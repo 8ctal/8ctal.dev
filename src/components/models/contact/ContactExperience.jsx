@@ -1,9 +1,7 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 
-import Computer from "./Computer";
 import { EightBall } from "../hero_models/EightBall";
-import { Chromatic } from "./Chromatic";
 
 const ContactExperience = () => {
     return (

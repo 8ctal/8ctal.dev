@@ -328,7 +328,7 @@ const certifications = [
     title: "Flutter Developer",
     issuer: "Udemy",
     date: "Junio 2025",
-    credentialId: "Ef4mLmADys",
+    credentialId: "UC-0123456789",
     imgPath: "/images/logos/udemy_logo.png",
     description: "Certificación en desarrollo de aplicaciones móviles con Flutter, incluyendo widgets, navegación, API, y testing.",
     skills: ["Flutter", "Dart", "API", "Testing", "Firebase", "Firestore", "Authentication", "Cloud Functions", "Cloud Storage", "Cloud Messaging", "Notifications", "Bloc", "Riverpod"],

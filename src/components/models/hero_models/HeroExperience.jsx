@@ -2,12 +2,9 @@ import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useMediaQuery } from "react-responsive";
 
-import { Room } from "./Room";
-import { PoolBall } from "./PoolBall";
-import { LostProgrammer } from "./LostProgrammer";
+
 import { NetrunnerOffice } from "./NetrunnerOffice";
-import { MountainBike } from "./MountainBike";
-import { EightBall } from "./EightBall";
+import { HeroModel } from "./HeroModel";
 import HeroLights from "./HeroLights";
 import Particles from "./Particles";
 import { Suspense } from "react";
@@ -17,7 +14,8 @@ const HeroExperience = () => {
     const isTablet = useMediaQuery({ query: "(max-width: 1024px)" });
 
     return (
-        <Canvas camera={{ position: [-120, 10, 0], fov: 62 }}>
+        <Canvas shadows camera={{ position: [-120, 40, 300], fov: 45 }}>
+            <hemisphereLight intensity={0.35} groundColor="black" />
             {/* <EightBall position[-80, 10, 100] /> */}
             {/* deep blue ambient */}
             <ambientLight intensity={0.2} color="#b9c6ea" />
@@ -39,7 +37,13 @@ const HeroExperience = () => {
                     position={[0, -3.5, 0]}
                     rotation={[0, -Math.PI / 4, 0]}
                 >
-                    <NetrunnerOffice />
+                    <HeroModel />
+                    <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.51, 0]}>
+                        <planeGeometry args={[50, 50]} />
+                        <shadowMaterial opacity={0.3} />
+                    </mesh>
+
+
                 </group>
             </Suspense>
         </Canvas>

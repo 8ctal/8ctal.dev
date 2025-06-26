@@ -10,34 +10,21 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Certifications = () => {
     useGSAP(() => {
-        // Animate certification cards as they come into view
+        // Animate certification cards as they come into view (simplified)
         gsap.utils.toArray(".certification-card").forEach((card) => {
             gsap.from(card, {
-                yPercent: 50,
+                yPercent: 30,
                 opacity: 0,
-                duration: 1,
+                duration: 0.8,
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: card,
-                    start: "top 80%",
+                    start: "top 85%",
                 },
             });
         });
 
-        // Animate the skills badges
-        gsap.utils.toArray(".skill-badge").forEach((badge, index) => {
-            gsap.from(badge, {
-                scale: 0,
-                opacity: 0,
-                duration: 0.5,
-                delay: index * 0.1,
-                ease: "back.out(1.7)",
-                scrollTrigger: {
-                    trigger: badge,
-                    start: "top 90%",
-                },
-            });
-        });
+        // Removed individual skill badge animations for better performance
     }, []);
 
     return (
@@ -104,7 +91,7 @@ const Certifications = () => {
                                                 {cert.skills.map((skill, skillIndex) => (
                                                     <span
                                                         key={skillIndex}
-                                                        className="skill-badge bg-black-200 text-white-50 text-xs px-3 py-1 rounded-full border border-blue-50/20"
+                                                        className="bg-black-200 text-white-50 text-xs px-3 py-1 rounded-full border border-blue-50/20"
                                                     >
                                                         {skill}
                                                     </span>
