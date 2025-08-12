@@ -30,7 +30,7 @@ const GlowCard = ({ card, index, children, showStars = true }) => {
         <div
             ref={(el) => (cardRefs.current[index] = el)}
             onMouseMove={handleMouseMove(index)}
-            className="card card-border timeline-card rounded-xl p-10 mb-5 break-inside-avoid-column"
+            className="card border border-black-50 bg-black-100 timeline-card rounded-xl p-10 mb-5 break-inside-avoid-column"
         >
             <div className="glow"></div>
             {showStars && (

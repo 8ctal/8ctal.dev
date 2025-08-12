@@ -45,12 +45,12 @@ const TechStack = () => {
                 <div className="tech-grid">
                     {/* Loop through the techStackIcons array and create a component for each item. 
               The key is set to the name of the tech stack icon, and the classnames are set to 
-              card-border, tech-card, overflow-hidden, and group. The xl:rounded-full and rounded-lg 
+              border border-black-50 bg-black-100, tech-card, overflow-hidden, and group. The xl:rounded-full and rounded-lg 
               classes are only applied on larger screens. */}
                     {techStackIcons.map((techStackIcon) => (
                         <div
                             key={techStackIcon.name}
-                            className="card-border tech-card overflow-hidden group xl:rounded-full rounded-lg"
+                            className="border border-black-50 bg-black-100 tech-card overflow-hidden group xl:rounded-full rounded-lg"
                         >
                             {/* The tech-card-animated-bg div is used to create a background animation when the 
                   component is hovered. */}

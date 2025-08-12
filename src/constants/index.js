@@ -293,6 +293,75 @@ const socialImgs = [
 
 const cvLink = "https://drive.google.com/file/d/15Cu0ZqXEN9iYkkihbnIGRqBu6FrNPFeH/view?usp=sharing";
 
+const projects = [
+  {
+    id: "parchuis",
+    title: "ParchUIS",
+    subtitle: "ParchUIS - Comunidad educativa en un mundo digital 3D",
+    description: "Una aplicación construida con Flutter, Firebase, MapBox SDK y otras herramientas de desarrollo escalables (En desarrollo).",
+    imagePath: "/images/parchUIS_banner.png",
+    technologies: ["Flutter", "Firebase", "MapBox SDK"],
+    link: "https://parchuis.com/",
+    featured: true,
+    category: "mobile"
+  },
+  {
+    id: "gymapp",
+    title: "GymApp",
+    subtitle: "Tu rutina de ejercicios siempre a mano",
+    description: "Con nuestra GymApp no tendrás que recordar tu rutina de ejercicios, aquí tendrás a la mano todo lo relacionado con tu sitio de entrenamiento.",
+    imagePath: "/images/gym_app_banner.png",
+    technologies: ["Flutter", "Supabase"],
+    link: "https://github.com/xMiguelBolano/gym_app",
+    featured: true,
+    category: "mobile"
+  },
+  {
+    id: "school-admin",
+    title: "School Admin",
+    subtitle: "Administración educativa simplificada",
+    description: "Administra fácilmente tus estudiantes y profesores en un solo lugar.",
+    imagePath: "/images/school_admin_display.png",
+    technologies: ["Angular", "Spring Boot", "PostgreSQL", "Docker", "AWS"],
+    link: "#",
+    featured: true,
+    category: "web"
+  },
+  {
+    id: "wallet-app",
+    title: "Wallet App",
+    subtitle: "Gestión financiera personal",
+    description: "Aplicación móvil para el control de gastos y presupuestos personales.",
+    imagePath: "/images/wallet_app_display.png",
+    technologies: ["Redis - Upstash", "NeonDB - PostgreSQL", "Expo","Auth - Clerk"],
+    link: "https://github.com/8ctal/wallet-app",
+    featured: false,
+    category: "mobile"
+  },
+  {
+    id: "style-bga",
+    title: "StyleBGA",
+    subtitle: "Administra tu sitio de belleza",
+    description: "Una plataforma para gestionar tu negocio de belleza.",
+    imagePath: "/images/stylebga_display.jpg",
+    technologies: ["Java Spring Boot", "React JS", "MongoDB", "Tailwind CSS"],
+    link: "https://github.com/8ctal/style_bga",
+    featured: false,
+    category: "web"
+  },
+  {
+    id: "doctor_landing",
+    title: "Doctor Landing",
+    subtitle: "Landing page comercial",
+    description: "Un sitio web para promocionar tu portafolio profesional.",
+    imagePath: "/images/carlos_landing_display.png",
+    technologies: ["Next.js", "Tailwind CSS", "Typescript"],
+    link: "https://carlosgonzalesmedicointernista.vercel.app/",
+    featured: false,
+    category: "web"
+  },
+];
+
 const certifications = [
   {
     title: "Bootcamp Inteligencia Artificial",
@@ -350,4 +419,5 @@ export {
   navLinks,
   certifications,
   cvLink,
+  projects,
 };
