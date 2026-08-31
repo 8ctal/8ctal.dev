@@ -1,5 +1,4 @@
 
-import { testimonials } from "../constants";
 import TitleHeader from "../components/TitleHeader";
 import GlowCard from "../components/GlowCard";
 
