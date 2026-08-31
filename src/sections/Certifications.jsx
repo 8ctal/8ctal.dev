@@ -40,7 +40,7 @@ const Certifications = () => {
                 
                 <div className="mt-32">
                     <div className="grid-3-cols gap-8">
-                        {certifications.map((cert, index) => (
+                        {certifications.map((cert) => (
                             <div key={cert.credentialId} className="certification-card">
                                 <GlowCard card={cert} showStars={false}>
                                     <div className="flex flex-col h-full">
