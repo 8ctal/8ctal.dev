@@ -8,7 +8,7 @@ const Testimonials = () => {
             <div className="w-full h-full md:px-10 px-5">
                 <TitleHeader
                     title="¿Que dicen de mí?"
-                    sub="⭐️ Opiniones de mis clientes"
+                    sub="Opiniones de mis clientes"
                 />
 
                 <div className="lg:columns-3 md:columns-2 columns-1 mt-16"><h1 className="text-white-50 text-center text-2xl">En construcción...</h1>

@@ -1,6 +1,10 @@
 allowBuilds:
   '@tailwindcss/oxide': true
+  '@vgpu/adapter-node': true
   esbuild: true
+  webgpu: true
 onlyBuiltDependencies:
   - "@tailwindcss/oxide"
+  - "@vgpu/adapter-node"
   - esbuild
+  - webgpu

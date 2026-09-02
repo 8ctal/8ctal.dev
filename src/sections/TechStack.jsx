@@ -1,12 +1,32 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useMediaQuery } from "react-responsive";
+import { lazy, Suspense, useState } from "react";
 
 import TitleHeader from "../components/TitleHeader";
-import TechIconCardExperience from "../components/models/tech_logos/TechIconCardExperience";
-import { techStackIcons } from "../constants";
-// import { techStackImgs } from "../constants";
+import { techStackIcons, techStackImgs } from "../constants";
+
+// Only the desktop branch below ever mounts this — mobile renders the
+// static image instead — so code-split it rather than shipping R3F/drei
+// to visitors who will never trigger it.
+const TechIconCardExperience = lazy(() =>
+    import("../components/models/tech_logos/TechIconCardExperience")
+);
 
 const TechStack = () => {
+    // Below this width, skip the 3D canvases entirely and render the static
+    // logo instead — five live WebGL contexts on one screen is real cost on
+    // a phone (battery, thermals, first paint), and mobile users never get
+    // to orbit them anyway. See DESIGN.md for the rest of the perf pass.
+    const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+
+    // On desktop, only the hovered/focused card goes live 3D — the other
+    // four stay static images. Mounting all five R3F Canvas instances at
+    // once was hitting the browser's simultaneous-WebGL-context ceiling
+    // ("THREE.WebGLRenderer: Context Lost" in the console); this caps it
+    // at one live context in this section, ever.
+    const [activeIndex, setActiveIndex] = useState(null);
+
     // Animate the tech cards in the skills section
     useGSAP(() => {
         // This animation is triggered when the user scrolls to the #skills wrapper
@@ -40,28 +60,47 @@ const TechStack = () => {
             <div className="w-full h-full md:px-10 px-5">
                 <TitleHeader
                     title="Habilidades clave y tecnologías"
-                    sub="🤝 Lo que puedo aportar"
+                    sub="Lo que puedo aportar"
                 />
                 <div className="tech-grid">
-                    {/* Loop through the techStackIcons array and create a component for each item. 
-              The key is set to the name of the tech stack icon, and the classnames are set to 
-              border border-black-50 bg-black-100, tech-card, overflow-hidden, and group. The xl:rounded-full and rounded-lg 
+                    {/* Loop through the techStackIcons array and create a component for each item.
+              The key is set to the name of the tech stack icon, and the classnames are set to
+              border border-black-50 bg-black-100, tech-card, overflow-hidden, and group. The xl:rounded-full and rounded-lg
               classes are only applied on larger screens. */}
-                    {techStackIcons.map((techStackIcon) => (
+                    {techStackIcons.map((techStackIcon, index) => (
                         <div
                             key={techStackIcon.name}
+                            tabIndex={0}
                             className="border border-black-50 bg-black-100 tech-card overflow-hidden group xl:rounded-full rounded-lg"
+                            onMouseEnter={() => setActiveIndex(index)}
+                            onMouseLeave={() => setActiveIndex((current) => (current === index ? null : current))}
+                            onFocus={() => setActiveIndex(index)}
+                            onBlur={() => setActiveIndex((current) => (current === index ? null : current))}
                         >
-                            {/* The tech-card-animated-bg div is used to create a background animation when the 
+                            {/* The tech-card-animated-bg div is used to create a background animation when the
                   component is hovered. */}
                             <div className="tech-card-animated-bg" />
                             <div className="tech-card-content">
-                                {/* The tech-icon-wrapper div contains the TechIconCardExperience component, 
-                    which renders the 3D model of the tech stack icon. */}
+                                {/* Mobile: always the static logo image. Desktop: the static
+                    image too, except the one card under hover/focus, which
+                    swaps to the animated 3D model — see activeIndex above.
+                    Positionally paired via index from techStackImgs since
+                    the two lists use different display names. */}
                                 <div className="tech-icon-wrapper">
-                                    <TechIconCardExperience model={techStackIcon} />
+                                    {!isMobile && activeIndex === index ? (
+                                        <Suspense fallback={<div className="w-20 h-20 animate-pulse rounded-full bg-black-200" />}>
+                                            <TechIconCardExperience model={techStackIcon} />
+                                        </Suspense>
+                                    ) : (
+                                        <img
+                                            src={techStackImgs[index]?.imgPath}
+                                            alt={techStackIcon.name}
+                                            className="w-20 h-20 object-contain"
+                                            loading="lazy"
+                                        />
+                                    )}
                                 </div>
-                                {/* The padding-x and w-full classes are used to add horizontal padding to the 
+                                {/* The padding-x and w-full classes are used to add horizontal padding to the
                     text and make it take up the full width of the component. */}
                                 <div className="padding-x w-full">
                                     {/* The p tag contains the name of the tech stack icon. */}
@@ -70,24 +109,6 @@ const TechStack = () => {
                             </div>
                         </div>
                     ))}
-
-                    {/* This is for the img part */}
-                    {/* {techStackImgs.map((techStackIcon, index) => (
-            <div
-              key={index}
-              className="card-border tech-card overflow-hidden group xl:rounded-full rounded-lg"
-            >
-              <div className="tech-card-animated-bg" />
-              <div className="tech-card-content">
-                <div className="tech-icon-wrapper">
-                  <img src={techStackIcon.imgPath} alt="" />
-                </div>
-                <div className="padding-x w-full">
-                  <p>{techStackIcon.name}</p>
-                </div>
-              </div>
-            </div>
-          ))} */}
                 </div>
             </div>
         </div>

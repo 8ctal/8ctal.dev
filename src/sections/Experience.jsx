@@ -4,89 +4,27 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { expCards } from "../constants";
 import TitleHeader from "../components/TitleHeader";
-import GlowCard from "../components/GlowCard";
+import TimelineLogo from "../components/TimelineLogo";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Experience = () => {
     useGSAP(() => {
-        // Loop through each timeline card and animate them in
-        // as the user scrolls to each card
+        // Each timeline entry rises in from the left and fades in as it
+        // scrolls into view — one authored moment per entry, nothing else.
         gsap.utils.toArray(".timeline-card").forEach((card) => {
-            // Animate the card coming in from the left
-            // and fade in
             gsap.from(card, {
-                // Move the card in from the left
-                xPercent: -100,
-                // Make the card invisible at the start
+                xPercent: -8,
                 opacity: 0,
-                // Set the origin of the animation to the left side of the card
-                transformOrigin: "left left",
-                // Animate over 1 second
                 duration: 1,
-                // Use a power2 ease-in-out curve
-                ease: "power2.inOut",
-                // Trigger the animation when the card is 80% of the way down the screen
+                ease: "power2.out",
                 scrollTrigger: {
-                    // The card is the trigger element
                     trigger: card,
-                    // Trigger the animation when the card is 80% down the screen
                     start: "top 80%",
                 },
             });
         });
 
-        // Animate the timeline height as the user scrolls
-        // from the top of the timeline to 70% down the screen
-        // The timeline height should scale down from 1 to 0
-        // as the user scrolls up the screen
-        gsap.to(".timeline", {
-            // Set the origin of the animation to the bottom of the timeline
-            transformOrigin: "bottom bottom",
-            // Animate the timeline height over 1 second
-            ease: "power1.inOut",
-            // Trigger the animation when the timeline is at the top of the screen
-            // and end it when the timeline is at 70% down the screen
-            scrollTrigger: {
-                trigger: ".timeline",
-                start: "top center",
-                end: "70% center",
-                // Update the animation as the user scrolls
-                onUpdate: (self) => {
-                    // Scale the timeline height as the user scrolls
-                    // from 1 to 0 as the user scrolls up the screen
-                    gsap.to(".timeline", {
-                        scaleY: 1 - self.progress,
-                    });
-                },
-            },
-        });
-
-        // Loop through each expText element and animate them in
-        // as the user scrolls to each text element
-        gsap.utils.toArray(".expText").forEach((text) => {
-            // Animate the text opacity from 0 to 1
-            // and move it from the left to its final position
-            // over 1 second with a power2 ease-in-out curve
-            gsap.from(text, {
-                // Set the opacity of the text to 0
-                opacity: 0,
-                // Move the text from the left to its final position
-                // (xPercent: 0 means the text is at its final position)
-                xPercent: 0,
-                // Animate over 1 second
-                duration: 1,
-                // Use a power2 ease-in-out curve
-                ease: "power2.inOut",
-                // Trigger the animation when the text is 60% down the screen
-                scrollTrigger: {
-                    // The text is the trigger element
-                    trigger: text,
-                    // Trigger the animation when the text is 60% down the screen
-                    start: "top 60%",
-                },
-            });
-        }, "<"); // position parameter - insert at the start of the animation
     }, []);
 
     return (
@@ -97,48 +35,63 @@ const Experience = () => {
             <div className="w-full h-full md:px-20 px-5">
                 <TitleHeader
                     title="Experiencia Profesional"
-                    sub="💼 Mi trayectoria a lo largo de los años"
+                    sub="Mi trayectoria a lo largo de los años"
                 />
                 <div className="mt-32 relative">
-                    <div className="relative z-50 xl:space-y-32 space-y-10">
+                    <div className="relative z-50 xl:space-y-20 space-y-10">
+                        <div className="timeline-wrapper">
+                            <div className="gradient-line w-1 h-full" />
+                        </div>
+
                         {expCards.map((card) => (
-                            <div key={card.title} className="exp-card-wrapper">
-                                <div className="xl:w-2/6">
-                                    <GlowCard card={card}>
+                            <div
+                                key={`${card.company}-${card.title}`}
+                                className="exp-card-wrapper"
+                            >
+                                <div className="timeline-card relative z-20 pl-16 md:pl-24">
+                                    <div className="flex items-start gap-4 md:gap-5 mb-6">
+                                        <div className="timeline-logo glass-panel">
+                                            <TimelineLogo
+                                                src={card.logoPath}
+                                                alt={`Logo de ${card.company}`}
+                                                fallbackText={card.company}
+                                            />
+                                        </div>
                                         <div>
-                                            <img src={card.imgPath} alt="exp-img" />
-                                        </div>
-                                    </GlowCard>
-                                </div>
-                                <div className="xl:w-4/6">
-                                    <div className="flex items-start">
-                                        <div className="timeline-wrapper">
-                                            <div className="timeline" />
-                                            <div className="gradient-line w-1 h-full" />
-                                        </div>
-                                        <div className="expText flex xl:gap-20 md:gap-10 gap-5 relative z-20">
-                                            <div className="timeline-logo">
-                                                <img src={card.logoPath} alt="logo" />
-                                            </div>
-                                            <div>
-                                                <h1 className="font-semibold text-3xl">{card.title}</h1>
-                                                <p className="my-5 text-white-50">
-                                                    🗓️&nbsp;{card.date}
+                                            <h1 className="font-semibold text-2xl md:text-3xl">
+                                                {card.title}
+                                            </h1>
+                                            <p className="text-white-50 mt-1">{card.company}</p>
+                                            {(card.employmentType || card.location) && (
+                                                <p className="text-blue-50 text-sm mt-1">
+                                                    {[card.employmentType, card.location]
+                                                        .filter(Boolean)
+                                                        .join(" · ")}
                                                 </p>
-                                                <p className="text-[#839CB5] italic">
-                                                    Responsabilidades
-                                                </p>
-                                                <ul className="list-disc ms-5 mt-5 flex flex-col gap-5 text-white-50">
-                                                    {card.responsibilities.map(
-                                                        (responsibility, index) => (
-                                                            <li key={index} className="text-lg">
-                                                                {responsibility}
-                                                            </li>
-                                                        )
-                                                    )}
-                                                </ul>
-                                            </div>
+                                            )}
+                                            <p className="text-blue-50 text-sm mt-1">
+                                                {card.date}
+                                            </p>
                                         </div>
+                                    </div>
+
+                                    <div className="exp-card glass-panel">
+                                        <p className="text-white-50 text-base md:text-lg leading-relaxed">
+                                            {card.summary}
+                                        </p>
+
+                                        {card.stack?.length > 0 && (
+                                            <div className="flex flex-wrap gap-2 mt-6">
+                                                {card.stack.map((tech) => (
+                                                    <span
+                                                        key={tech}
+                                                        className="bg-black-200 text-white-50 text-xs px-3 py-1 rounded-full border border-blue-50/20"
+                                                    >
+                                                        {tech}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

@@ -18,12 +18,15 @@
     "@react-three/fiber": "^9.1.2",
     "@react-three/postprocessing": "^3.0.4",
     "@tailwindcss/vite": "^4.1.10",
+    "framer-motion": "^13.1.1",
     "gsap": "^3.13.0",
+    "lucide-react": "^1.38.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-responsive": "^10.0.1",
     "tailwindcss": "^4.1.10",
-    "three": "^0.177.0"
+    "three": "^0.177.0",
+    "vgpu": "^0.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

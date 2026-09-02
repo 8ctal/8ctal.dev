@@ -5,7 +5,7 @@ import { EightBall } from "../hero_models/EightBall";
 
 const ContactExperience = () => {
     return (
-        <Canvas shadows camera={{ position: [12, 0, -90], fov: 5 }}>
+        <Canvas shadows dpr={[1, 1.5]} camera={{ position: [12, 0, -90], fov: 5 }}>
             <ambientLight intensity={1} color="#fff4e6" />
 
             <directionalLight position={[5, 5, 3]} intensity={2.5} color="#ffffff" />

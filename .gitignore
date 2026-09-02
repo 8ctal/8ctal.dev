@@ -26,3 +26,12 @@ dist-ssr
 # Environment variables
 .env
 .env.local
+
+# Impeccable — machine-local cache and per-developer overrides
+# (.impeccable/config.json and design.json are shared/committed)
+.impeccable/*.cache.json
+.impeccable/config.local.json
+
+# Reference component snippets pasted in for porting into real
+# components — scratch material, not part of the shipped site
+ref_components/

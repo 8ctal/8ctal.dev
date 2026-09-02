@@ -35,7 +35,7 @@ const Certifications = () => {
             <div className="w-full h-full md:px-20 px-5">
                 <TitleHeader
                     title="Certificaciones"
-                    sub="🏆 Credenciales que validan mi experiencia"
+                    sub="Credenciales que validan mi experiencia"
                 />
                 
                 <div className="mt-32">
@@ -47,10 +47,11 @@ const Certifications = () => {
                                         {/* Header with logo and title */}
                                         <div className="flex items-center gap-4 mb-6">
                                             <div className="w-16 h-16 rounded-lg bg-white-50 flex items-center justify-center p-2">
-                                                <img 
-                                                    src={cert.imgPath} 
+                                                <img
+                                                    src={cert.imgPath}
                                                     alt={cert.title}
                                                     className="w-full h-full object-contain"
+                                                    loading="lazy"
                                                 />
                                             </div>
                                             <div>
@@ -74,7 +75,7 @@ const Certifications = () => {
                                         <div className="mb-6">
                                             <div className="flex items-center justify-between text-sm">
                                                 <span className="text-blue-50">
-                                                    🗓️ {cert.date}
+                                                    {cert.date}
                                                 </span>
                                                 <span className="text-blue-50 font-mono">
                                                     ID: {cert.credentialId}

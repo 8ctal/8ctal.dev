@@ -41,7 +41,7 @@ const ProjectCard = ({ project, index, isFeatured = false }) => {
                 onClick={isClickable ? handleClick : undefined}
             >
                 <div className="image-wrapper">
-                    <img src={project.imagePath} alt={project.title} />
+                    <img src={project.imagePath} alt={project.title} loading="lazy" />
                 </div>
                 <div className="text-content">
                     <div className="badges">
@@ -82,7 +82,7 @@ const ProjectCard = ({ project, index, isFeatured = false }) => {
             onClick={isClickable ? handleClick : undefined}
         >
             <div className="image-wrapper">
-                <img src={project.imagePath} alt={project.title} />
+                <img src={project.imagePath} alt={project.title} loading="lazy" />
             </div>
             <div className="project-info">
                 <h2>{project.subtitle}</h2>

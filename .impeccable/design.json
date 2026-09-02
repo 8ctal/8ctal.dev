@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-01T00:00:00.000Z",
+  "title": "Design System: 8ctal — Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#000000", "tonalRamp": ["#000000", "#0a0a0b", "#0e0e10", "#1c1c21", "#282732", "#3a3a45", "#5a5a68", "#83839a"] },
+      "void": { "role": "neutral", "displayName": "Void", "canonical": "#0e0e10", "tonalRamp": ["#000000", "#0e0e10", "#1c1c21", "#282732", "#3a3a45", "#5a5a68", "#83839a", "#b5b5c6"] },
+      "graphite": { "role": "neutral", "displayName": "Graphite", "canonical": "#1c1c21", "tonalRamp": ["#0e0e10", "#1c1c21", "#282732", "#3a3a45", "#5a5a68", "#83839a", "#b5b5c6", "#e2e2ea"] },
+      "slate": { "role": "neutral", "displayName": "Slate", "canonical": "#282732", "tonalRamp": ["#1c1c21", "#282732", "#3a3a45", "#4d4d5c", "#6b6b7d", "#8f8fa0", "#b8b8c6", "#e2e2ea"] },
+      "input-well": { "role": "neutral", "displayName": "Input Well", "canonical": "#2d2d38", "tonalRamp": ["#1c1c21", "#282732", "#2d2d38", "#3f3f4d", "#5b5b6c", "#83839a", "#b5b5c6", "#e2e2ea"] },
+      "muted-slate-blue": { "role": "neutral", "displayName": "Muted Slate-Blue", "canonical": "#839cb5", "tonalRamp": ["#1f2a34", "#324356", "#455c74", "#5c7793", "#839cb5", "#a9bece", "#cddae5", "#eef2f6"] },
+      "signal-white": { "role": "primary", "displayName": "Signal White", "canonical": "#d9ecff", "tonalRamp": ["#0f1a24", "#1e3448", "#3d6890", "#6b9cc4", "#9fc4e2", "#d9ecff", "#e9f4ff", "#f7fbff"] },
+      "pure-white": { "role": "neutral", "displayName": "Pure White", "canonical": "#ffffff", "tonalRamp": ["#1a1a1a", "#404040", "#666666", "#8c8c8c", "#b3b3b3", "#d9d9d9", "#f0f0f0", "#ffffff"] },
+      "spark-cyan": { "role": "secondary", "displayName": "Spark Cyan", "canonical": "#62e0ff", "tonalRamp": ["#0a2e38", "#124a5a", "#1c6f87", "#2f9cb8", "#45c3e0", "#62e0ff", "#9aecff", "#d3f7ff"] },
+      "spark-azure": { "role": "secondary", "displayName": "Spark Azure", "canonical": "#52aeff", "tonalRamp": ["#0a2440", "#123c66", "#1c5b94", "#2f7dc0", "#4098e0", "#52aeff", "#8ecaff", "#c9e6ff"] },
+      "spark-coral": { "role": "secondary", "displayName": "Spark Coral", "canonical": "#fd5c79", "tonalRamp": ["#3d0e18", "#651a29", "#93283d", "#c23851", "#e64a67", "#fd5c79", "#fe93a6", "#ffc9d3"] },
+      "spark-violet": { "role": "secondary", "displayName": "Spark Violet", "canonical": "#6d45ce", "tonalRamp": ["#180e33", "#2a1a58", "#412985", "#573bab", "#6d45ce", "#9276e0", "#bcaced", "#e2dbf8"] },
+      "glass-100": { "role": "material", "displayName": "Glass 100", "canonical": "rgba(217, 236, 255, 0.05)", "tonalRamp": ["rgba(217,236,255,0.02)", "rgba(217,236,255,0.05)", "rgba(217,236,255,0.1)", "rgba(217,236,255,0.16)", "rgba(217,236,255,0.28)"] },
+      "glass-200": { "role": "material", "displayName": "Glass 200", "canonical": "rgba(217, 236, 255, 0.1)", "tonalRamp": ["rgba(217,236,255,0.02)", "rgba(217,236,255,0.05)", "rgba(217,236,255,0.1)", "rgba(217,236,255,0.16)", "rgba(217,236,255,0.28)"] },
+      "glass-border": { "role": "material", "displayName": "Glass Border", "canonical": "rgba(217, 236, 255, 0.16)", "tonalRamp": ["rgba(217,236,255,0.05)", "rgba(217,236,255,0.1)", "rgba(217,236,255,0.16)", "rgba(217,236,255,0.28)"] },
+      "glass-border-strong": { "role": "material", "displayName": "Glass Border Strong", "canonical": "rgba(217, 236, 255, 0.28)", "tonalRamp": ["rgba(217,236,255,0.1)", "rgba(217,236,255,0.16)", "rgba(217,236,255,0.28)", "rgba(217,236,255,0.4)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headline only — the rotating 'Ideas/Conceptos/Diseños/Código' line." },
+      "headline": { "displayName": "Headline", "purpose": "Centered section titles via TitleHeader." },
+      "body": { "displayName": "Body", "purpose": "Paragraph copy, card content, project/certification/experience descriptions." },
+      "label": { "displayName": "Label", "purpose": "Badges, dates, credential IDs, nav links, CTA button text (uppercase), mobile nav overlay links (text-3xl)." }
+    },
+    "shadows": [
+      { "name": "glass-panel", "value": "inset 0 1px 0 0 rgba(217,236,255,0.22), 0 8px 32px rgba(0,0,0,0.45)", "purpose": "Liquid Glass panels: mobile nav toggle, GlowCard, exp-card, timeline logo marker — inner rim highlight plus real offset+blur lift." },
+      { "name": "glass-panel-strong", "value": "inset 0 1px 0 0 rgba(217,236,255,0.18), 0 24px 64px rgba(0,0,0,0.6)", "purpose": "The full-viewport mobile nav overlay — a heavier lift since it sits above everything else on screen." }
+    ],
+    "motion": [
+      { "name": "reveal-slow", "value": "all 0.5s ease / 500ms", "purpose": "CTA button circle retraction and text/arrow reveal on hover." },
+      { "name": "underline-grow", "value": "all 0.3s ease-in-out", "purpose": "Nav link underline growing from 0 to full width on hover." },
+      { "name": "glow-track", "value": "border-color 1s ease-in-out / opacity 0.5s ease", "purpose": "GlowCard's mouse-tracked conic highlight fade in/out — now read as light catching the glass edge." },
+      { "name": "surface-hover", "value": "background-color 0.3s ease / 300ms", "purpose": "Flat background-color shifts on secondary buttons, badges, footer icons." },
+      { "name": "mobile-nav-entrance", "value": "opacity 0.45s power2.out, then y/opacity stagger 0.5s expo.out (0.06s stagger, -0.25s overlap)", "purpose": "Mobile nav glass overlay fade-in followed by staggered link rise (GSAP, NavBar.jsx)." },
+      { "name": "mobile-nav-exit", "value": "opacity 0.3s power2.in", "purpose": "Mobile nav overlay fade-out on close (tap link, tap toggle, or Escape)." },
+      { "name": "timeline-entrance", "value": "xPercent -8 → 0, opacity 0 → 1, 1s power2.out, ScrollTrigger top 80%", "purpose": "Each Experience timeline entry rises in from the left as it scrolls into view." }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "2xl", "value": "1536px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button (CTA reveal)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The 'Mira mi trabajo' CTA — a white circle covers the dark pill at rest; on hover it retracts to a small icon, revealing the dark backdrop and flipping the text color. Not a glass surface.",
+      "html": "<a class=\"ds-cta\"><span class=\"ds-cta-circle\"></span><span class=\"ds-cta-text\">MIRA MI TRABAJO</span><span class=\"ds-cta-arrow\">↓</span></a>",
+      "css": ".ds-cta { position: relative; display: inline-flex; align-items: center; justify-content: center; padding: 16px; border-radius: 8px; background: var(--color-black-200, #282732); overflow: hidden; cursor: pointer; } .ds-cta-circle { position: absolute; right: -40px; top: 50%; transform: translateY(-50%); width: 120%; height: 120%; border-radius: 9999px; background: var(--color-white-50, #d9ecff); transition: all 0.5s ease; } .ds-cta-text { position: relative; z-index: 1; text-transform: uppercase; font-weight: 600; color: #000; transition: color 0.5s ease, transform 0.5s ease; } .ds-cta-arrow { position: relative; z-index: 1; margin-left: 12px; width: 40px; height: 40px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; } .ds-cta:hover .ds-cta-circle, .ds-cta:focus-visible .ds-cta-circle { right: 10px; width: 40px; height: 40px; } .ds-cta:hover .ds-cta-text, .ds-cta:focus-visible .ds-cta-text { color: var(--color-white-50, #d9ecff); transform: translateX(-8px); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-primary-hover",
+      "description": "Contáctame / CV download — flat, no reveal animation, used for confirmatory actions. Not a glass surface.",
+      "html": "<a class=\"ds-btn-secondary\">Contáctame</a>",
+      "css": ".ds-btn-secondary { display: inline-flex; padding: 8px 20px; border-radius: 8px; background: var(--color-white-50, #d9ecff); color: #000; font-weight: 500; transition: background-color 0.3s ease, color 0.3s ease; } .ds-btn-secondary:hover, .ds-btn-secondary:focus-visible { background: var(--color-black-50, #1c1c21); color: var(--color-white-50, #d9ecff); }"
+    },
+    {
+      "name": "Glow Card (Liquid Glass)",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Signature container for experience/certifications/testimonials — now a Liquid Glass panel (blurred, saturated, gradient-washed, bordered, real offset+blur shadow). A conic-gradient halo tracks the cursor, read as light catching the glass edge.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-glow\"></div><p class=\"ds-card-body\">\"Card content goes here.\"</p></div>",
+      "css": ".ds-card { --start: 0; position: relative; overflow: hidden; border-radius: 12px; padding: 40px; background: linear-gradient(180deg, var(--color-glass-200, rgba(217,236,255,0.1)) 0%, var(--color-glass-100, rgba(217,236,255,0.05)) 100%); border: 1px solid var(--color-glass-border, rgba(217,236,255,0.16)); backdrop-filter: blur(24px) saturate(150%); box-shadow: inset 0 1px 0 0 rgba(217,236,255,0.18), 0 8px 32px rgba(0,0,0,0.45); transition: border-color 1s ease-in-out; } .ds-card::before { content: \"\"; position: absolute; inset: 0; border-radius: 12px; border: 2px solid transparent; background: conic-gradient(from calc((var(--start) - 15) * 1deg), rgba(255,255,255,0.12) 0deg, #fff, rgba(255,255,255,0) 100deg); mask: linear-gradient(#0000,#0000), conic-gradient(from calc((var(--start) - 15) * 1deg), rgba(255,255,255,0.12) 0deg, #fff, rgba(255,255,255,0) 100deg); mask-composite: intersect; opacity: 0; transition: opacity 0.5s ease; } .ds-card:hover::before, .ds-card:focus-within::before { opacity: 1; } .ds-card-body { position: relative; z-index: 1; color: var(--color-white-50, #d9ecff); font-size: 1.125rem; }"
+    },
+    {
+      "name": "Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Technology/skill pill used across project cards and certifications. Not a glass surface.",
+      "html": "<span class=\"ds-badge\">React</span>",
+      "css": ".ds-badge { display: inline-flex; padding: 4px 12px; border-radius: 9999px; background: var(--color-black-200, #282732); color: var(--color-white-50, #d9ecff); font-size: 0.75rem; border: 1px solid var(--color-black-50, #1c1c21); }"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Contact form text input/textarea — background-only definition, no visible border. Not a glass surface.",
+      "html": "<input class=\"ds-input\" placeholder=\"Tu nombre\" />",
+      "css": ".ds-input { width: 100%; padding: 16px; border-radius: 6px; background: var(--color-blue-100, #2d2d38); color: var(--color-white-50, #d9ecff); border: none; font-size: 1rem; } .ds-input::placeholder { color: var(--color-blue-50, #839cb5); } .ds-input:focus-visible { outline: 2px solid var(--color-white-50, #d9ecff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Nav Link (desktop)",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Desktop navigation link with a growing underline on hover. Unchanged this round.",
+      "html": "<a class=\"ds-nav-link\"><span>Experiencia</span><span class=\"ds-nav-underline\"></span></a>",
+      "css": ".ds-nav-link { position: relative; color: var(--color-white-50, #d9ecff); text-decoration: none; padding-bottom: 4px; } .ds-nav-link:hover, .ds-nav-link:focus-visible { color: #fff; } .ds-nav-underline { position: absolute; left: 0; bottom: -4px; width: 0; height: 2px; background: #fff; transition: width 0.3s ease-in-out; } .ds-nav-link:hover .ds-nav-underline, .ds-nav-link:focus-visible .ds-nav-underline { width: 100%; }"
+    },
+    {
+      "name": "Mobile Nav Overlay (Liquid Glass, full-screen)",
+      "kind": "nav",
+      "refersTo": "glass-panel-strong",
+      "description": "Full-viewport glass overlay opened from a hamburger toggle below the lg breakpoint (camosdigital.com-inspired). Fade-in then staggered link rise via GSAP; Escape/tap-link/tap-toggle to close; body scroll locked and focus moved to the first link while open.",
+      "html": "<button class=\"ds-nav-toggle\" aria-expanded=\"false\">☰</button><div class=\"ds-mobile-nav-overlay\"><nav><a class=\"ds-mobile-nav-link\">Experiencia</a><a class=\"ds-mobile-nav-link\">Contáctame</a></nav></div>",
+      "css": ".ds-nav-toggle { display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; border-radius: 9999px; border: 1px solid var(--color-glass-border, rgba(217,236,255,0.16)); background: linear-gradient(180deg, var(--color-glass-200, rgba(217,236,255,0.1)) 0%, var(--color-glass-100, rgba(217,236,255,0.05)) 100%); backdrop-filter: blur(24px) saturate(150%); box-shadow: inset 0 1px 0 0 rgba(217,236,255,0.22), 0 8px 32px rgba(0,0,0,0.45); } .ds-mobile-nav-overlay { position: fixed; inset: 0; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; border: 1px solid var(--color-glass-border-strong, rgba(217,236,255,0.28)); background: linear-gradient(180deg, rgba(14,14,16,0.82) 0%, rgba(14,14,16,0.94) 100%); backdrop-filter: blur(40px) saturate(150%); box-shadow: inset 0 1px 0 0 rgba(217,236,255,0.18), 0 24px 64px rgba(0,0,0,0.6); } .ds-mobile-nav-link { font-size: 1.875rem; font-weight: 600; color: var(--color-white-50, #d9ecff); transition: color 0.3s ease; } .ds-mobile-nav-link:hover { color: #fff; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Netrunner del 8-ball",
+    "overview": "Un desarrollador que trabaja de noche en un escritorio cyberpunk — y sobre esa mesa de trabajo, en lugar de un adorno cualquiera, hay una bola de billar 8 girando en 3D. La interfaz es ese escritorio: superficies casi negras, apiladas unas sobre otras, con la tipografía blanco-azulada haciendo todo el trabajo de jerarquía. No hay una paleta de colores en el sentido tradicional — hay oscuridad técnica, disciplinada, y una única chispa de neón (cian → azul → coral → violeta) que aparece una sola vez, como el reflejo de luces de una ciudad nocturna en una ventana. Todo lo demás se mantiene monocromático a propósito, para que esa chispa nunca deje de sentirse rara y especial. Los componentes no son estáticos: responden al cursor. Sobre ese mismo lienzo oscuro, el sitio ha empezado a adoptar un segundo material para su capa de chrome flotante e interactivo: Vidrio Líquido, al estilo Apple pero en su variante oscura — paneles translúcidos, desenfocados, con borde luminoso y sombra real, como el Centro de Control de iOS en modo oscuro. No reemplaza el mundo del Netrunner: es un material nuevo para las superficies que flotan sobre ese escritorio, no un tema nuevo.",
+    "keyCharacteristics": [
+      "Monocromo disciplinado (negros apilados + blanco-azulado frío) con una sola chispa de neón, nunca expandida.",
+      "Una sola familia tipográfica (Mona Sans) que carga toda la jerarquía por peso y tamaño, no por combinación de fuentes.",
+      "Profundidad por capas de superficie y borde en la base del sitio; el chrome flotante e interactivo usa vidrio translúcido con sombra real.",
+      "Toda interacción tiene una respuesta táctil: revelado, movimiento o glow — nunca un simple cambio de color."
+    ],
+    "rules": [
+      { "name": "La Regla de la Chispa Única", "body": "El degradado neón (cian/azul/coral/violeta) vive solo en la línea del timeline. No se replica en botones, badges ni fondos — su rareza es lo que lo hace notar.", "section": "colors" },
+      { "name": "La Regla del Vidrio Reservado", "body": "Los tokens glass-* solo se usan en componentes de chrome flotante e interactivo (nav móvil, tarjetas, marcadores de timeline) — nunca como fondo de sección ni decoración plana.", "section": "colors" },
+      { "name": "La Regla de un Solo Rostro", "body": "Nunca se introduce una segunda familia tipográfica. Mona Sans, en sus 900 pesos disponibles, es suficiente para toda la jerarquía.", "section": "typography" },
+      { "name": "La Regla de Capas: Base Plana / Chrome de Vidrio", "body": "Supersede a la antigua Regla de Cero Sombras. La base estructural del sitio sigue sin sombras (superficie + borde de 1px). El chrome flotante e interactivo (nav móvil, tarjetas, marcadores de timeline) es la única capa donde un box-shadow de offset+blur real está permitido, y solo como parte del material de vidrio completo.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do usar Signal White (#d9ecff) como color de texto por defecto; reservar Pure White (#ffffff) solo para estados de hover/foco.",
+      "Do dar a todo elemento interactivo una respuesta de revelado o movimiento al hover.",
+      "Do mantener la chispa de neón confinada a la línea del timeline.",
+      "Do usar rounded-full solo para píldoras/círculos y rounded-xl/rounded-2xl solo para superficies grandes.",
+      "Do reservar el material de Vidrio Líquido para chrome flotante e interactivo — nunca como decoración de fondo de sección."
+    ],
+    "donts": [
+      "Don't añadir box-shadow a una superficie de la capa base (fondos de sección, badges, botones, inputs).",
+      "Don't aplicar el material de vidrio (blur/saturación/degradado) como decoración genérica fuera de chrome flotante o interactivo.",
+      "Don't introducir una segunda familia tipográfica.",
+      "Don't expandir la chispa de neón a botones, badges o fondos generales.",
+      "Don't presentar el contenido de placeholder de Testimonios como si fuera real."
+    ]
+  }
+}

@@ -1,8 +1,12 @@
-import { useRef, useState } from "react";
+import { useRef, useState, lazy, Suspense } from "react";
 import emailjs from "@emailjs/browser";
 
 import TitleHeader from "../components/TitleHeader";
-import ContactExperience from "../components/models/contact/ContactExperience";
+import useInView from "../hooks/useInView";
+
+// Below the fold and its own three.js scene — code-split so the contact
+// form (the actual above-the-fold content here) isn't waiting on it.
+const ContactExperience = lazy(() => import("../components/models/contact/ContactExperience"));
 
 const Contact = () => {
     const formRef = useRef(null);
@@ -12,6 +16,10 @@ const Contact = () => {
         email: "",
         message: "",
     });
+
+    // Same reasoning as HeroExperience: don't keep a live WebGL context
+    // spinning once this section scrolls out of view.
+    const [sceneRef, sceneVisible] = useInView({ initialInView: false });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -44,7 +52,7 @@ const Contact = () => {
             <div className="w-full h-full md:px-10 px-5">
                 <TitleHeader
                     title="Contáctame"
-                    sub="💬 ¿Tienes preguntas o ideas? ¡Házmelo saber! 🚀"
+                    sub="¿Tienes preguntas o ideas? ¡Házmelo saber!"
                 />
                 <div className="grid-12-cols mt-16">
                     <div className="xl:col-span-5">
@@ -108,8 +116,15 @@ const Contact = () => {
                         </div>
                     </div>
                     <div className="xl:col-span-7 min-h-96">
-                        <div className="bg-black w-full h-full hover:cursor-grab rounded-3xl overflow-hidden">
-                            <ContactExperience />
+                        <div
+                            ref={sceneRef}
+                            className="bg-black w-full h-full hover:cursor-grab rounded-3xl overflow-hidden"
+                        >
+                            {sceneVisible && (
+                                <Suspense fallback={<div className="w-full h-full animate-pulse bg-black-100" />}>
+                                    <ContactExperience />
+                                </Suspense>
+                            )}
                         </div>
                     </div>
                 </div>

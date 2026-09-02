@@ -171,40 +171,71 @@ const techStackIcons = [
 
 const expCards = [
   {
-    review: "Camilo demostró una gran capacidad para entender los desafíos de cada cliente y traducirlos en soluciones funcionales y eficientes. Su versatilidad técnica y su responsabilidad como freelancer lo convierten en un desarrollador confiable y comprometido con los resultados.",
-    imgPath: "/images/8ctal_logo_resized.png",
-    logoPath: "/images/logo_8ball.png",
+    title: "Full Stack Engineer",
+    company: "COPOWER ENERGY SOLUTIONS",
+    employmentType: "Tiempo completo · Presencial",
+    location: "Bucaramanga, Colombia",
+    logoPath: "/images/logos/logo-copower-colombia.png",
+    date: "Mayo 2026 - Agosto 2026 · 4 meses",
+    summary:
+      "Full Stack Engineer para Cathaleia, una plataforma de Industria 4.0 que conecta PLCs industriales con la nube para monitoreo en tiempo real, mantenimiento predictivo y analítica con IA. Diseñé pipelines de datos en tiempo real y dashboards de gestión de activos, y desarrollé apps multiplataforma junto con servicios backend cloud-native, integrando telemetría industrial con Snowflake para insights predictivos.",
+    stack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Kafka",
+      "MQTT",
+      "Java",
+      "Docker",
+      "Expo",
+      "Snowflake",
+    ],
+  },
+  {
+    title: "Information Technology Specialist",
+    company: "COPOWER ENERGY SOLUTIONS",
+    employmentType: "Prácticas",
+    location: "Bucaramanga, Santander, Colombia",
+    logoPath: "/images/logos/logo-copower-colombia.png",
+    date: "Noviembre 2025 - Mayo 2026 · 7 meses",
+    summary:
+      "Arquitecté una app móvil multiplataforma y un dashboard web para un sistema de tickets de TI integrado con Odoo CRM. Gestioné infraestructura de red y seguridad, administré entornos Windows Server y virtualización Linux/Proxmox, y automaticé la gestión de activos con PowerShell mientras brindaba soporte técnico Tier 2/3.",
+    stack: [
+      "Expo",
+      "Appwrite",
+      "Next.js",
+      "Odoo",
+      "Fortinet",
+      "PowerShell",
+      "Windows Server",
+      "Proxmox",
+    ],
+  },
+  {
     title: "Desarrollador freelance",
+    company: "8ctal · Freelance",
+    logoPath: "/images/logo_8ball.png",
     date: "Enero 2025 - Actualidad",
-    responsibilities: [
-      "Colaboré con distintos clientes en el desarrollo de aplicaciones web y móviles personalizadas, adaptadas a sus necesidades específicas.",
-      "Participé en todas las etapas del ciclo de desarrollo: planificación, diseño, desarrollo, testing y despliegue.",
-      "Mantuve una comunicación constante con los clientes para asegurar que el producto cumpliera con sus expectativas y requerimientos técnicos.",
-    ],
+    summary:
+      "Colaboré con distintos clientes en el desarrollo de aplicaciones web y móviles personalizadas, participando en todas las etapas del ciclo de desarrollo —planificación, diseño, desarrollo, testing y despliegue— con comunicación constante para asegurar que el producto cumpliera sus expectativas.",
   },
   {
-    review: "Camilo combinó su experiencia en administración y desarrollo para transformar completamente la gestión del negocio. Su iniciativa al crear una app personalizada permitió mejorar el control financiero y optimizar procesos diarios.",
-    imgPath: "/images/exp_cabecera_resized.png",
-    logoPath: "/images/logo_cabecera.png",
     title: "Administrador",
+    company: "Cabecera",
+    logoPath: "/images/logo_cabecera.png",
     date: "Junio 2024 - Diciembre 2024",
-    responsibilities: [
-      "Administré las operaciones diarias de un negocio local, gestionando inventario, flujo de caja y relaciones con proveedores.",
-      "Diseñé y desarrollé una aplicación móvil con Expo (React Native) y un backend con Express.js para gestionar pedidos y deudas de clientes.",
-      "Automaticé de tareas operativas clave para reducir errores manuales y mejorar la eficiencia del negocio."
-    ],
+    summary:
+      "Administré las operaciones diarias de un negocio local (inventario, flujo de caja, proveedores) y diseñé una aplicación móvil con Expo y un backend con Express.js para gestionar pedidos y deudas de clientes, automatizando tareas operativas clave.",
+    stack: ["Expo", "React Native", "Express.js"],
   },
   {
-    review: "Camilo desempeñó un rol fundamental al liderar la estrategia de marketing digital y el desarrollo tecnológico del proyecto. Su enfoque integral —desde la producción de contenido hasta la creación de un sitio e-commerce funcional.",
-    imgPath: "/images/exp_probell-resized.png",
-    logoPath: "/images/logo_probell.png",
     title: "Director de marketing",
+    company: "Probell",
+    logoPath: "/images/logo_probell.png",
     date: "Enero 2022 - Mayo 2022",
-    responsibilities: [
-      "Diseño y producción de anuncios y contenido promocional; gestión de redes sociales.",
-      "Desarrollo de sitio web de e-commerce para compra, gestión y entrega de productos (React, Node.js, MongoDB).",
-      "Gestión de inventario e integración de pasarela de pago.",
-    ],
+    summary:
+      "Lideré la producción de anuncios y contenido promocional y la gestión de redes sociales, y desarrollé un sitio de e-commerce con gestión de inventario e integración de pasarela de pago.",
+    stack: ["React", "Node.js", "MongoDB"],
   },
 ];
 
@@ -299,7 +330,7 @@ const projects = [
     title: "ParchUIS",
     subtitle: "ParchUIS - Comunidad educativa en un mundo digital 3D",
     description: "Una aplicación construida con Flutter, Firebase, MapBox SDK y otras herramientas de desarrollo escalables (En desarrollo).",
-    imagePath: "/images/parchUIS_banner.png",
+    imagePath: "/images/parchuis.jpg",
     technologies: ["Flutter", "Firebase", "MapBox SDK"],
     link: "https://parchuis.com/",
     featured: true,
