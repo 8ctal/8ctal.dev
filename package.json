@@ -21,6 +21,7 @@
     "framer-motion": "^13.1.1",
     "gsap": "^3.13.0",
     "lucide-react": "^1.38.0",
+    "opentype.js": "^2.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-responsive": "^10.0.1",

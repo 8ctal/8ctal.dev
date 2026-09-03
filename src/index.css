@@ -19,6 +19,22 @@ section {
   width: 100dvw;
 }
 
+/* Custom cursor (see src/components/CustomCursor.jsx). Only ever added on
+   fine-pointer/hover-capable devices with motion allowed, so this never
+   touches touch devices or the reduce-motion path. */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none !important;
+}
+
+/* Boot loader (see src/components/BootLoader.jsx): freezes scroll while
+   the entrance sequence owns the screen. The component itself removes
+   this class on every exit path, including its hard-kill failsafe, so it
+   can never get stuck on — see that file's `exit()`. */
+html.is-booting {
+  overflow: hidden;
+}
+
 /* Reduce-motion toggle (see src/context/MotionPreference.jsx). Collapses
    CSS transitions/keyframe animations sitewide; GSAP tweens are handled
    separately via gsap.globalTimeline.timeScale(), since GSAP drives
@@ -91,6 +107,22 @@ section {
     box-shadow:
       inset 0 1px 0 0 rgba(217, 236, 255, 0.18),
       0 24px 64px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Subtle Liquid Glass refraction — a procedural feTurbulence +
+     feDisplacementMap filter (defined once in NavBar.jsx), layered on top
+     of the standard glass blur/saturate for the desktop nav pill only, per
+     the brief ("sutilmente incorporar el liquid_glass") — not merged into
+     .glass-panel sitewide. Progressive enhancement: the unprefixed
+     property carries the filter() reference; the -webkit- one repeats
+     just blur+saturate as a plain fallback, since an unsupported function
+     inside a filter-value-list drops the *whole* declaration rather than
+     just that function — without the fallback, an engine that doesn't
+     support url() references here would lose the blur entirely instead of
+     degrading to the same baseline as the rest of the site's glass. */
+  .glass-liquid {
+    backdrop-filter: url(#nav-liquid-glass) blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
   }
 
   /* Mobile navigation overlay */
@@ -194,21 +226,41 @@ section {
     }
 
     .inner {
-      @apply mx-auto flex items-center justify-between;
+      @apply relative mx-auto flex items-center justify-between;
     }
 
     .logo {
       @apply text-white-50 text-xl md:text-2xl font-semibold transition-transform duration-300 hover:scale-105;
     }
 
-    nav.desktop {
-      @apply hidden lg:flex items-center;
+    /* Centers the desktop nav pill on .inner itself, independent of the
+       logo and action-button group flanking it (see NavBar.jsx) — those
+       two are never the same width, so leaving the pill as a plain third
+       flex child of a `justify-between` row visibly pulled it off-center
+       toward whichever side was narrower. Absolute + transform keeps it
+       centered regardless of that width difference, and regardless of the
+       pill's own expanded/collapsed width. */
+    .nav-pill-center {
+      @apply hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
+    }
+
+    /* Desktop nav links, rebuilt as a framer-motion pill (see NavBar.jsx's
+       DesktopNavPill) that collapses to a logo-only circle on scroll-down
+       and re-expands on scroll-up. The glass-panel + glass-liquid classes
+       are applied directly in JSX, same reasoning as .contact-btn below:
+       Tailwind v4's @apply can't itself reference another custom class. */
+    .nav-pill {
+      @apply items-center h-12 rounded-full overflow-hidden relative;
 
       ul {
-        @apply flex space-x-8;
+        @apply flex items-center gap-1 px-2 relative z-10;
 
         li {
           @apply text-white-50 relative;
+
+          a {
+            @apply block px-3 py-2 text-sm whitespace-nowrap;
+          }
 
           span {
             @apply transition-colors duration-300 hover:text-white;
@@ -219,32 +271,31 @@ section {
           }
         }
       }
+
+      .nav-pill-mark {
+        @apply absolute inset-0 flex justify-center items-center pointer-events-none;
+      }
     }
 
+    /* A secondary nav action, styled with the same Liquid Glass material as
+       every other button on the site now (see .cta-button below and
+       DESIGN.md § Components › Buttons) — .glass-panel is applied directly
+       in JSX, since Tailwind v4's @apply can't itself reference another
+       custom class. */
     .contact-btn {
       @apply flex;
 
       .inner {
-        @apply px-5 py-2 rounded-lg bg-white text-black group-hover:bg-black-50 transition-colors duration-300;
-
-        span {
-          @apply group-hover:text-white transition-colors duration-300;
-        }
+        @apply px-5 py-2 rounded-lg text-white-50 transition-colors duration-300 hover:text-white;
       }
     }
   }
 
+  /* Floating CV button (FloatingCVButton.jsx): a round glass icon button,
+     same shape/material as the nav toggles. */
   .cv-btn {
-    @apply flex;
-  
-    .inner {
-      @apply px-5 py-2 rounded-lg bg-gray-200 text-black group-hover:bg-black-50 transition-colors duration-300;
-  
-      span {
-        @apply group-hover:text-white transition-colors duration-300;
-      }
-    }
-  }  
+    @apply flex justify-center items-center size-14 rounded-full text-white-50 transition-transform duration-300 hover:scale-105;
+  }
 
   .cv-animated-div {
     will-change: transform, opacity;
@@ -376,22 +427,24 @@ section {
     @apply relative z-20 cursor-pointer;
   }
 
+  /* The one button treatment used everywhere — "Mira mi trabajo" (Hero,
+     via Button.jsx) and "Enviar mensaje" (Contact.jsx's submit) both
+     render this exact markup/class set. .glass-panel is applied directly
+     in JSX alongside this for the material itself (see DESIGN.md §
+     Components › Buttons — Apple Liquid Glass, minimalist, no
+     bespoke per-button treatment). */
   .cta-button {
-    @apply px-4 py-4 rounded-lg bg-black-200 flex justify-center items-center relative cursor-pointer overflow-hidden;
-
-    .bg-circle {
-      @apply absolute -right-10 origin-center top-1/2 -translate-y-1/2 w-[120%] h-[120%] group-hover:size-10 group-hover:right-10 rounded-full bg-white-50 transition-all duration-500;
-    }
+    @apply relative flex items-center justify-center gap-3 px-6 py-4 rounded-lg cursor-pointer overflow-hidden transition-colors duration-300;
 
     .text {
-      @apply uppercase md:text-lg text-black transition-all duration-500 group-hover:text-white-50 group-hover:-translate-x-5 xl:translate-x-0 -translate-x-5;
+      @apply uppercase md:text-lg text-white-50 transition-colors duration-300 group-hover:text-white;
     }
 
     .arrow-wrapper {
-      @apply group-hover:bg-white-50 size-10 rounded-full absolute right-10 top-1/2 -translate-y-1/2 flex justify-center items-center overflow-hidden;
+      @apply size-8 rounded-full shrink-0 flex justify-center items-center transition-transform duration-300 group-hover:translate-x-1;
 
       img {
-        @apply size-5 xl:-translate-y-32 translate-y-0 group-hover:translate-y-0 transition-all duration-500 ease-out;
+        @apply size-4;
       }
     }
   }
@@ -403,7 +456,7 @@ section {
   }
 
   .timeline-wrapper {
-    @apply absolute top-0 md:left-10 left-5 h-full flex justify-center;
+    @apply absolute top-0 md:left-10 left-5 h-full w-[2px];
   }
 
   .timeline-logo {
@@ -415,11 +468,38 @@ section {
   }
 
   .exp-card-wrapper {
-    @apply relative;
+    @apply relative md:flex md:items-start md:gap-10;
   }
 
   .exp-card {
     @apply rounded-2xl md:p-10 p-6;
+  }
+
+  /* "Ver skills" toggle (SkillsToggle.jsx) — shared by Certifications and
+     the Experience timeline. The panel's height animates via a
+     grid-template-rows 0fr→1fr trick (the standard way to transition to/
+     from an intrinsic "auto" height in CSS) rather than max-height, so it
+     never clips a longer chip list short or leaves dead space on a
+     shorter one. */
+  .skills-toggle {
+    @apply inline-flex items-center gap-2 text-blue-50 text-sm font-medium transition-colors duration-300 hover:text-white-50;
+  }
+
+  .skills-toggle-chevron {
+    @apply transition-transform duration-300;
+  }
+
+  .skills-toggle-panel {
+    @apply grid transition-[grid-template-rows] duration-300 ease-out;
+    grid-template-rows: 0fr;
+
+    > div {
+      @apply overflow-hidden;
+    }
+
+    &.open {
+      grid-template-rows: 1fr;
+    }
   }
 
   .gradient-edge {
@@ -455,14 +535,6 @@ section {
     textarea {
       @apply w-full px-4 py-4 md:text-base text-sm placeholder:text-blue-50 bg-blue-100 rounded-md;
     }
-
-    a {
-      @apply w-full py-4 bg-white text-black font-semibold rounded-md flex justify-center items-center gap-2;
-
-      img {
-        @apply inline-block;
-      }
-    }
   }
 
   .footer {
@@ -480,7 +552,7 @@ section {
       @apply flex items-center justify-center gap-5;
 
       .icon {
-        @apply border border-black-50 bg-black-100 flex justify-center items-center rounded-xl size-10 md:size-12 cursor-pointer transition-all duration-500 hover:bg-black-50;
+        @apply flex justify-center items-center rounded-full size-10 md:size-12 cursor-pointer transition-transform duration-300 hover:scale-105;
       }
 
       img {
@@ -547,6 +619,18 @@ section {
       #52aeff 37.51%,
       #fd5c79 62.83%,
       #6d45ce 92.91%);
+}
+
+/* Dim static track sitting behind .gradient-line's animated fill (see
+   Experience.jsx) — ported from ref_components/timeline/timeline.tsx's
+   two-layer line, recolored to this site's own glass border token instead
+   of its neutral-200/700, with the same top/bottom fade mask so the line
+   doesn't cut off hard at either end. */
+.gradient-track {
+  width: 2px;
+  background: var(--color-glass-border);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
 .gradient-edge:nth-of-type(1) {
@@ -617,6 +701,14 @@ section {
    across the panel. --start is set from JS (GlowCard) as the pointer
    angle. */
 .card::before {
+  /* Purely decorative — the conic-gradient border glow. CSS `mask` only
+     clips what's *painted*, not the element's hit-test box, so without
+     this the full 100%×100% pseudo-element (invisible everywhere except
+     that thin masked edge) was silently swallowing clicks meant for real
+     content underneath — that's why GlowCard's own "Verificar
+     certificación" link already needed a defensive z-20 + stopPropagation
+     to work at all. This is the actual fix: let every click pass through. */
+  pointer-events: none;
   position: absolute;
   content: "";
   width: 100%;

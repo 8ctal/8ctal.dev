@@ -8,6 +8,12 @@
         "value": "mona sans",
         "createdAt": "2026-09-01T20:43:15.798Z",
         "reason": "Pre-existing project typeface, not introduced this session; documented in DESIGN.md Typography as an intentional Named Rule (La Regla de un Solo Rostro)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "2.5rem",
+        "createdAt": "2026-09-02T14:11:35.039Z",
+        "reason": "One-off display size for the full-screen boot counter (a single 2-digit number dominating an otherwise-empty screen) — a distinct composition from Hero's multi-line headline, not meant to become a reusable type-scale step"
       }
     ]
   }

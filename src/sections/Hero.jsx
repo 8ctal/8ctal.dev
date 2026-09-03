@@ -3,6 +3,7 @@ import gsap from "gsap";
 
 import AnimatedCounter from "../components/AnimatedCounter";
 import Button from "../components/Button";
+import HandwritingText from "../components/HandwritingText";
 import { words } from "../constants";
 import HeroExperience from "../components/models/hero_models/HeroExperience";
 
@@ -50,11 +51,19 @@ const Hero = () => {
                             <h1>que dan resultados</h1>
                         </div>
 
-                        <p className="text-white-50 md:text-xl relative z-10 pointer-events-none">
-                            ¡Hola! Soy Camilo, un ingeniero de software Colombiano
-                            <p className="text-white-50 md:text-xl relative z-10 pointer-events-none">apasionado por
-                                la creación de experiencias digitales.</p>
-                        </p>
+                        {/* The handwriting accent lives on the greeting, not
+                            the headline — a short phrase keeps the SVG run
+                            legible at this width; the full sentence would
+                            have to shrink too far to still read as cursive. */}
+                        <div className="w-full max-w-full space-y-1 overflow-hidden sm:space-y-0">
+                            <p className="w-full max-w-full text-xs leading-relaxed text-white-50 sm:text-sm md:text-xl relative z-10 pointer-events-none">
+                                <HandwritingText text="¡Hola! Soy Camilo un ingeniero de software Colombiano" height="clamp(1.75em, 7vw, 2.5em)" />
+                            </p>
+                            <p className="w-full max-w-full text-xs leading-relaxed text-white-50 sm:text-sm md:text-xl relative z-10 pointer-events-none">
+                                <HandwritingText text="Apasionado por la creación de experiencias digitales" height="clamp(1.75em, 7vw, 2.5em)" />
+                            </p>
+                        </div>
+
 
                         <Button
                             text="Mira mi trabajo"

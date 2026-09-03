@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { certifications } from "../constants";
 import TitleHeader from "../components/TitleHeader";
 import GlowCard from "../components/GlowCard";
+import SkillsToggle from "../components/SkillsToggle";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -83,21 +84,9 @@ const Certifications = () => {
                                             </div>
                                         </div>
 
-                                        {/* Skills */}
+                                        {/* Skills — hidden by default, see SkillsToggle */}
                                         <div className="mb-6">
-                                            <p className="text-blue-50 text-sm font-medium mb-3">
-                                                Habilidades certificadas:
-                                            </p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {cert.skills.map((skill, skillIndex) => (
-                                                    <span
-                                                        key={skillIndex}
-                                                        className="bg-black-200 text-white-50 text-xs px-3 py-1 rounded-full border border-blue-50/20"
-                                                    >
-                                                        {skill}
-                                                    </span>
-                                                ))}
-                                            </div>
+                                            <SkillsToggle skills={cert.skills} label="habilidades certificadas" />
                                         </div>
 
                                         {/* Verify button */}
@@ -106,7 +95,7 @@ const Certifications = () => {
                                                 href={cert.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-white-50 transition-colors duration-300 group pointer-events-auto relative z-20"
+                                                className="glass-panel inline-flex items-center gap-2 text-white-50 px-4 py-2 rounded-lg text-sm font-medium hover:text-white transition-colors duration-300 group pointer-events-auto relative z-20"
                                                 onClick={(e) => e.stopPropagation()}
                                             >
                                                 Verificar certificación

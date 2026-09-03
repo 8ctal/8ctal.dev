@@ -101,14 +101,13 @@ const Contact = () => {
                                     />
                                 </div>
 
-                                <button type="submit">
-                                    <div className="cta-button group">
-                                        <div className="bg-circle" />
+                                <button type="submit" className="cta-wrapper">
+                                    <div className="cta-button glass-panel group">
                                         <p className="text">
                                             {loading ? "Enviando..." : "Enviar mensaje"}
                                         </p>
                                         <div className="arrow-wrapper">
-                                            <img src="/images/arrow-down.svg" alt="arrow" />
+                                            <img src="/images/arrow-right.svg" alt="" />
                                         </div>
                                     </div>
                                 </button>

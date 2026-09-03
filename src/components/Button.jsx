@@ -33,11 +33,10 @@ const Button = ({ text, className, id, href }) => {
             onClick={handleClick}
             className={`${className ?? ""} cta-wrapper`}
         >
-            <div className="cta-button group">
-                <div className="bg-circle" />
+            <div className="cta-button glass-panel group">
                 <p className="text">{text}</p>
                 <div className="arrow-wrapper">
-                    <img src="/images/arrow-down.svg" alt="arrow" />
+                    <img src="/images/arrow-right.svg" alt="" />
                 </div>
             </div>
         </a>

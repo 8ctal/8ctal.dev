@@ -57,14 +57,15 @@ spacing:
   section-y-mobile: "5rem"
   section-y-desktop: "10rem"
 components:
-  button-primary:
-    backgroundColor: "{colors.signal-white}"
-    textColor: "#000000"
-    rounded: "{rounded.lg}"
-    padding: "16px 16px"
-  button-primary-hover:
-    backgroundColor: "{colors.slate}"
+  button:
+    background: "linear-gradient({colors.glass-200} → {colors.glass-100})"
     textColor: "{colors.signal-white}"
+    rounded: "{rounded.lg}"
+    padding: "16px 24px"
+    border: "1px solid {colors.glass-border}"
+    boxShadow: "inset 0 1px 0 0 rgba(217,236,255,0.22), 0 8px 32px rgba(0,0,0,0.45)"
+  button-hover:
+    textColor: "#ffffff"
   badge:
     backgroundColor: "{colors.slate}"
     textColor: "{colors.signal-white}"
@@ -87,14 +88,15 @@ components:
 
 Un desarrollador que trabaja de noche en un escritorio cyberpunk — y sobre esa mesa de trabajo, en lugar de un adorno cualquiera, hay una bola de billar 8 girando en 3D. La interfaz es ese escritorio: superficies casi negras, apiladas unas sobre otras, con la tipografía blanco-azulada haciendo todo el trabajo de jerarquía. No hay una paleta de colores en el sentido tradicional — hay oscuridad técnica, disciplinada, y una única chispa de neón (cian → azul → coral → violeta) que aparece una sola vez, como el reflejo de luces de una ciudad nocturna en una ventana. Todo lo demás se mantiene monocromático a propósito, para que esa chispa nunca deje de sentirse rara y especial.
 
-Los componentes no son estáticos: responden al cursor. Una tarjeta revela un halo que persigue el mouse; un botón esconde su fondo oscuro detrás de un círculo blanco que se retrae al pasar el cursor. Es una interfaz "viva y con textura" — el gesto del usuario siempre obtiene una respuesta física, nunca solo un cambio de color plano.
+Los componentes no son estáticos: responden al cursor. Una tarjeta revela un halo que persigue el mouse; un botón es un panel de vidrio que aclara su borde y su texto al pasar el cursor. Es una interfaz "viva y con textura" — el gesto del usuario siempre obtiene una respuesta física, nunca solo un cambio de color plano.
 
-Sobre ese mismo lienzo oscuro, el sitio ha empezado a adoptar un segundo material para su capa de chrome flotante e interactiva: "Vidrio Líquido" (Liquid Glass), al estilo Apple pero en su variante oscura — paneles translúcidos, desenfocados, con borde luminoso y sombra real, como el Centro de Control de iOS en modo oscuro. No reemplaza el mundo del Netrunner: el fondo sigue siendo Ink/Void, la bola 8 sigue girando en el Hero, y la chispa de neón sigue siendo única. El vidrio es un material nuevo para las superficies que flotan *sobre* ese escritorio (menú móvil, tarjetas, marcadores de timeline) — no un tema nuevo.
+Sobre ese mismo lienzo oscuro, el sitio adopta un segundo material para toda su capa de chrome flotante e interactiva: "Vidrio Líquido" (Liquid Glass), al estilo Apple pero en su variante oscura y minimalista — paneles translúcidos, desenfocados, con borde luminoso y sombra real, como el Centro de Control de iOS en modo oscuro. No reemplaza el mundo del Netrunner: el fondo sigue siendo Ink/Void, la bola 8 sigue girando en el Hero, y la chispa de neón sigue siendo única. El vidrio es el material de *todo* lo que flota e interactúa sobre ese escritorio — navegación, tarjetas, marcadores de timeline, y **todos los botones** (no solo un botón "secundario"; ya no hay una excepción sólida de por medio) — no un tema nuevo, un único lenguaje de superficie consistente.
 
 **Key Characteristics:**
 - Monocromo disciplinado (negros apilados + blanco-azulado frío) con una sola chispa de neón, nunca expandida.
 - Una sola familia tipográfica (Mona Sans) que carga toda la jerarquía por peso y tamaño, no por combinación de fuentes.
-- Profundidad por capas de superficie y borde en la base del sitio; el chrome flotante e interactivo (nav móvil, tarjetas) usa vidrio translúcido con sombra real en su lugar.
+- Profundidad por capas de superficie y borde en la base del sitio; todo el chrome flotante e interactivo (nav, tarjetas, botones) usa vidrio translúcido con sombra real en su lugar.
+- Vidrio Líquido minimalista: un solo material de botón, sin coreografías de reveal por componente — el propio vidrio (blur, borde, realce) es la respuesta de interacción, con solo un ajuste sutil de color/posición encima (texto a blanco puro, la flecha del CTA se desliza un poco).
 - Toda interacción tiene una respuesta táctil: revelado, movimiento o glow — nunca un simple cambio de color.
 
 ## Colors
@@ -124,7 +126,7 @@ La paleta es casi monocromática por diseño: negros profundos como lienzo, un b
 ### Named Rules
 **La Regla de la Chispa Única.** El degradado neón (cian/azul/coral/violeta) vive solo en la línea del timeline. No se replica en botones, badges ni fondos — su rareza es lo que lo hace notar.
 
-**La Regla del Vidrio Reservado.** Los tokens `glass-*` solo se usan en componentes de chrome flotante e interactivo (nav móvil, tarjetas, marcadores de timeline) — nunca como fondo de sección ni decoración plana. Ver Elevation & Depth y Do's/Don'ts.
+**La Regla del Vidrio Reservado.** Los tokens `glass-*` solo se usan en componentes de chrome flotante e interactivo (navegación, tarjetas, marcadores de timeline, botones) — nunca como fondo de sección ni decoración plana. Ver Elevation & Depth y Do's/Don'ts.
 
 ## Typography
 
@@ -155,7 +157,7 @@ El sistema tiene ahora dos capas de profundidad con reglas distintas, no una:
 
 **Capa base (sin cambios):** las superficies estructurales del sitio siguen siendo planas — sin `box-shadow`. La profundidad se transmite apilando superficies cada vez más claras sobre el fondo negro (Ink → Void → Graphite/Slate) y delimitándolas con bordes finos de 1px en Graphite. Esta sigue siendo la base por defecto para cualquier superficie que no sea chrome flotante o interactivo.
 
-**Capa de Vidrio Líquido (nueva):** el chrome flotante e interactivo — el overlay de nav móvil, el toggle de menú, `GlowCard` (y por herencia sus tarjetas de Certificaciones/Testimonios), y los paneles de la nueva Experiencia (marcador de timeline, `.exp-card`) — usa un material translúcido y desenfocado (`backdrop-filter: blur(24px) saturate(150%)`) con borde `glass-border`, un degradado de fondo `glass-200 → glass-100`, y **sí** lleva un `box-shadow` real: un realce interior superior (`inset 0 1px 0 0 rgba(217,236,255,0.18/0.22)`, que lee como el filo del vidrio atrapando luz) más una sombra exterior de offset+blur (`0 8px 32px rgba(0,0,0,0.45)`, o `0 24px 64px rgba(0,0,0,0.6)` en la variante "strong" del overlay de pantalla completa). Esta es la única capa del sistema donde una sombra real está sancionada.
+**Capa de Vidrio Líquido:** el chrome flotante e interactivo — la navegación completa (píldora de escritorio y overlay móvil), el toggle de menú, `GlowCard` (y por herencia sus tarjetas de Certificaciones/Testimonios), los paneles de Experiencia (marcador de timeline, `.exp-card`), y **todos los botones** (`.cta-button` — "Mira mi trabajo", "Enviar mensaje" — y "Contáctame") — usa un material translúcido y desenfocado (`backdrop-filter: blur(24px) saturate(150%)`) con borde `glass-border`, un degradado de fondo `glass-200 → glass-100`, y **sí** lleva un `box-shadow` real: un realce interior superior (`inset 0 1px 0 0 rgba(217,236,255,0.18/0.22)`, que lee como el filo del vidrio atrapando luz) más una sombra exterior de offset+blur (`0 8px 32px rgba(0,0,0,0.45)`, o `0 24px 64px rgba(0,0,0,0.6)` en la variante "strong" del overlay de pantalla completa). Esta es la única capa del sistema donde una sombra real está sancionada. La píldora de navegación de escritorio suma además un filtro de refracción sutil (`feTurbulence` + `feDisplacementMap` vía SVG, ver `.glass-liquid` en `index.css`) sobre esa misma base — un acento, no un material aparte.
 
 El halo cónico que sigue al mouse en las tarjetas (`--start`, `conic-gradient` enmascarado) se mantiene como firma de interacción, y ahora se lee explícitamente como "el canto del vidrio atrapando la luz" en vez de un glow abstracto sobre una superficie opaca — el mismo mecanismo, reinterpretado por el nuevo material.
 
@@ -170,9 +172,9 @@ Dos familias de esquina, sin mezclarlas: **`rounded-full`** para píldoras y ele
 
 ### Buttons
 - **Shape:** `rounded-lg` (8px).
-- **Primary (CTA "Mira mi trabajo"):** en reposo, un círculo Signal White cubre ~120% del botón — el usuario ve un botón blanco sólido con texto negro en mayúsculas y una flecha. Fondo real: Slate (`#282732`).
-- **Hover / Focus:** el círculo blanco se retrae a un ícono circular de 40px en el borde derecho (`group-hover:size-10 group-hover:right-10`), revelando el fondo Slate; el texto pasa de negro a Signal White y se desliza hacia la izquierda; la flecha, que en desktop empieza oculta arriba del botón, cae con un rebote (`animate-bounce`) hasta su posición final. Es el componente más "vivo" del sistema — el revelado, no el color, es lo que comunica interactividad.
-- **Secondary (Contáctame / CV):** más simple — fondo Signal White (o gris claro para CV) con texto negro; en hover, el fondo pasa a Graphite y el texto a Signal White. Sin la animación de círculo. No es de vidrio — es chrome de acción confirmatoria, no un panel flotante.
+- **Material:** Apple Liquid Glass, minimalista, y **el mismo en todos lados** — `.cta-button` (Hero's "Mira mi trabajo", Contact's "Enviar mensaje") y "Contáctame" en la navbar comparten el material `.glass-panel` exacto: degradado `glass-200 → glass-100`, `backdrop-blur-2xl backdrop-saturate-150`, borde 1px `glass-border`, y el `box-shadow` de realce interior + sombra exterior descrito en Elevation & Depth. No existe ya un botón "primario" sólido y uno "secundario" de vidrio — es un único lenguaje de botón, sin excepciones.
+- **Hover / Focus:** deliberadamente mínimo — el texto pasa de Signal White a Pure White, y en `.cta-button` la flecha se desliza unos píxeles a la derecha (`group-hover:translate-x-1`). Sin círculo revelador, sin cambio de color de fondo sólido: el vidrio en sí (su blur, su borde, su realce) es la declaración visual; la interacción solo la acentúa, no la reemplaza.
+- **CV flotante:** mismo material y misma lógica — `.cv-btn` es un ícono circular de vidrio (ver `FloatingCVButton.jsx`), consistente con el resto.
 
 ### Badges / Chips
 - **Style:** fondo Slate, texto Signal White, `rounded-full`, padding `px-3 py-1` (badges de proyecto) o `px-2 py-1` (badges de tecnología, más pequeños/`text-xs`), borde de 1px en Graphite.
@@ -190,8 +192,8 @@ Dos familias de esquina, sin mezclarlas: **`rounded-full`** para píldoras y ele
 - **Submit:** botón ancho completo, fondo Signal White, texto negro semibold — el único botón del sitio que no usa el patrón de círculo revelador (es una acción de confirmación, no de descubrimiento).
 
 ### Navigation
-- **Desktop:** barra fija (`fixed`), transparente hasta hacer scroll (`bg-transparent` → `bg-black` tras 10px de scroll), logo = ícono de bola 8 + wordmark "8ctal" en Signal White. Enlaces con texto Signal White en reposo, blanco puro al hover, con un subrayado (`.underline`) que crece de 0 a 100% de ancho — el mismo lenguaje de "revelado" que el botón CTA, aplicado a texto. Sin cambios respecto al sistema anterior.
-- **Mobile — overlay de vidrio de pantalla completa (nuevo):** por debajo de `lg:`, un botón hamburguesa (`.nav-toggle`, en sí mismo un pequeño panel `glass-panel` circular) reemplaza los enlaces de escritorio. Al tocarlo, se abre un panel `.mobile-nav-overlay.glass-panel-strong` de viewport completo (`fixed inset-0`) — inspirado en el patrón de overlay móvil de camosdigital.com — con los enlaces apilados en `text-3xl font-semibold`, centrados vertical y horizontalmente. La entrada se anima con GSAP: el overlay hace fade-in (0.45s), seguido de un stagger de los enlaces que suben desde `y: 24px, opacity: 0` (0.5s, stagger 0.06s, `expo.out`). Al cerrar (tap en un enlace, tap en el botón, o Escape), el overlay hace fade-out (0.3s) sin el stagger inverso. Mientras está abierto: scroll del body bloqueado y foco movido al primer enlace. Usa `glass-panel-strong` (no `glass-panel`) porque, al ser la única superficie visible en pantalla, necesita leerse como un fondo propio y opaco-al-desenfoque, no como una tarjeta flotando sobre otro contenido visible.
+- **Desktop — píldora de vidrio que colapsa:** barra fija (`fixed`), logo = ícono de bola 8 + wordmark "8ctal" en Signal White, a la izquierda, fuera de la píldora. Los enlaces viven en una píldora `.glass-panel` (más `.glass-liquid`, su filtro de refracción sutil) que se colapsa a un círculo de 3rem con un ícono `Menu` (lucide-react) genérico al bajar más de 150px, y se re-expande al subir — nunca repite el logo dentro del círculo colapsado, para no leerse redundante con el wordmark fijo a su izquierda. Enlaces con texto Signal White en reposo, blanco puro al hover, con un subrayado (`.underline`) que crece de 0 a 100% de ancho — el mismo lenguaje de "revelado" que el resto del sistema, aplicado a texto.
+- **Mobile — marca fija + overlay de vidrio de pantalla completa:** un pequeño panel `glass-panel` circular con el ícono de bola 8 vive fijo en la esquina superior izquierda (inspirado en la esquina de marca de camosdigital.com), independiente del estado del menú. Por debajo de `lg:`, un botón hamburguesa (`.nav-toggle`, el mismo tipo de panel circular) en la esquina opuesta reemplaza los enlaces de escritorio. Al tocarlo, se abre un panel `.mobile-nav-overlay.glass-panel-strong` de viewport completo (`fixed inset-0`) — mismo patrón de overlay móvil de camosdigital.com — con los enlaces apilados en `text-3xl font-semibold`, centrados vertical y horizontalmente. La entrada se anima con GSAP: el overlay hace fade-in (0.45s), seguido de un stagger de los enlaces que suben desde `y: 24px, opacity: 0` (0.5s, stagger 0.06s, `expo.out`). Al cerrar (tap en un enlace, tap en el botón, o Escape), el overlay hace fade-out (0.3s) sin el stagger inverso. Mientras está abierto: scroll del body bloqueado y foco movido al primer enlace. Usa `glass-panel-strong` (no `glass-panel`) porque, al ser la única superficie visible en pantalla, necesita leerse como un fondo propio y opaco-al-desenfoque, no como una tarjeta flotando sobre otro contenido visible.
 
 ## Do's and Don'ts
 
@@ -200,14 +202,15 @@ Dos familias de esquina, sin mezclarlas: **`rounded-full`** para píldoras y ele
 - **Do** dar a todo elemento interactivo (botón, link, tarjeta) una respuesta de revelado o movimiento al hover — nunca solo un cambio de color plano.
 - **Do** mantener la chispa de neón (cian/azul/coral/violeta) confinada a la línea del timeline (La Regla de la Chispa Única).
 - **Do** usar `rounded-full` solo para píldoras/círculos y `rounded-xl`/`rounded-2xl` solo para superficies grandes — no intercambiarlos.
-- **Do** reservar el material de Vidrio Líquido (`glass-*`, blur, borde, sombra offset+blur) para chrome flotante e interactivo — nav móvil, tarjetas, marcadores de timeline — nunca como decoración de fondo de sección.
+- **Do** reservar el material de Vidrio Líquido (`glass-*`, blur, borde, sombra offset+blur) para chrome flotante e interactivo — navegación, tarjetas, marcadores de timeline, botones — nunca como decoración de fondo de sección.
+- **Do** usar el mismo `.glass-panel`/`.cta-button` para cualquier botón nuevo — no introducir un segundo estilo de botón "porque este es más importante"; la jerarquía se expresa con tamaño/posición, no con un material distinto.
 
 ### Don't:
-- **Don't** añadir `box-shadow` a una superficie de la capa base (fondos de sección, badges, botones, inputs) — esa capa sigue resolviendo profundidad con superficie + borde de 1px, sin excepción.
+- **Don't** añadir `box-shadow` a una superficie de la capa base (fondos de sección, badges, inputs) — esa capa sigue resolviendo profundidad con superficie + borde de 1px, sin excepción. (Los botones ya no son parte de esta capa — ver Elevation & Depth.)
 - **Don't** aplicar el material de vidrio (blur/saturación/degradado glass) como decoración genérica en una superficie que no sea chrome flotante o interactivo — el vidrio se gana su lugar por función (paneles que flotan sobre contenido), no por moda visual.
 - **Don't** introducir una segunda familia tipográfica; Mona Sans cubre toda la jerarquía por peso/tamaño.
 - **Don't** expandir la chispa de neón a botones, badges o fondos generales — debe seguir sintiéndose rara.
 - **Don't** presentar el contenido de placeholder de la sección Testimonios (nombres/reseñas falsas heredadas del template) como si fuera real — ver `PRODUCT.md` § Evidence on Hand.
 
 ### Estado de adopción (nota de alcance)
-El Vidrio Líquido es ahora el material de referencia para todo chrome flotante nuevo, pero solo se ha implementado en NavBar (móvil) y Experience esta ronda. Hero, ShowcaseSection, FeatureCards, TechStack, Contact y Footer siguen con el tratamiento plano/bordeado anterior, salvo donde ya reutilizan `GlowCard` (Certificaciones y el Testimonios oculto, que heredan el vidrio automáticamente porque comparten el componente). Esto es trabajo incremental esperado, no una inconsistencia a corregir — ver PRODUCT.md.
+El Vidrio Líquido cubre ya: NavBar completa (píldora de escritorio y overlay móvil), Experience, Certificaciones (vía `GlowCard`), el Testimonios oculto (mismo componente), y todos los botones interactivos (CTA principal, Contáctame, envío de formulario, CV flotante). ShowcaseSection, FeatureCards, TechStack y Footer siguen con el tratamiento plano/bordeado anterior fuera de sus botones. Esto es trabajo incremental esperado, no una inconsistencia a corregir — ver PRODUCT.md.

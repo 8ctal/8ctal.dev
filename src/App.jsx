@@ -1,5 +1,7 @@
+import BootLoader from "./components/BootLoader";
 import Certifications from "./sections/Certifications";
 import Contact from "./sections/Contact";
+import CustomCursor from "./components/CustomCursor";
 import Experience from "./sections/Experience";
 import FeatureCards from "./sections/FeatureCards";
 import FloatingCVButton from "./components/FloatingCVButton";
@@ -13,6 +15,8 @@ import Testimonials from "./sections/Testimonials";
 
 const App = () => (
   <>
+    <BootLoader />
+    <CustomCursor />
     <Navbar />
     <Hero />
     <ShowcaseSection />
