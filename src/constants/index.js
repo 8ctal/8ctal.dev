@@ -335,6 +335,28 @@ const cvLink = "https://drive.google.com/file/d/15Cu0ZqXEN9iYkkihbnIGRqBu6FrNPFe
 
 const projects = [
   {
+    id: "copower_pr_elec",
+    title: "Copower Pruebas Eléctricas",
+    subtitle: "Pruebas Eléctricas - Automatiza la generación de documentos de tus pruebas eléctricas",
+    description: "Una plataforma construida con NextJS, Python, FastAPI y hosteada con IonosCloud que permite con ayuda de algoritmos deterministas y machine learning automatizar la generación de documentos del departamento Pruebas Eléctricas de la empresa asociada Copower",
+    imagePath: "/images/projects/web/copower_pr_elec.jpg",
+    technologies: ["NextJS", "PostgreSQL", "FastAPI", "IonosCloud"],
+    link: "#",
+    featured: true,
+    category: "web"
+  },
+  {
+    id: "camos_digital",
+    title: "CAMOS DIGITAL",
+    subtitle: "CAMOS DIGITAL - Agencia creativa especializada en publicidad, diseño y SEO",
+    description: "Una landing para una agencia dedicada a la asesoría de marca y crecimiento digital",
+    imagePath: "/images/projects/web/camos_digital_hero.png",
+    technologies: ["NextJS", "ShadCN", "ThreeJS","GSap"],
+    link: "https://camosdigital.com/",
+    featured: true,
+    category: "web"
+  },
+  {
     id: "parchuis",
     title: "ParchUIS",
     subtitle: "ParchUIS - Comunidad educativa en un mundo digital 3D",
@@ -346,11 +368,22 @@ const projects = [
     category: "mobile"
   },
   {
+    id: "tribe_app",
+    title: "Tribe App",
+    subtitle: "Tribe model - Conoce qué tan viral se hará tu contenido con estímulos cerebrales reales",
+    description: "Una plataforma construída en base al modelo Tribe de Meta que permite identificar patrones reales en un cerebro humano respecto al contenido que consume, así el usuario puede subir su propio contenido y determinar qué estímulo tendrá en quien lo consuma",
+    imagePath: "/images/projects/mobile/meta_tribe_model.jpg",
+    technologies: ["StreamLit", "Python", "Cloudflare"],
+    link: "#",
+    featured: true,
+    category: "mobile"
+  },
+  {
     id: "gymapp",
     title: "GymApp",
     subtitle: "Tu rutina de ejercicios siempre a mano",
     description: "Con nuestra GymApp no tendrás que recordar tu rutina de ejercicios, aquí tendrás a la mano todo lo relacionado con tu sitio de entrenamiento.",
-    imagePath: "/images/gym_app_banner.png",
+    imagePath: "/images/projects/mobile/gym_app.png",
     technologies: ["Flutter", "Supabase"],
     link: "https://github.com/xMiguelBolano/gym_app",
     featured: true,
@@ -361,7 +394,7 @@ const projects = [
     title: "School Admin",
     subtitle: "Administración educativa simplificada",
     description: "Administra fácilmente tus estudiantes y profesores en un solo lugar.",
-    imagePath: "/images/school_admin_display.png",
+    imagePath: "/images/projects/web/school_admin.png",
     technologies: ["Angular", "Spring Boot", "PostgreSQL", "Docker", "AWS"],
     link: "#",
     featured: true,
@@ -372,7 +405,7 @@ const projects = [
     title: "Wallet App",
     subtitle: "Gestión financiera personal",
     description: "Aplicación móvil para el control de gastos y presupuestos personales.",
-    imagePath: "/images/wallet_app_display.png",
+    imagePath: "/images/projects/mobile/wallet_app.png",
     technologies: ["Redis - Upstash", "NeonDB - PostgreSQL", "Expo", "Auth - Clerk"],
     link: "https://github.com/8ctal/wallet-app",
     featured: false,
@@ -383,7 +416,7 @@ const projects = [
     title: "StyleBGA",
     subtitle: "Administra tu sitio de belleza",
     description: "Una plataforma para gestionar tu negocio de belleza.",
-    imagePath: "/images/stylebga_display.jpg",
+    imagePath: "/images/projects/web/stylebga_display.png",
     technologies: ["Java Spring Boot", "React JS", "MongoDB", "Tailwind CSS"],
     link: "https://github.com/8ctal/style_bga",
     featured: false,
