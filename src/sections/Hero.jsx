@@ -57,10 +57,22 @@ const Hero = () => {
                             have to shrink too far to still read as cursive. */}
                         <div className="w-full max-w-full space-y-1 overflow-hidden sm:space-y-0">
                             <p className="w-full max-w-full text-xs leading-relaxed text-white-50 sm:text-sm md:text-xl relative z-10 pointer-events-none">
-                                <HandwritingText text="¡Hola! Soy Camilo un ingeniero de software Colombiano" height="clamp(1.75em, 7vw, 2.5em)" />
+                                <HandwritingText
+                                    text="¡Hola! Soy Camilo un ingeniero de software Colombiano"
+                                    height="clamp(1.75em, 7vw, 2.5em)"
+                                    duration={2.6}
+                                />
                             </p>
                             <p className="w-full max-w-full text-xs leading-relaxed text-white-50 sm:text-sm md:text-xl relative z-10 pointer-events-none">
-                                <HandwritingText text="Apasionado por la creación de experiencias digitales" height="clamp(1.75em, 7vw, 2.5em)" />
+                                {/* Starts once the first line is mostly written,
+                                    so the two lines read as written one after
+                                    the other rather than scribbled at once. */}
+                                <HandwritingText
+                                    text="Apasionado por la creación de experiencias digitales"
+                                    height="clamp(1.75em, 7vw, 2.5em)"
+                                    duration={2.4}
+                                    delay={1.6}
+                                />
                             </p>
                         </div>
 

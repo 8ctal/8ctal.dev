@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { parse as parseFont } from "opentype.js";
 
 import { useMotionPreference } from "../context/MotionPreference";
@@ -159,6 +159,50 @@ const HandwritingText = ({
 
     const contourCount = geom ? geom.glyphs.reduce((n, g) => n + g.contours.length, 0) : 0;
 
+    // Precomputed once geometry is known, rather than inline per contour:
+    // the fill under each glyph needs to know when *that glyph's own*
+    // stroke finishes, not a single shared moment for the whole word (see
+    // the fill's comment below), so this walks the glyphs/contours once and
+    // hands back both a flat per-contour timing list and a per-glyph fill
+    // delay in the same pass.
+    const timing = useMemo(() => {
+        if (!geom) return null;
+        const count = Math.max(1, contourCount);
+        // How far apart successive contours start, and how long each one's
+        // own stroke takes to draw. `each` used to be derived purely from
+        // `stagger` (stagger * 2.4) with no floor — fine for a short demo
+        // word, but for a full sentence it collapses toward zero: this
+        // component's two Hero callers run ~70 contours through it, and at
+        // the previous 1.5s total duration that gave each letter's stroke
+        // only ~50ms to draw, too fast to read as anything but a pop. A
+        // long sentence should take longer to "write" than a short word
+        // instead of drawing at the same fixed speed, so flooring `each`
+        // and letting the total pass stretch to fit is the right trade.
+        const stagger = Math.max(0.012, duration / count);
+        const each = Math.max(0.12, stagger * 2.4);
+
+        const contours = [];
+        const glyphFillDelay = [];
+        let index = -1;
+        geom.glyphs.forEach((glyph) => {
+            let lastEnd = delay;
+            glyph.contours.forEach(() => {
+                index += 1;
+                const start = delay + index * stagger;
+                contours.push({ start, each });
+                lastEnd = Math.max(lastEnd, start + each);
+            });
+            // The bold fill "soaks in" right after that glyph's own stroke
+            // finishes, not after the whole word has been stroked — that is
+            // what makes the weight arrive letter by letter as the pen
+            // crosses the word, instead of the entire sentence flipping to
+            // bold together near the end (which is what previously made the
+            // whole line look like it just appeared, reduced-motion or not).
+            glyphFillDelay.push(lastEnd + 0.03);
+        });
+        return { contours, glyphFillDelay };
+    }, [geom, contourCount, duration, delay]);
+
     useEffect(() => {
         if (!geom) return undefined;
         setLengths(
@@ -182,7 +226,6 @@ const HandwritingText = ({
         return <span className={className}>{text}</span>;
     }
 
-    const count = Math.max(1, contourCount);
     let contourIndex = -1;
 
     return (
@@ -209,7 +252,7 @@ const HandwritingText = ({
                                 opacity: drawn ? 1 : 0,
                                 transition:
                                     drawn && !reducedMotion
-                                        ? `opacity 0.45s ease-out ${(delay + duration * 0.72).toFixed(3)}s`
+                                        ? `opacity 0.3s ease-out ${(timing?.glyphFillDelay[gi] ?? delay).toFixed(3)}s`
                                         : "none",
                             }}
                         />
@@ -221,8 +264,7 @@ const HandwritingText = ({
                         // Contours overlap slightly so the stroke reads as one
                         // continuous movement rather than as letters
                         // switching on in turn.
-                        const each = (duration / count) * 2.4;
-                        const start = delay + (i / count) * duration;
+                        const { start, each } = timing.contours[i];
                         return (
                             <path
                                 key={ci}

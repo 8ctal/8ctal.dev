@@ -217,8 +217,14 @@ html.is-booting {
        + -translate-x-1/2 was a no-op anyway on a w-full element. */
     @apply fixed w-full py-5 px-5 md:px-20 z-[100] transition-all duration-300 ease-in-out;
 
+    /* No background here, scrolled or not — the header is a plain
+       positioning wrapper, never a bar of its own. Only its three floating
+       children (the logo mark, the glass nav pill, and the action-button
+       group) are meant to read as present on the page; a shared strip
+       behind them would reintroduce exactly the "navbar as a bar" chrome
+       the Liquid Glass redesign replaced it to get away from. */
     &.scrolled {
-      @apply top-0 bg-black;
+      @apply top-0;
     }
 
     &.not-scrolled {
