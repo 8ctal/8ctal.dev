@@ -1,3 +1,5 @@
+import BlurText from "./BlurText";
+
 const TitleHeader = ({ title, sub }) => {
     return (
         <div className="flex flex-col items-center gap-5">
@@ -5,9 +7,11 @@ const TitleHeader = ({ title, sub }) => {
                 <p>{sub}</p>
             </div>
             <div>
-                <h1 className="font-semibold md:text-5xl text-3xl text-center">
-                    {title}
-                </h1>
+                <BlurText
+                    as="h1"
+                    text={title}
+                    className="font-semibold md:text-5xl text-3xl text-center"
+                />
             </div>
         </div>
     );
