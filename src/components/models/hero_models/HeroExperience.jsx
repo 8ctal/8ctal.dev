@@ -16,6 +16,21 @@ import useInView from "../../../hooks/useInView";
 // BlackHoleCanvas.jsx, black_hole/, and HeroFallbackScene.jsx (plus the
 // three.js desk model/particles/lights it alone used) are left in the repo
 // unused rather than deleted, in case any of that is wanted again.
+// Mobile used to get this same scene too, just at reduced steps/resolution
+// — but even cut down, a phone GPU is still doing a per-pixel raymarch
+// every frame, which is what read as "un poco de lag" (the user's words):
+// tuning it down further only makes it cheaper, not free, since it's still
+// the same shader. ref_components/optimized_black_hole (a real second
+// render path built for exactly this) turned out to be gated behind a paid
+// 21st.dev account this project doesn't have — confirmed via both a direct
+// fetch and the CLI, both refused with "Marketplace membership required"
+// even once authenticated. Rather than keep paying a WebGL cost on every
+// phone that opens this site, mobile now gets a plain static image of the
+// same scene instead (a screenshot of this exact shader, mid-render,
+// downsized and re-encoded — see public/images/hero-blackhole-mobile.jpg)
+// — zero GPU context, zero per-frame cost, same visual at a glance.
+const MOBILE_IMAGE_SRC = "/images/hero-blackhole-mobile.jpg";
+
 const HeroExperience = () => {
     const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
@@ -25,23 +40,32 @@ const HeroExperience = () => {
     // hero is off-screen and recreate it on return; BlackHoleHeroSection
     // also pauses its own render loop via IntersectionObserver, but that
     // still leaves the GL context (and its render targets) allocated, so
-    // this unmount is what actually frees the GPU memory.
+    // this unmount is what actually frees the GPU memory. The image path
+    // below never allocates a GL context in the first place, so it has
+    // nothing to free — isVisible only gates mounting the real 3D scene.
     const [containerRef, isVisible] = useInView();
+
+    if (isMobile) {
+        return (
+            <div className="relative h-full w-full overflow-hidden bg-black">
+                <img
+                    src={MOBILE_IMAGE_SRC}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    loading="eager"
+                    fetchPriority="high"
+                />
+            </div>
+        );
+    }
 
     return (
         <div ref={containerRef} className="w-full h-full">
-            {isVisible && (
-                <BlackHoleHeroSection
-                    // Mobile GPUs foot the same per-pixel raymarch cost as
-                    // desktop ones for a shader like this — fewer steps and
-                    // a lower render scale is what actually keeps it smooth
-                    // there, not a different scene. 300/0.7 (the component's
-                    // own defaults) is comfortably desktop-only otherwise.
-                    steps={isMobile ? 170 : 300}
-                    resolution={isMobile ? 0.55 : 0.7}
-                    maxDpr={isMobile ? 1.5 : 1.75}
-                />
-            )}
+            {/* No steps/resolution/maxDpr override anymore — those existed
+                only to cut quality for the mobile case, which no longer
+                renders this at all, so the component's own (desktop-tuned)
+                defaults apply unconditionally here. */}
+            {isVisible && <BlackHoleHeroSection />}
         </div>
     );
 };
