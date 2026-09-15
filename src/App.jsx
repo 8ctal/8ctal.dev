@@ -10,6 +10,7 @@ import Hero from "./sections/Hero";
 import LogoShowcase from "./sections/LogoShowcase";
 import Navbar from "./components/NavBar";
 import ShowcaseSection from "./sections/ShowcaseSection";
+import StatsShowcase from "./components/StatsShowcase";
 import TechStack from "./sections/TechStack";
 import Testimonials from "./sections/Testimonials";
 
@@ -19,6 +20,7 @@ const App = () => (
     <CustomCursor />
     <Navbar />
     <Hero />
+    <StatsShowcase />
     <ShowcaseSection />
     <LogoShowcase />
     <FeatureCards />
