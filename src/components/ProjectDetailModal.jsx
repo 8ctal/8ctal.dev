@@ -67,7 +67,14 @@ const ProjectDetailModal = ({ project, onClose }) => {
                     </svg>
                 </button>
 
-                <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-black-100 md:aspect-auto md:w-1/2">
+                {/* aspect-video (not md:aspect-auto) stays in force at every
+                    breakpoint, and md:self-start opts this side out of the
+                    row's default flex stretch — otherwise a shorter
+                    description on one project vs. a longer one on another
+                    would stretch this box to a different height each time,
+                    which read as the media area having different dimensions
+                    per project instead of one consistent frame. */}
+                <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-black-100 md:w-1/2 md:self-start">
                     {hasVideo ? (
                         <video
                             src={project.videoPath}
