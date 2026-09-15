@@ -17,11 +17,20 @@ export function InteractiveFolderGallery({
     dragHintText = "Drag any photo down to close",
     className,
     onOpenChange,
+    // ShowcaseSection uses this as a permanent gate — once someone's opened
+    // it, the projects underneath should stay revealed until an actual page
+    // reload, not close again because a photo got dragged too far. With
+    // `closable = false`, that drag gesture (and the hint text about it)
+    // just doesn't do anything, rather than closing the folder while the
+    // parent keeps whatever it revealed open anyway — showing the hint but
+    // having it not work would be worse than not showing it at all.
+    closable = true,
 }) {
     const [isFolderOpen, setIsFolderOpen] = useState(false);
     const [hoverFolder, setHoverFolder] = useState(false);
 
     const setOpen = (value) => {
+        if (!value && !closable) return;
         setIsFolderOpen(value);
         onOpenChange?.(value);
     };
@@ -56,7 +65,7 @@ export function InteractiveFolderGallery({
                             return (
                                 <Motion.div
                                     key={photo.id}
-                                    drag={isFolderOpen ? true : false}
+                                    drag={isFolderOpen && closable ? true : false}
                                     dragSnapToOrigin={true}
                                     onDragEnd={(e, info) => {
                                         if (info.offset.y > 100 && isFolderOpen) {
@@ -64,7 +73,7 @@ export function InteractiveFolderGallery({
                                             setHoverFolder(false);
                                         }
                                     }}
-                                    className={`absolute bottom-0 h-72 w-56 origin-bottom overflow-hidden rounded-xl border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.5)] ${isFolderOpen ? "cursor-grab active:cursor-grabbing pointer-events-auto" : "pointer-events-none"}`}
+                                    className={`absolute bottom-0 h-72 w-56 origin-bottom overflow-hidden rounded-xl border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.5)] ${isFolderOpen && closable ? "cursor-grab active:cursor-grabbing pointer-events-auto" : "pointer-events-none"}`}
                                     animate={
                                         !isFolderOpen
                                             ? { y: stackY, x: stackX, rotate: stackRotate, scale: stackScale, zIndex: i + 10 }
@@ -103,12 +112,14 @@ export function InteractiveFolderGallery({
                     </Motion.div>
                 </div>
 
-                <Motion.div
-                    animate={{ opacity: isFolderOpen ? 1 : 0, y: isFolderOpen ? 0 : 50 }}
-                    className="pointer-events-none absolute bottom-10 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium uppercase tracking-widest text-white/50 backdrop-blur-md"
-                >
-                    {dragHintText}
-                </Motion.div>
+                {closable && (
+                    <Motion.div
+                        animate={{ opacity: isFolderOpen ? 1 : 0, y: isFolderOpen ? 0 : 50 }}
+                        className="pointer-events-none absolute bottom-10 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium uppercase tracking-widest text-white/50 backdrop-blur-md"
+                    >
+                        {dragHintText}
+                    </Motion.div>
+                )}
             </div>
         </div>
     );

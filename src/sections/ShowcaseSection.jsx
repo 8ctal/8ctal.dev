@@ -72,18 +72,22 @@ const AppShowcase = () => {
     return (
         <div id="work" ref={sectionRef} className="app-showcase">
             <div className="w-full">
-                {/* First an interactive_folder_gallery gate — the real
-                    showcase (title, CardStack/PhoneCarousel) only appears
-                    once it's opened. */}
+                {/* interactive_folder_gallery is the entrance, not a
+                    section of its own next to this one — opening it reveals
+                    the CardStack/PhoneCarousel showcase right here, and per
+                    feedback it stays open once opened (closable={false})
+                    until an actual page reload, rather than being able to
+                    close again and hide what it revealed. */}
                 <InteractiveFolderGallery
                     photos={folderPhotos}
                     folderName="mi-trabajo.gallery"
-                    dragHintText="Arrastra una foto hacia abajo para cerrar"
+                    closable={false}
                     onOpenChange={setFolderOpen}
+                    className="!py-12"
                 />
 
                 <div
-                    className={`transition-all duration-700 ${folderOpen ? "opacity-100" : "pointer-events-none -translate-y-6 opacity-0"}`}
+                    className={`transition-all duration-700 ${folderOpen ? "mt-4 opacity-100" : "pointer-events-none -mt-16 opacity-0"}`}
                     aria-hidden={!folderOpen}
                 >
                     <TitleHeader
