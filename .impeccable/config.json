@@ -62,6 +62,12 @@
         "value": "#ffc0fd00",
         "createdAt": "2026-09-15T02:28:27.700Z",
         "reason": "User explicitly requested ref_components/Ruixen_Gradient_Footer.tsx by name for the footer; these are that component's exact rainbow gradient stops, the whole point of the visual. Documented in DESIGN.md as a second sanctioned exception to the single-neon-spark rule (alongside the Experience timeline)."
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "createdAt": "2026-09-15T16:16:00.607Z",
+        "reason": "Deliberate single-overshoot pop (not a multi-cycle bounce) chosen specifically to fix a real jitter bug: elastic.out's repeated oscillation, compressed 50x by the reduce-motion timeScale hack, was what read as jittering. back.out overshoots once and settles, matching the site's existing bounce/spring character elsewhere (CardStack, CertificationStack transitions) without that repeat."
       }
     ]
   }
