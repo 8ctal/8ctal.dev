@@ -96,7 +96,14 @@ const CertificationCardContent = ({ cert }) => (
     </GlowCard>
 );
 
-const StackedCard = ({ cert, slot, exitDirection, onSelect }) => {
+// Below this drag distance (or velocity), a swipe snaps back to the stack
+// instead of committing to a page change — same idea as CardStack.jsx's own
+// drag threshold, just a fixed value here rather than one derived from a
+// configurable card width.
+const DRAG_COMMIT_DISTANCE = 90;
+const DRAG_COMMIT_VELOCITY = 500;
+
+const StackedCard = ({ cert, slot, exitDirection, onSelect, onAdvance, onRetreat }) => {
     const { scale, y } = POSITION_STYLES[slot] ?? POSITION_STYLES[POSITION_STYLES.length - 1];
     const zIndex = POSITION_STYLES.length - slot;
     const exitAnim = slot === 0 ? (exitDirection === "back" ? EXIT_BACKWARD : EXIT_FORWARD) : undefined;
@@ -106,6 +113,7 @@ const StackedCard = ({ cert, slot, exitDirection, onSelect }) => {
                 ? ENTER_BACKWARD
                 : ENTER_FORWARD
             : undefined;
+    const isFront = slot === 0;
 
     return (
         // The centering (left: 50% + a -50% shift) has to live on a plain,
@@ -125,7 +133,27 @@ const StackedCard = ({ cert, slot, exitDirection, onSelect }) => {
                 // tapping the peeking card brings it to the front, same as
                 // pressing "next" enough times to reach it.
                 onClick={slot > 0 ? () => onSelect(slot) : undefined}
-                className={slot > 0 ? "cursor-pointer" : ""}
+                className={slot > 0 ? "cursor-pointer" : isFront ? "cursor-grab active:cursor-grabbing" : ""}
+                // The front card can also be swiped — the buttons are
+                // desktop-only and tapping only ever goes forward (to
+                // whichever card is peeking), so without this a mobile
+                // visitor who'd scrolled forward through the whole stack had
+                // no way to come back to an earlier one except cycling all
+                // the way around again.
+                drag={isFront ? "x" : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.6}
+                onDragEnd={
+                    isFront
+                        ? (_e, info) => {
+                              if (info.offset.x < -DRAG_COMMIT_DISTANCE || info.velocity.x < -DRAG_COMMIT_VELOCITY) {
+                                  onAdvance();
+                              } else if (info.offset.x > DRAG_COMMIT_DISTANCE || info.velocity.x > DRAG_COMMIT_VELOCITY) {
+                                  onRetreat();
+                              }
+                          }
+                        : undefined
+                }
             >
                 <CertificationCardContent cert={cert} />
             </Motion.div>
@@ -169,6 +197,8 @@ const CertificationStack = ({ items }) => {
                             slot={slot}
                             exitDirection={exitDirection}
                             onSelect={advanceTo}
+                            onAdvance={advance}
+                            onRetreat={retreat}
                         />
                     ))}
                 </AnimatePresence>

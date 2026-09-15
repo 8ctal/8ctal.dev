@@ -33,8 +33,20 @@ const folderPreviewIds = ["camos_digital", "copower_pr_elec", "parchuis", "gymap
 const AppShowcase = () => {
     const sectionRef = useRef(null);
     const { reducedMotion } = useMotionPreference();
-    const [folderOpen, setFolderOpen] = useState(false);
+    // Flips true a beat after the folder opens (photos fanning out) and
+    // swaps this same slot over to the CardStack — per feedback, the two
+    // aren't their own sections stacked one after another, they're one
+    // shared spot that starts as the folder and becomes the CardStack.
+    // Swapping the instant the folder's onOpenChange fires would cut its
+    // own opening animation off before anyone actually saw it; the delay
+    // lets that read first. Once true it stays true — InteractiveFolderGallery
+    // is closable={false}, so onOpenChange only ever fires with `true`.
+    const [showStack, setShowStack] = useState(false);
     const [activeProject, setActiveProject] = useState(null);
+
+    const handleFolderOpenChange = () => {
+        window.setTimeout(() => setShowStack(true), reducedMotion ? 0 : 900);
+    };
 
     useGSAP(() => {
         // Animation for the main section
@@ -72,31 +84,30 @@ const AppShowcase = () => {
     return (
         <div id="work" ref={sectionRef} className="app-showcase">
             <div className="w-full">
-                {/* interactive_folder_gallery is the entrance, not a
-                    section of its own next to this one — opening it reveals
-                    the CardStack/PhoneCarousel showcase right here, and per
-                    feedback it stays open once opened (closable={false})
-                    until an actual page reload, rather than being able to
-                    close again and hide what it revealed. */}
-                <InteractiveFolderGallery
-                    photos={folderPhotos}
-                    folderName="mi-trabajo.gallery"
-                    closable={false}
-                    onOpenChange={setFolderOpen}
-                    className="!py-12"
+                <TitleHeader
+                    title="Mi Trabajo"
+                    sub="Proyectos que he construido"
                 />
 
-                <div
-                    className={`transition-all duration-700 ${folderOpen ? "mt-4 opacity-100" : "pointer-events-none -mt-16 opacity-0"}`}
-                    aria-hidden={!folderOpen}
-                >
-                    <TitleHeader
-                        title="Mi Trabajo"
-                        sub="Proyectos que he construido"
-                    />
+                {/* One shared slot, not two sections stacked one after
+                    another: it starts as the interactive_folder_gallery
+                    entrance and, a beat after it opens (closable={false} —
+                    it stays open until an actual page reload), swaps in
+                    place for the CardStack — the same visualization this
+                    section always had, not a separate gallery next to it. */}
+                <div className="relative mt-16">
+                    {!showStack && (
+                        <InteractiveFolderGallery
+                            photos={folderPhotos}
+                            folderName="mi-trabajo.gallery"
+                            closable={false}
+                            onOpenChange={handleFolderOpenChange}
+                            className="!py-12"
+                        />
+                    )}
 
-                    {stackItems.length > 0 && (
-                        <div className="mt-16">
+                    {showStack && stackItems.length > 0 && (
+                        <div>
                             {/* The card is image-only on purpose — text over the
                                 artwork was covering it. Title/tech/link live in
                                 the caption below, following the active card. */}
@@ -123,26 +134,26 @@ const AppShowcase = () => {
                             />
                         </div>
                     )}
-
-                    {mobileImages.length > 0 && (
-                        <div className="mt-20">
-                            <h3 className="text-3xl font-bold mb-2 text-center">
-                                Apps móviles
-                            </h3>
-                            <Suspense fallback={<StackFallback height={410} />}>
-                                <PhoneCarousel
-                                    images={mobileImages}
-                                    onChangeIndex={setActiveMobileIndex}
-                                    forceReducedMotion={reducedMotion}
-                                />
-                            </Suspense>
-                            <ProjectCaption
-                                project={mobileProjects[activeMobileIndex]}
-                                onViewDetails={setActiveProject}
-                            />
-                        </div>
-                    )}
                 </div>
+
+                {showStack && mobileImages.length > 0 && (
+                    <div className="mt-20">
+                        <h3 className="text-3xl font-bold mb-2 text-center">
+                            Apps móviles
+                        </h3>
+                        <Suspense fallback={<StackFallback height={410} />}>
+                            <PhoneCarousel
+                                images={mobileImages}
+                                onChangeIndex={setActiveMobileIndex}
+                                forceReducedMotion={reducedMotion}
+                            />
+                        </Suspense>
+                        <ProjectCaption
+                            project={mobileProjects[activeMobileIndex]}
+                            onViewDetails={setActiveProject}
+                        />
+                    </div>
+                )}
             </div>
 
             <ProjectDetailModal project={activeProject} onClose={() => setActiveProject(null)} />

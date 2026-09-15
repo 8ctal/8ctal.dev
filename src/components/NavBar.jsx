@@ -190,10 +190,16 @@ const NavBar = () => {
     const [scrolled, setScrolled] = useState(false);
     // track whether the mobile nav overlay is open
     const [menuOpen, setMenuOpen] = useState(false);
-    // The wordmark only shows while the Hero section itself is on screen —
-    // not just "not scrolled", since routes other than "/" (e.g. /blog)
-    // have no Hero at all and should never show it either.
-    const [inHero, setInHero] = useState(true);
+    // The wordmark shows only at the very top of the page — not "while the
+    // Hero is on screen" (the first version of this: it used to stay up
+    // for as long as ~40% of the Hero was still visible, so it lingered
+    // through almost the whole section before retracting). Per feedback,
+    // it should go as soon as the page moves "a little" and only sit there
+    // while basically unscrolled — the same near-top window `scrolled`
+    // already tracks below, just also gated on there being a Hero to show
+    // it next to at all (routes other than "/", e.g. /blog, never show it).
+    const location = useLocation();
+    const isHomeRoute = location.pathname === "/";
     const { reducedMotion, setReducedMotion } = useMotionPreference();
 
     const overlayRef = useRef(null);
@@ -216,24 +222,7 @@ const NavBar = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    // Re-checked on every route change too (not just once on mount): #hero
-    // only exists on "/", so navigating to /blog needs this to notice
-    // there's no Hero at all and fall back to "not in hero" — a plain
-    // IntersectionObserver never fires for an element that isn't there.
-    const location = useLocation();
-    useEffect(() => {
-        const heroEl = document.getElementById("hero");
-        if (!heroEl) {
-            setInHero(false);
-            return undefined;
-        }
-        const observer = new IntersectionObserver(
-            ([entry]) => setInHero(entry.isIntersecting),
-            { threshold: 0.4 }
-        );
-        observer.observe(heroEl);
-        return () => observer.disconnect();
-    }, [location]);
+    const showWordmark = isHomeRoute && !scrolled;
 
     // While the mobile nav is open: lock body scroll, let Escape close it,
     // and move keyboard focus into the overlay.
@@ -321,7 +310,7 @@ const NavBar = () => {
                 <Link to="/" className="logo" aria-label="8ctal — inicio">
                     <div className="flex items-center gap-2">
                         <img src="/images/logo_8ball.png" alt="" className="h-15 w-auto" />
-                        <Wordmark visible={inHero} />
+                        <Wordmark visible={showWordmark} />
                     </div>
                 </Link>
 

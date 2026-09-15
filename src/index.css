@@ -546,8 +546,11 @@ html.is-booting {
   .footer {
     @apply my-10 md:mt-20 mt-10 text-white-50 px-5 md:px-20 xl:px-20 flex items-center justify-center;
 
+    /* Down to two children now (social links, copyright) since the
+       "available for projects" status dot was removed — a plain row
+       instead of the old 3-column grid that reserved a slot for it. */
     .footer-container {
-      @apply grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-0 w-full;
+      @apply flex flex-col items-center gap-5 md:flex-row md:justify-between md:gap-0 w-full;
     }
 
     p {

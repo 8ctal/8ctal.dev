@@ -114,8 +114,14 @@ const StatsShowcase = () => {
             "[grid-area:stack] transition-transform duration-[900ms] ease-out",
             STACK_OFFSETS[Math.min(index, STACK_OFFSETS.length - 1)],
             settled && ROW_OFFSETS[Math.min(index, ROW_OFFSETS.length - 1)],
+            // DisplayCard's own `after:` edge-fade (see DisplayCards.jsx) is
+            // sized to mask a card into the ones stacked *behind* it — at
+            // 20rem wide it's actually wider than these cards, so once
+            // they're side by side with nothing behind them to fade into,
+            // it just bled over each card's own right border, cutting it
+            // off. Only needed while still in the stacked look.
             settled
-                ? "grayscale-0 md:scale-100"
+                ? "grayscale-0 md:scale-100 after:hidden"
                 : [
                       index === last ? "hover:translate-y-2" : "hover:-translate-y-8",
                       index !== last &&
