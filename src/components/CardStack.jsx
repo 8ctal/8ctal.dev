@@ -63,6 +63,11 @@ export function CardStack({
 
     onChangeIndex,
     renderCard,
+    // Called instead of window.open(item.href) when the active card is
+    // clicked, so a caller can open something else first (ShowcaseSection
+    // opens a detail modal) rather than always jumping straight to the
+    // external link.
+    onActivateClick,
 
     // The site's own reduce-motion toggle (see MotionPreference context).
     // framer-motion only reads the OS media query on its own, so combine it
@@ -251,8 +256,14 @@ export function CardStack({
                                         damping: springDamping,
                                     }}
                                     onClick={() => {
-                                        if (isActive && item.href) {
-                                            window.open(item.href, "_blank", "noopener,noreferrer");
+                                        if (isActive) {
+                                            if (onActivateClick) {
+                                                onActivateClick(item);
+                                                return;
+                                            }
+                                            if (item.href) {
+                                                window.open(item.href, "_blank", "noopener,noreferrer");
+                                            }
                                             return;
                                         }
                                         setActive(i);

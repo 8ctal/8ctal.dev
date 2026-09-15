@@ -333,6 +333,16 @@ const socialImgs = [
 
 const cvLink = "https://drive.google.com/file/d/15Cu0ZqXEN9iYkkihbnIGRqBu6FrNPFeH/view?usp=sharing";
 
+// Optional per-project fields, not set on anything below yet:
+// - `videoPath` / `gifPath`: shown instead of `imagePath` inside the
+//   project detail modal (ProjectDetailModal.jsx) when present — a video
+//   wins if both are set. Drop the file in public/ and point to it with a
+//   root-relative path, same as imagePath.
+// - `islandColor` (mobile projects only): recolors that screenshot's
+//   Dynamic Island in the iPhone frame (PhoneCarousel.jsx) — e.g. "#000"
+//   for a project whose UI is itself dark, where the default light-silver
+//   cutout looks out of place. Left unset, the island stays the frame's
+//   default light color.
 const projects = [
   {
     id: "copower_pr_elec",

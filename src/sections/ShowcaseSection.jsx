@@ -4,6 +4,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { projects } from "../constants";
 import TitleHeader from "../components/TitleHeader";
+import InteractiveFolderGallery from "../components/InteractiveFolderGallery";
+import ProjectDetailModal from "../components/ProjectDetailModal";
 import { useMotionPreference } from "../context/MotionPreference";
 
 // Below the fold, and each pulls in its own real dependency (framer-motion,
@@ -22,9 +24,17 @@ const StackFallback = ({ height = 380 }) => (
 
 gsap.registerPlugin(ScrollTrigger);
 
+// The folder gallery's own preview stack — a handful of featured
+// screenshots across both categories, purely decorative (opening the
+// folder just reveals the real showcase below; it doesn't gate *which*
+// projects show up there).
+const folderPreviewIds = ["camos_digital", "copower_pr_elec", "parchuis", "gymapp", "school-admin"];
+
 const AppShowcase = () => {
     const sectionRef = useRef(null);
     const { reducedMotion } = useMotionPreference();
+    const [folderOpen, setFolderOpen] = useState(false);
+    const [activeProject, setActiveProject] = useState(null);
 
     useGSAP(() => {
         // Animation for the main section
@@ -38,18 +48,22 @@ const AppShowcase = () => {
     const webProjects = projects.filter((project) => project.category === "web");
     const mobileProjects = projects.filter((project) => project.category === "mobile");
 
+    const folderPhotos = folderPreviewIds
+        .map((id) => projects.find((project) => project.id === id))
+        .filter(Boolean)
+        .map((project) => ({ id: project.id, image: project.imagePath, alt: project.title }));
+
     const stackItems = webProjects.map((project) => ({
         id: project.id,
         title: project.title,
         imageSrc: project.imagePath,
-        // Not rendered inside the card (that's the point), but keeps
-        // "click the active card" opening the project, same as before.
-        href: project.link && project.link !== "#" ? project.link : undefined,
+        project,
     }));
 
     const mobileImages = mobileProjects.map((project) => ({
         src: project.imagePath,
         alt: project.title,
+        islandColor: project.islandColor,
     }));
 
     const [activeWebIndex, setActiveWebIndex] = useState(0);
@@ -58,59 +72,84 @@ const AppShowcase = () => {
     return (
         <div id="work" ref={sectionRef} className="app-showcase">
             <div className="w-full">
-                <TitleHeader
-                    title="Mi Trabajo"
-                    sub="Proyectos que he construido"
+                {/* First an interactive_folder_gallery gate — the real
+                    showcase (title, CardStack/PhoneCarousel) only appears
+                    once it's opened. */}
+                <InteractiveFolderGallery
+                    photos={folderPhotos}
+                    folderName="mi-trabajo.gallery"
+                    dragHintText="Arrastra una foto hacia abajo para cerrar"
+                    onOpenChange={setFolderOpen}
                 />
 
-                {stackItems.length > 0 && (
-                    <div className="mt-16">
-                        {/* The card is image-only on purpose — text over the
-                            artwork was covering it. Title/tech/link live in
-                            the caption below, following the active card. */}
-                        <Suspense fallback={<StackFallback />}>
-                            <CardStack
-                                items={stackItems}
-                                onChangeIndex={setActiveWebIndex}
-                                forceReducedMotion={reducedMotion}
-                                renderCard={(item) => (
-                                    <img
-                                        src={item.imageSrc}
-                                        alt={item.title}
-                                        className="h-full w-full object-cover"
-                                        draggable={false}
-                                        loading="eager"
-                                    />
-                                )}
-                            />
-                        </Suspense>
-                        <ProjectCaption project={webProjects[activeWebIndex]} />
-                    </div>
-                )}
+                <div
+                    className={`transition-all duration-700 ${folderOpen ? "opacity-100" : "pointer-events-none -translate-y-6 opacity-0"}`}
+                    aria-hidden={!folderOpen}
+                >
+                    <TitleHeader
+                        title="Mi Trabajo"
+                        sub="Proyectos que he construido"
+                    />
 
-                {mobileImages.length > 0 && (
-                    <div className="mt-20">
-                        <h3 className="text-3xl font-bold mb-2 text-center">
-                            Apps móviles
-                        </h3>
-                        <Suspense fallback={<StackFallback height={410} />}>
-                            <PhoneCarousel
-                                images={mobileImages}
-                                onChangeIndex={setActiveMobileIndex}
-                                forceReducedMotion={reducedMotion}
+                    {stackItems.length > 0 && (
+                        <div className="mt-16">
+                            {/* The card is image-only on purpose — text over the
+                                artwork was covering it. Title/tech/link live in
+                                the caption below, following the active card. */}
+                            <Suspense fallback={<StackFallback />}>
+                                <CardStack
+                                    items={stackItems}
+                                    onChangeIndex={setActiveWebIndex}
+                                    forceReducedMotion={reducedMotion}
+                                    onActivateClick={(item) => setActiveProject(item.project)}
+                                    renderCard={(item) => (
+                                        <img
+                                            src={item.imageSrc}
+                                            alt={item.title}
+                                            className="h-full w-full object-cover"
+                                            draggable={false}
+                                            loading="eager"
+                                        />
+                                    )}
+                                />
+                            </Suspense>
+                            <ProjectCaption
+                                project={webProjects[activeWebIndex]}
+                                onViewDetails={setActiveProject}
                             />
-                        </Suspense>
-                        <ProjectCaption project={mobileProjects[activeMobileIndex]} />
-                    </div>
-                )}
+                        </div>
+                    )}
+
+                    {mobileImages.length > 0 && (
+                        <div className="mt-20">
+                            <h3 className="text-3xl font-bold mb-2 text-center">
+                                Apps móviles
+                            </h3>
+                            <Suspense fallback={<StackFallback height={410} />}>
+                                <PhoneCarousel
+                                    images={mobileImages}
+                                    onChangeIndex={setActiveMobileIndex}
+                                    forceReducedMotion={reducedMotion}
+                                />
+                            </Suspense>
+                            <ProjectCaption
+                                project={mobileProjects[activeMobileIndex]}
+                                onViewDetails={setActiveProject}
+                            />
+                        </div>
+                    )}
+                </div>
             </div>
+
+            <ProjectDetailModal project={activeProject} onClose={() => setActiveProject(null)} />
         </div>
     );
 };
 
-/** Title, tech badges, and a "Ver proyecto" link for whichever project is
- * currently active in a CardStack or PhoneCarousel above it. */
-const ProjectCaption = ({ project }) => {
+/** Title, tech badges, a "Ver detalles" button (opens ProjectDetailModal)
+ * and a direct "Ver proyecto" link, for whichever project is currently
+ * active in a CardStack or PhoneCarousel above it. */
+const ProjectCaption = ({ project, onViewDetails }) => {
     if (!project) return null;
     const href = project.link && project.link !== "#" ? project.link : undefined;
 
@@ -129,16 +168,25 @@ const ProjectCaption = ({ project }) => {
                     ))}
                 </div>
             )}
-            {href && (
-                <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block text-blue-50 hover:text-white-50 text-sm mt-3 transition-colors"
+            <div className="mt-4 flex items-center justify-center gap-4">
+                <button
+                    type="button"
+                    onClick={() => onViewDetails?.(project)}
+                    className="glass-panel rounded-lg px-4 py-2 text-sm font-medium text-white-50 transition-colors duration-300 hover:text-white"
                 >
-                    Ver proyecto
-                </a>
-            )}
+                    Ver detalles
+                </button>
+                {href && (
+                    <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block text-blue-50 hover:text-white-50 text-sm transition-colors"
+                    >
+                        Ver proyecto
+                    </a>
+                )}
+            </div>
         </div>
     );
 };
