@@ -103,32 +103,41 @@ const Experience = () => {
                                     pinned header that size would eat too much of a
                                     small screen). Shares the .timeline-card class
                                     with the content column below so both get the
-                                    same GSAP entrance. */}
+                                    same GSAP entrance.
+
+                                    The marker is `absolute`, sitting directly on
+                                    top of the line (same left-5/md:left-10 x-
+                                    coordinate as .timeline-wrapper above,
+                                    centered on it via -translate-x-1/2) — this is
+                                    the one thing the previous pass got visibly
+                                    wrong relative to the reference: the logo sat
+                                    in a plain flex row next to the title, not
+                                    positioned on the line at all, so the line and
+                                    its "beads" read as two unrelated elements
+                                    instead of one timeline. */}
                                 <div className="timeline-card relative z-20 pl-16 md:pl-24 md:sticky md:top-40 md:w-80 lg:w-96 md:shrink-0">
-                                    <div className="flex items-start gap-4 md:gap-5">
-                                        <div className="timeline-logo glass-panel">
-                                            <TimelineLogo
-                                                src={card.logoPath}
-                                                alt={`Logo de ${card.company}`}
-                                                fallbackText={card.company}
-                                            />
-                                        </div>
-                                        <div>
-                                            <h1 className="font-semibold text-2xl md:text-3xl">
-                                                {card.title}
-                                            </h1>
-                                            <p className="text-white-50 mt-1">{card.company}</p>
-                                            {(card.employmentType || card.location) && (
-                                                <p className="text-blue-50 text-sm mt-1">
-                                                    {[card.employmentType, card.location]
-                                                        .filter(Boolean)
-                                                        .join(" · ")}
-                                                </p>
-                                            )}
+                                    <div className="timeline-logo glass-panel absolute left-5 top-0 -translate-x-1/2 md:left-10">
+                                        <TimelineLogo
+                                            src={card.logoPath}
+                                            alt={`Logo de ${card.company}`}
+                                            fallbackText={card.company}
+                                        />
+                                    </div>
+                                    <div>
+                                        <h1 className="font-semibold text-2xl md:text-3xl">
+                                            {card.title}
+                                        </h1>
+                                        <p className="text-white-50 mt-1">{card.company}</p>
+                                        {(card.employmentType || card.location) && (
                                             <p className="text-blue-50 text-sm mt-1">
-                                                {card.date}
+                                                {[card.employmentType, card.location]
+                                                    .filter(Boolean)
+                                                    .join(" · ")}
                                             </p>
-                                        </div>
+                                        )}
+                                        <p className="text-blue-50 text-sm mt-1">
+                                            {card.date}
+                                        </p>
                                     </div>
                                 </div>
 
