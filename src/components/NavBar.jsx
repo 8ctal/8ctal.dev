@@ -93,7 +93,18 @@ const Wordmark = ({ visible }) => {
         // aria-hidden, not display:none — the accessible name for the whole
         // link lives on the <Link> itself (see NavBar's aria-label below)
         // regardless of which characters are visually mid-animation.
-        <p aria-hidden="true">
+        //
+        // mix-blend-difference: this text has no background of its own, so
+        // as a light-colored screenshot in a section below scrolls up
+        // through the fixed navbar's own strip of the viewport, plain white
+        // text sitting directly on the page (no glass panel under it here)
+        // washed out against it. Difference-blending against whatever's
+        // actually behind it inverts automatically — white text over a
+        // light backdrop reads as dark, the same text back over the site's
+        // normal black reads as white again — without a scroll listener or
+        // any per-frame JS at all (same technique CustomCursor.jsx already
+        // uses for the same reason).
+        <p aria-hidden="true" className="mix-blend-difference">
             {WORDMARK_CHARS.map((char, index) => (
                 <span
                     key={index}
@@ -163,9 +174,17 @@ const DesktopNavPill = () => {
             <Motion.ul className={!expanded ? "pointer-events-none" : undefined}>
                 {navLinks.map(({ link, name }) => (
                     <Motion.li key={name} variants={linkVariants} className="group">
+                        {/* mix-blend-difference again (see Wordmark's own
+                            copy of this note above): the pill's glass tint
+                            is only ~10% opaque, tuned for the site's own
+                            black background — over a bright screenshot
+                            scrolling past underneath, that's nowhere near
+                            enough to keep this text's normal color
+                            readable, and difference-blending it fixes that
+                            the same cheap, scroll-listener-free way. */}
                         <NavLinkItem link={link} onClick={(e) => e.stopPropagation()}>
-                            <span>{name}</span>
-                            <span className="underline" />
+                            <span className="mix-blend-difference">{name}</span>
+                            <span className="underline mix-blend-difference" />
                         </NavLinkItem>
                     </Motion.li>
                 ))}
