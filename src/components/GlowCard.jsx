@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-const GlowCard = ({ card, index, children, showStars = true }) => {
+const GlowCard = ({ card, index, children, showStars = true, solid = false }) => {
     // refs for all the cards
     const cardRefs = useRef([]);
 
@@ -30,7 +30,7 @@ const GlowCard = ({ card, index, children, showStars = true }) => {
         <div
             ref={(el) => (cardRefs.current[index] = el)}
             onMouseMove={handleMouseMove(index)}
-            className="card rounded-xl p-10 mb-5 break-inside-avoid-column"
+            className={`card rounded-xl p-10 mb-5 break-inside-avoid-column${solid ? " card--solid" : ""}`}
         >
             <div className="glow"></div>
             {showStars && (

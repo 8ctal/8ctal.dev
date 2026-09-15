@@ -51,10 +51,10 @@ function createCounterItem(value, suffix, labelSingular, labelPlural) {
 }
 
 const counterItems = [
-  createCounterItem(1, "+", "Año de experiencia", "Años de experiencia"),
-  { value: 10, suffix: "+", label: "Proyectos completados" },
+  createCounterItem(2, "+", "Año de experiencia", "Años de experiencia"),
+  { value: 20, suffix: "+", label: "Proyectos completados" },
   { value: 5, suffix: "+", label: "Clientes satisfechos" },
-  { value: 5, suffix: "#", label: "Certificaciones" },
+  { value: 8, suffix: "#", label: "Certificaciones" },
 ];
 
 const logoIconsList = [
@@ -322,30 +322,33 @@ const testimonials = [
 // (see SocialLinks.jsx, which renders it as clickable text) — kept apart
 // from `name` since that key had drifted from what it actually links to
 // (the "fb" entry has always pointed at GitHub, not Facebook) and nothing
-// previously rendered `name` where that would show.
+// previously rendered `name` where that would show. `icon` picks which
+// brand mark SocialLinks.jsx's hover pop-up shows (see SocialIcon.jsx) —
+// this used to be a flat PNG path (`imgPath`), but those were dull single-
+// color placeholders once seen at the size the pop-up renders them.
 const socialImgs = [
   {
     name: "insta",
     label: "Instagram",
-    imgPath: "/images/insta.png",
+    icon: "instagram",
     link: "https://www.instagram.com/8ctals/",
   },
   {
     name: "fb",
     label: "GitHub",
-    imgPath: "/images/github.png",
+    icon: "github",
     link: "https://github.com/8ctal",
   },
   {
     name: "x",
     label: "X",
-    imgPath: "/images/x.png",
+    icon: "x",
     link: "https://x.com/8ctalst",
   },
   {
     name: "linkedin",
     label: "LinkedIn",
-    imgPath: "/images/linkedin.png",
+    icon: "linkedin",
     link: "https://www.linkedin.com/in/camilo-j-avila",
   },
 ];

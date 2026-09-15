@@ -36,7 +36,11 @@ const ENTER_BACKWARD = { x: -SLIDE_DISTANCE, y: -44, opacity: 0, scale: 0.85 };
 const CARD_TRANSITION = { type: "spring", duration: 0.55, bounce: 0.15 };
 
 const CertificationCardContent = ({ cert }) => (
-    <GlowCard card={cert} index={0} showStars={false}>
+    // solid: at the stack's normal ~5-10% opaque glass, the card behind
+    // (only 12-44px off in y, i.e. mostly directly underneath) stayed
+    // faintly readable straight through the front one — see index.css's
+    // .card--solid for the fuller explanation.
+    <GlowCard card={cert} index={0} showStars={false} solid>
         <div className="flex h-full flex-col">
             <div className="mb-6 flex items-center gap-4">
                 <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-white-50 p-2">

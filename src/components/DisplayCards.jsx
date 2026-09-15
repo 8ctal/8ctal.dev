@@ -35,12 +35,40 @@ export function DisplayCard({
     // reference's fixed 22rem width was only ever tuned for its own
     // 3-card demo stack, never for laying cards out side by side.
     sizeClassName = "h-36 w-[22rem]",
+    // Also not part of the reference: the constant 8° skew is what makes a
+    // *stacked* card read as having depth, but StatsShowcase's settled row
+    // (cards side by side, no longer overlapping) just looked crooked with
+    // it still applied — this lets that caller turn it off once settled
+    // instead of fighting the reference's class with a conflicting one of
+    // equal specificity.
+    skewed = true,
+    // Also not part of the reference: forwarded so a caller can make a card
+    // interactive (StatsShowcase uses this on mobile, where there's no
+    // hover to reveal a card buried in the stack — tapping it has to do
+    // that job instead).
+    onClick,
 }) {
+    const interactive = Boolean(onClick);
+
     return (
         <div
             ref={cardRef}
+            role={interactive ? "button" : undefined}
+            tabIndex={interactive ? 0 : undefined}
+            onClick={onClick}
+            onKeyDown={
+                interactive
+                    ? (e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              onClick(e);
+                          }
+                      }
+                    : undefined
+            }
             className={cn(
-                "glass-panel relative flex -skew-y-[8deg] select-none flex-col justify-between rounded-xl px-4 py-3 transition-all duration-700 after:absolute after:-right-1 after:top-[-5%] after:h-[110%] after:w-[20rem] after:bg-gradient-to-l after:from-black after:to-transparent after:content-[''] hover:border-white/20 [&>*]:flex [&>*]:items-center [&>*]:gap-2",
+                "glass-panel relative flex select-none flex-col justify-between rounded-xl px-4 py-3 transition-all duration-700 after:absolute after:-right-1 after:top-[-5%] after:h-[110%] after:w-[20rem] after:bg-gradient-to-l after:from-black after:to-transparent after:content-[''] hover:border-white/20 [&>*]:flex [&>*]:items-center [&>*]:gap-2",
+                skewed && "-skew-y-[8deg]",
                 sizeClassName,
                 className
             )}

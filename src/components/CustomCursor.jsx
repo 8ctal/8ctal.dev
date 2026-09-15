@@ -229,7 +229,20 @@ const CustomCursor = () => {
             stopTicker();
             root.classList.remove("has-custom-cursor");
         };
-    }, [active]);
+        // revertOnUpdate: without it, useGSAP only runs this cleanup on
+        // final unmount, not between re-runs caused by `active` changing —
+        // by default it defers cleanup exactly like this effect's own
+        // `deferCleanup` local variable would suggest from the hook's own
+        // source (@gsap/react's useGSAP keeps the same gsap.context() alive
+        // across dependency changes unless told otherwise). Toggling the
+        // reduce-motion switch while the cursor was active flipped `active`
+        // to false, which returns early up top without ever reaching this
+        // cleanup — so "has-custom-cursor" (which sets `cursor: none` on
+        // the whole page, see index.css) stayed applied with no ring/dot
+        // left to replace it, and neither cursor was visible. This makes
+        // that toggle revert the previous run first, same as a normal
+        // effect would.
+    }, { dependencies: [active], revertOnUpdate: true });
 
     if (!active) return null;
 

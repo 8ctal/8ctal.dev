@@ -10,6 +10,9 @@
 //   shown as the clickable text, not `social.name` — that field had drifted
 //   from what several entries actually link to (see the comment there) and
 //   nothing rendered it as user-facing text until now.
+// - The pop-up is a real brand mark (SocialIcon.jsx) driven by `social.icon`
+//   instead of the reference's arbitrary `social.image` — the reference
+//   ships no icon artwork of its own to begin with (see SocialIcon.jsx).
 import { useEffect, useState } from "react";
 // Imported as `Motion` (capitalized): this project's ESLint config has no
 // JSX-usage detection for member-expression tags like `motion.div`, so a
@@ -18,6 +21,7 @@ import { useEffect, useState } from "react";
 import { motion as Motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "../lib/cn";
+import SocialIcon from "./SocialIcon";
 
 export function SocialLinks({ socials, className, ...props }) {
     const [hoveredSocial, setHoveredSocial] = useState(null);
@@ -66,16 +70,15 @@ export function SocialLinks({ socials, className, ...props }) {
                                 className="absolute bottom-0 left-0 right-0 flex h-full w-full items-center justify-center"
                                 animate={animation}
                             >
-                                <Motion.img
+                                <Motion.div
                                     key={social.label}
-                                    src={social.imgPath}
-                                    alt={social.label}
-                                    className="size-16"
                                     initial={{ y: -40, rotate: rotation, opacity: 0, filter: "blur(2px)" }}
                                     animate={{ y: -50, opacity: 1, filter: "blur(0px)" }}
                                     exit={{ y: -40, opacity: 0, filter: "blur(2px)" }}
                                     transition={{ duration: 0.2 }}
-                                />
+                                >
+                                    <SocialIcon name={social.icon} className="size-16" />
+                                </Motion.div>
                             </Motion.div>
                         )}
                     </AnimatePresence>

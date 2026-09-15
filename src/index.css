@@ -705,6 +705,19 @@ html.is-booting {
   transition: border-color 1s ease-in-out;
 }
 
+/* GlowCard's `solid` prop opts into this instead of the ~5-10% opaque fill
+   above (same formula as .glass-panel-strong). Only needed where cards sit
+   almost directly on top of one another — CertificationStack's stack has
+   each card just 12-44px off the one behind it, so at the normal glass
+   opacity the covered card's own text stayed faintly visible right through
+   the front one, blurred but still legible enough to fight with it.
+   Testimonials' GlowCard grid doesn't overlap, so it keeps the lighter,
+   more translucent default. */
+.card.card--solid {
+  background: linear-gradient(180deg, rgba(14, 14, 16, 0.9) 0%, rgba(14, 14, 16, 0.97) 100%);
+  border-color: var(--color-glass-border-strong) !important;
+}
+
 /* The glass's own edge catching the light: a soft highlight that
    tracks the cursor, standing in for a specular reflection sweeping
    across the panel. --start is set from JS (GlowCard) as the pointer

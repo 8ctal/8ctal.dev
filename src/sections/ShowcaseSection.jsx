@@ -4,7 +4,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { projects } from "../constants";
 import TitleHeader from "../components/TitleHeader";
-import InteractiveFolderGallery from "../components/InteractiveFolderGallery";
 import ProjectDetailModal from "../components/ProjectDetailModal";
 import { useMotionPreference } from "../context/MotionPreference";
 
@@ -24,29 +23,10 @@ const StackFallback = ({ height = 380 }) => (
 
 gsap.registerPlugin(ScrollTrigger);
 
-// The folder gallery's own preview stack — a handful of featured
-// screenshots across both categories, purely decorative (opening the
-// folder just reveals the real showcase below; it doesn't gate *which*
-// projects show up there).
-const folderPreviewIds = ["camos_digital", "copower_pr_elec", "parchuis", "gymapp", "school-admin"];
-
 const AppShowcase = () => {
     const sectionRef = useRef(null);
     const { reducedMotion } = useMotionPreference();
-    // Flips true a beat after the folder opens (photos fanning out) and
-    // swaps this same slot over to the CardStack — per feedback, the two
-    // aren't their own sections stacked one after another, they're one
-    // shared spot that starts as the folder and becomes the CardStack.
-    // Swapping the instant the folder's onOpenChange fires would cut its
-    // own opening animation off before anyone actually saw it; the delay
-    // lets that read first. Once true it stays true — InteractiveFolderGallery
-    // is closable={false}, so onOpenChange only ever fires with `true`.
-    const [showStack, setShowStack] = useState(false);
     const [activeProject, setActiveProject] = useState(null);
-
-    const handleFolderOpenChange = () => {
-        window.setTimeout(() => setShowStack(true), reducedMotion ? 0 : 900);
-    };
 
     useGSAP(() => {
         // Animation for the main section
@@ -59,11 +39,6 @@ const AppShowcase = () => {
 
     const webProjects = projects.filter((project) => project.category === "web");
     const mobileProjects = projects.filter((project) => project.category === "mobile");
-
-    const folderPhotos = folderPreviewIds
-        .map((id) => projects.find((project) => project.id === id))
-        .filter(Boolean)
-        .map((project) => ({ id: project.id, image: project.imagePath, alt: project.title }));
 
     const stackItems = webProjects.map((project) => ({
         id: project.id,
@@ -89,24 +64,8 @@ const AppShowcase = () => {
                     sub="Proyectos que he construido"
                 />
 
-                {/* One shared slot, not two sections stacked one after
-                    another: it starts as the interactive_folder_gallery
-                    entrance and, a beat after it opens (closable={false} —
-                    it stays open until an actual page reload), swaps in
-                    place for the CardStack — the same visualization this
-                    section always had, not a separate gallery next to it. */}
                 <div className="relative mt-16">
-                    {!showStack && (
-                        <InteractiveFolderGallery
-                            photos={folderPhotos}
-                            folderName="mi-trabajo.gallery"
-                            closable={false}
-                            onOpenChange={handleFolderOpenChange}
-                            className="!py-12"
-                        />
-                    )}
-
-                    {showStack && stackItems.length > 0 && (
+                    {stackItems.length > 0 && (
                         <div>
                             {/* The card is image-only on purpose — text over the
                                 artwork was covering it. Title/tech/link live in
@@ -136,7 +95,7 @@ const AppShowcase = () => {
                     )}
                 </div>
 
-                {showStack && mobileImages.length > 0 && (
+                {mobileImages.length > 0 && (
                     <div className="mt-20">
                         <h3 className="text-3xl font-bold mb-2 text-center">
                             Apps móviles
