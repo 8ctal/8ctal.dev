@@ -1,23 +1,33 @@
+// Section links are prefixed with "/" (not bare "#work") so they still
+// resolve correctly from a route other than home — e.g. clicking "Trabajo"
+// while on /blog needs to navigate back to "/" and then scroll, not just
+// change the hash on whatever page is currently showing. "Blog" has no
+// hash at all: it's a real route (see App.jsx), rendered as a router
+// <Link> rather than a plain anchor in NavBar.jsx.
 const navLinks = [
   {
     name: "Trabajo",
-    link: "#work",
+    link: "/#work",
   },
   {
     name: "Experiencia",
-    link: "#experience",
+    link: "/#experience",
   },
   {
     name: "Habilidades",
-    link: "#skills",
+    link: "/#skills",
   },
   {
     name: "Certificaciones",
-    link: "#certifications",
+    link: "/#certifications",
   },
   {
     name: "Referencias",
-    link: "#testimonials",
+    link: "/#testimonials",
+  },
+  {
+    name: "Blog",
+    link: "/blog",
   },
 ];
 

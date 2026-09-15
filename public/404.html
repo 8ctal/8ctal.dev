@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>8ctal</title>
+    <!--
+      GitHub Pages serves this file for any path it doesn't recognize as a
+      real file — which, for a client-side-routed SPA, is every deep link
+      (/blog/un-post) since there's no server to match it against React
+      Router's routes. This is the standard workaround (rafgraph's
+      spa-github-pages: https://github.com/rafgraph/spa-github-pages):
+      redirect back to the real index.html with the intended path packed
+      into a query string, which index.html's own matching script then
+      unpacks via history.replaceState before React Router ever reads the
+      URL — see the inline script there.
+
+      pathSegmentsToKeep is 0 because this site is served from its custom
+      domain's root (8ctal.dev), not a github.io/<repo>/ subpath — see
+      CLAUDE.md § Deployment / vite.config.js's base: '/'.
+    -->
+    <script type="text/javascript">
+      var pathSegmentsToKeep = 0;
+      var l = window.location;
+      l.replace(
+        l.protocol + "//" + l.hostname + (l.port ? ":" + l.port : "") +
+        l.pathname.split("/").slice(0, 1 + pathSegmentsToKeep).join("/") + "/?/" +
+        l.pathname.slice(1).split("/").slice(pathSegmentsToKeep).join("/").replace(/&/g, "~and~") +
+        (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
+        l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>

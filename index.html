@@ -5,6 +5,30 @@
     <link rel="icon" type="image/svg+xml" href="/images/logo_8ball.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>8ctal</title>
+    <!--
+      Matching half of public/404.html's redirect (see the comment there):
+      unpacks the query-string-encoded path back into a real one via
+      history.replaceState, before React Router (in main.jsx) ever reads
+      window.location. Only fires for the shape 404.html produces
+      ("?/blog/un-post"); a plain "?foo=bar" query string on "/" is left
+      alone. Must run before the app's own module script, and as plain
+      synchronous script (no type="module"/defer) so it does regardless of
+      when that script finishes downloading.
+    -->
+    <script type="text/javascript">
+      (function (l) {
+        if (l.search[1] === "/") {
+          var decoded = l.search
+            .slice(1)
+            .split("&")
+            .map(function (s) {
+              return s.replace(/~and~/g, "&");
+            })
+            .join("?");
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
   </head>
   <body>
     <div id="root"></div>

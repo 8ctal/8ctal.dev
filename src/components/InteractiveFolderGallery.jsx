@@ -5,7 +5,11 @@
 // reference managed `isFolderOpen` purely internally with nothing for a
 // caller to hook into.
 import { useState } from "react";
-import { motion } from "framer-motion";
+// Imported as `Motion` (capitalized): this project's ESLint config has no
+// JSX-usage detection for member-expression tags like `motion.div`, so a
+// lowercase import reads as unused even though it's referenced in the JSX
+// below (see CardStack.jsx's own copy of this same note).
+import { motion as Motion } from "framer-motion";
 
 export function InteractiveFolderGallery({
     photos = [],
@@ -26,14 +30,14 @@ export function InteractiveFolderGallery({
         <div className={`relative w-full py-32 ${className || ""}`}>
             <div className="relative flex min-h-[500px] w-full flex-col items-center justify-center">
                 <div className="pointer-events-none relative z-0 flex h-[500px] w-[400px] justify-center">
-                    <motion.div
+                    <Motion.div
                         className="absolute bottom-6 h-56 w-80 drop-shadow-2xl"
                         animate={{ opacity: isFolderOpen ? 0 : 1, scale: isFolderOpen ? 0.9 : 1 }}
                     >
                         <div className="absolute left-0 top-0 h-10 w-32 rounded-t-xl border-l border-r border-t border-white/10 bg-linear-to-t from-[#1e1e1e] to-[#2a2a2a]" />
                         <div className="absolute bottom-0 left-0 right-0 top-8 rounded-b-xl rounded-tr-xl border border-white/10 bg-linear-to-b from-[#1e1e1e] to-[#0a0a0a] shadow-[inset_0_0_40px_rgba(0,0,0,0.8)]" />
                         <div className="pointer-events-none absolute bottom-2 left-2 right-2 top-10 rounded-lg bg-black shadow-inner" />
-                    </motion.div>
+                    </Motion.div>
 
                     <div className="absolute bottom-10 z-10 flex justify-center">
                         {photos.map((photo, i) => {
@@ -50,7 +54,7 @@ export function InteractiveFolderGallery({
                             const openScale = 1.05;
 
                             return (
-                                <motion.div
+                                <Motion.div
                                     key={photo.id}
                                     drag={isFolderOpen ? true : false}
                                     dragSnapToOrigin={true}
@@ -71,12 +75,12 @@ export function InteractiveFolderGallery({
                                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                                 >
                                     <img src={photo.image} alt={photo.alt || "Gallery item"} className="pointer-events-none h-full w-full object-cover" />
-                                </motion.div>
+                                </Motion.div>
                             );
                         })}
                     </div>
 
-                    <motion.div
+                    <Motion.div
                         className="pointer-events-auto absolute bottom-0 z-20 h-44 w-[340px] cursor-pointer drop-shadow-[0_-20px_40px_rgba(0,0,0,0.8)]"
                         style={{ transformOrigin: "bottom" }}
                         animate={{
@@ -96,15 +100,15 @@ export function InteractiveFolderGallery({
                                 <span className="text-sm font-medium tracking-wide text-white/90">{folderName}</span>
                             </div>
                         </div>
-                    </motion.div>
+                    </Motion.div>
                 </div>
 
-                <motion.div
+                <Motion.div
                     animate={{ opacity: isFolderOpen ? 1 : 0, y: isFolderOpen ? 0 : 50 }}
                     className="pointer-events-none absolute bottom-10 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium uppercase tracking-widest text-white/50 backdrop-blur-md"
                 >
                     {dragHintText}
-                </motion.div>
+                </Motion.div>
             </div>
         </div>
     );

@@ -64,7 +64,7 @@ const Footer = () => {
                             </span>
                             Disponible para nuevos proyectos
                         </span>
-                        <a href="#contact" className="glass-panel group inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-medium text-white-50 transition-colors duration-300 hover:text-white">
+                        <a href="/#contact" className="glass-panel group inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-medium text-white-50 transition-colors duration-300 hover:text-white">
                             Contáctame
                             <img
                                 src="/images/arrow-right.svg"

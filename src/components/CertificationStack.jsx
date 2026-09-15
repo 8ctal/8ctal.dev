@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+// Imported as `Motion` (capitalized): this project's ESLint config has no
+// JSX-usage detection for member-expression tags like `motion.div`, so a
+// lowercase import reads as unused even though it's referenced in the JSX
+// below (see CardStack.jsx's own copy of this same note).
+import { motion as Motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import GlowCard from "./GlowCard";
@@ -97,7 +101,7 @@ const StackedCard = ({ cert, slot, exitDirection }) => {
             : undefined;
 
     return (
-        <motion.div
+        <Motion.div
             key={cert.credentialId}
             initial={initialAnim}
             animate={{ y, scale, opacity: 1 }}
@@ -107,7 +111,7 @@ const StackedCard = ({ cert, slot, exitDirection }) => {
             className="absolute w-[min(90vw,26rem)]"
         >
             <CertificationCardContent cert={cert} />
-        </motion.div>
+        </Motion.div>
     );
 };
 

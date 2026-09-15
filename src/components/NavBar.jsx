@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { motion as Motion, useScroll, useMotionValueEvent } from "framer-motion";
@@ -7,6 +8,21 @@ import { Menu } from "lucide-react";
 
 import { navLinks } from "../constants";
 import { useMotionPreference } from "../context/MotionPreference";
+
+// A nav link is either a same-page anchor jump ("/#work") or a real route
+// ("/blog") — the first needs a plain <a> (so the browser's own hash
+// scrolling keeps working, including from a route other than "/"), the
+// second a router <Link> (so it navigates without a full page reload).
+const NavLinkItem = ({ link, children, ...rest }) =>
+    link.includes("#") ? (
+        <a href={link} {...rest}>
+            {children}
+        </a>
+    ) : (
+        <Link to={link} {...rest}>
+            {children}
+        </Link>
+    );
 
 // The desktop pill collapses to a small logo-only circle once the page has
 // scrolled past this point, and only re-expands once the user has scrolled
@@ -100,10 +116,10 @@ const DesktopNavPill = () => {
             <Motion.ul className={!expanded ? "pointer-events-none" : undefined}>
                 {navLinks.map(({ link, name }) => (
                     <Motion.li key={name} variants={linkVariants} className="group">
-                        <a href={link} onClick={(e) => e.stopPropagation()}>
+                        <NavLinkItem link={link} onClick={(e) => e.stopPropagation()}>
                             <span>{name}</span>
                             <span className="underline" />
-                        </a>
+                        </NavLinkItem>
                     </Motion.li>
                 ))}
             </Motion.ul>
@@ -232,12 +248,12 @@ const NavBar = () => {
             </svg>
 
             <div className="inner">
-                <a href="#hero" className="logo">
+                <Link to="/" className="logo">
                     <div className="flex items-center gap-2">
                         <img src="/images/logo_8ball.png" alt="logo" className="h-15 w-auto" />
                         <p>| 8ctal</p>
                     </div>
-                </a>
+                </Link>
 
                 {/* Centered on the header itself, not "between the logo and
                     the action buttons" — those two flank it at very
@@ -253,7 +269,7 @@ const NavBar = () => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <a href="#contact" className="contact-btn group hidden lg:flex">
+                    <a href="/#contact" className="contact-btn group hidden lg:flex">
                         <div className="inner glass-panel">
                             <span>Contáctame</span>
                         </div>
@@ -331,9 +347,9 @@ const NavBar = () => {
 
                         <nav className="flex flex-1 flex-col items-center justify-center gap-8 px-5">
                             {navLinks.map(({ link, name }, index) => (
-                                <a
+                                <NavLinkItem
                                     key={name}
-                                    href={link}
+                                    link={link}
                                     className="mobile-nav-link"
                                     ref={(el) => {
                                         linkRefs.current[index] = el;
@@ -342,10 +358,10 @@ const NavBar = () => {
                                     onClick={closeMenu}
                                 >
                                     {name}
-                                </a>
+                                </NavLinkItem>
                             ))}
                             <a
-                                href="#contact"
+                                href="/#contact"
                                 className="mobile-nav-link text-white"
                                 ref={(el) => (linkRefs.current[navLinks.length] = el)}
                                 onClick={closeMenu}
