@@ -1,60 +1,47 @@
-import { useState, lazy, Suspense } from "react";
 import { useMediaQuery } from "react-responsive";
 
-import BlackHoleCanvas from "./BlackHoleCanvas";
+import BlackHoleHeroSection from "./BlackHoleHeroSection";
 import useInView from "../../../hooks/useInView";
 
-// react-three-fiber/drei/three only ship to browsers that actually take
-// this branch (no WebGPU, or the adapter got denied) — see
-// HeroFallbackScene.jsx.
-const HeroFallbackScene = lazy(() => import("./HeroFallbackScene"));
-
-const supportsWebGPU = () =>
-    typeof navigator !== "undefined" && Boolean(navigator.gpu);
-
-// The black hole raymarches a full-screen shader *and* runs a 4-pass bloom
-// (bright-pass + 4 blurs + composite) every frame — see black_hole/pipeline.ts.
-// That's too fill-rate-heavy for mobile GPUs regardless of WebGPU support,
-// which some Android Chrome builds do have. Rather than a device-model
-// allowlist, this checks for the hardware class the cost actually scales
-// with: a coarse (touch) pointer at phone/tablet width. Desktops keep the
-// full black hole; phones and tablets always get the three.js fallback
-// scene below, same as browsers with no WebGPU at all.
-const isLowPowerGpuClass = () =>
-    typeof window !== "undefined" &&
-    window.matchMedia?.("(pointer: coarse)").matches &&
-    window.matchMedia?.("(max-width: 1024px)").matches;
-
+// Previously this branched on WebGPU support and hardware class: a
+// WebGPU-only raymarched black hole (BlackHoleCanvas.jsx/black_hole/) on
+// capable desktops, and a completely different three.js desk scene
+// (HeroFallbackScene.jsx) everywhere else — which meant every phone and
+// tablet, and every browser without WebGPU, never saw the black hole at
+// all. BlackHoleHeroSection is a plain-WebGL2/WebGL1 port (see its own file
+// header) that runs anywhere a <canvas> does, so it replaces both branches:
+// one visual, on every device, at the cost of the old version's
+// drag-to-orbit interactivity (the camera here holds still; only the gas
+// moves) — a deliberate trade from the redesign brief, not an oversight.
+// BlackHoleCanvas.jsx, black_hole/, and HeroFallbackScene.jsx (plus the
+// three.js desk model/particles/lights it alone used) are left in the repo
+// unused rather than deleted, in case any of that is wanted again.
 const HeroExperience = () => {
     const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
-    const isTablet = useMediaQuery({ query: "(max-width: 1024px)" });
 
-    // The black hole is a WebGPU shader (see black_hole/). Browsers without
-    // WebGPU (older Safari, several mobiles) fall back to the three.js desk
-    // scene below instead of showing a blank canvas — same if the adapter
-    // gets denied after the fact (onError), and same on any low-power-GPU
-    // touch device even when it does support WebGPU (see isLowPowerGpuClass).
-    const [useBlackHole, setUseBlackHole] = useState(
-        () => supportsWebGPU() && !isLowPowerGpuClass()
-    );
-
-    // Neither scene ever unmounted on scroll, so its render loop (and GPU
-    // context) stayed alive forever — with the black hole's continuous
-    // raymarch+bloom pipeline, that starved other WebGL contexts created
-    // later in the page (they'd immediately fire "Context Lost"). Dispose
-    // the renderer while the hero is off-screen and recreate it on return.
+    // Neither scene was ever unmounted on scroll before, so its render loop
+    // (and GPU context) stayed alive forever — starving other WebGL/WebGPU
+    // contexts created later in the page. Dispose the renderer while the
+    // hero is off-screen and recreate it on return; BlackHoleHeroSection
+    // also pauses its own render loop via IntersectionObserver, but that
+    // still leaves the GL context (and its render targets) allocated, so
+    // this unmount is what actually frees the GPU memory.
     const [containerRef, isVisible] = useInView();
 
     return (
         <div ref={containerRef} className="w-full h-full">
-            {isVisible &&
-                (useBlackHole ? (
-                    <BlackHoleCanvas onError={() => setUseBlackHole(false)} />
-                ) : (
-                    <Suspense fallback={null}>
-                        <HeroFallbackScene isMobile={isMobile} isTablet={isTablet} />
-                    </Suspense>
-                ))}
+            {isVisible && (
+                <BlackHoleHeroSection
+                    // Mobile GPUs foot the same per-pixel raymarch cost as
+                    // desktop ones for a shader like this — fewer steps and
+                    // a lower render scale is what actually keeps it smooth
+                    // there, not a different scene. 300/0.7 (the component's
+                    // own defaults) is comfortably desktop-only otherwise.
+                    steps={isMobile ? 170 : 300}
+                    resolution={isMobile ? 0.55 : 0.7}
+                    maxDpr={isMobile ? 1.5 : 1.75}
+                />
+            )}
         </div>
     );
 };
