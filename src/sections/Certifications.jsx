@@ -4,28 +4,26 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { certifications } from "../constants";
 import TitleHeader from "../components/TitleHeader";
-import GlowCard from "../components/GlowCard";
-import SkillsToggle from "../components/SkillsToggle";
+import CertificationStack from "../components/CertificationStack";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Certifications = () => {
     useGSAP(() => {
-        // Animate certification cards as they come into view (simplified)
-        gsap.utils.toArray(".certification-card").forEach((card) => {
-            gsap.from(card, {
-                yPercent: 30,
-                opacity: 0,
+        gsap.fromTo(
+            "#certifications .cert-stack",
+            { yPercent: 15, opacity: 0 },
+            {
+                yPercent: 0,
+                opacity: 1,
                 duration: 0.8,
                 ease: "power2.out",
                 scrollTrigger: {
-                    trigger: card,
+                    trigger: "#certifications .cert-stack",
                     start: "top 85%",
                 },
-            });
-        });
-
-        // Removed individual skill badge animations for better performance
+            }
+        );
     }, []);
 
     return (
@@ -38,87 +36,11 @@ const Certifications = () => {
                     title="Certificaciones"
                     sub="Credenciales que validan mi experiencia"
                 />
-                
-                <div className="mt-32">
-                    <div className="grid-3-cols gap-8">
-                        {certifications.map((cert) => (
-                            <div key={cert.credentialId} className="certification-card">
-                                <GlowCard card={cert} showStars={false}>
-                                    <div className="flex flex-col h-full">
-                                        {/* Header with logo and title */}
-                                        <div className="flex items-center gap-4 mb-6">
-                                            <div className="w-16 h-16 rounded-lg bg-white-50 flex items-center justify-center p-2">
-                                                <img
-                                                    src={cert.imgPath}
-                                                    alt={cert.title}
-                                                    className="w-full h-full object-contain"
-                                                    loading="lazy"
-                                                />
-                                            </div>
-                                            <div>
-                                                <h3 className="font-semibold text-xl text-white">
-                                                    {cert.title}
-                                                </h3>
-                                                <p className="text-blue-50 text-sm">
-                                                    {cert.issuer}
-                                                </p>
-                                            </div>
-                                        </div>
 
-                                        {/* Description */}
-                                        <div className="mb-6 flex-grow">
-                                            <p className="text-white-50 text-base leading-relaxed">
-                                                {cert.description}
-                                            </p>
-                                        </div>
-
-                                        {/* Date and Credential ID */}
-                                        <div className="mb-6">
-                                            <div className="flex items-center justify-between text-sm">
-                                                <span className="text-blue-50">
-                                                    {cert.date}
-                                                </span>
-                                                <span className="text-blue-50 font-mono">
-                                                    ID: {cert.credentialId}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {/* Skills — hidden by default, see SkillsToggle */}
-                                        <div className="mb-6">
-                                            <SkillsToggle skills={cert.skills} label="habilidades certificadas" />
-                                        </div>
-
-                                        {/* Verify button */}
-                                        <div className="mt-auto relative z-10">
-                                            <a
-                                                href={cert.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="glass-panel inline-flex items-center gap-2 text-white-50 px-4 py-2 rounded-lg text-sm font-medium hover:text-white transition-colors duration-300 group pointer-events-auto relative z-20"
-                                                onClick={(e) => e.stopPropagation()}
-                                            >
-                                                Verificar certificación
-                                                <svg 
-                                                    className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" 
-                                                    fill="none" 
-                                                    stroke="currentColor" 
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path 
-                                                        strokeLinecap="round" 
-                                                        strokeLinejoin="round" 
-                                                        strokeWidth={2} 
-                                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" 
-                                                    />
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </GlowCard>
-                            </div>
-                        ))}
-                    </div>
+                {/* Stack instead of a grid — mechanics ported from
+                    ref_components/animated_card, see CertificationStack.jsx. */}
+                <div className="cert-stack mt-20">
+                    <CertificationStack items={certifications} />
                 </div>
             </div>
         </section>
