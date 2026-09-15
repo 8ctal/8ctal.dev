@@ -1,12 +1,9 @@
-import { useRef, useState, lazy, Suspense } from "react";
+import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 
 import TitleHeader from "../components/TitleHeader";
+import GlobeCdn from "../components/GlobeCdn";
 import useInView from "../hooks/useInView";
-
-// Below the fold and its own three.js scene — code-split so the contact
-// form (the actual above-the-fold content here) isn't waiting on it.
-const ContactExperience = lazy(() => import("../components/models/contact/ContactExperience"));
 
 const Contact = () => {
     const formRef = useRef(null);
@@ -17,8 +14,8 @@ const Contact = () => {
         message: "",
     });
 
-    // Same reasoning as HeroExperience: don't keep a live WebGL context
-    // spinning once this section scrolls out of view.
+    // Same reasoning as HeroExperience: don't keep a live canvas render
+    // loop spinning once this section scrolls out of view.
     const [sceneRef, sceneVisible] = useInView({ initialInView: false });
 
     const handleChange = (e) => {
@@ -115,14 +112,17 @@ const Contact = () => {
                         </div>
                     </div>
                     <div className="xl:col-span-7 min-h-96">
+                        {/* Replaces the 3D pool-ball model previously here
+                            (see ContactExperience.jsx/EightBall.jsx, left
+                            unused rather than deleted) with the globe from
+                            ref_components/globe_cdn.tsx — see GlobeCdn.jsx
+                            for the Liquid Glass palette + trimmed overlays. */}
                         <div
                             ref={sceneRef}
-                            className="bg-black w-full h-full hover:cursor-grab rounded-3xl overflow-hidden"
+                            className="flex h-full w-full items-center justify-center rounded-3xl overflow-hidden bg-black"
                         >
                             {sceneVisible && (
-                                <Suspense fallback={<div className="w-full h-full animate-pulse bg-black-100" />}>
-                                    <ContactExperience />
-                                </Suspense>
+                                <GlobeCdn className="w-full max-w-md" />
                             )}
                         </div>
                     </div>
