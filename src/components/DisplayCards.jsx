@@ -29,12 +29,19 @@ export function DisplayCard({
     // rendered card's own DOM node directly, instead of needing an extra
     // wrapper div just to hang a ref on — see that file for why.
     cardRef,
+    // Also not part of the reference: overrides the fixed h-36/w-[22rem]
+    // size. StatsShowcase needs a smaller card so 4 of them fit in a
+    // horizontal row without overflowing a normal laptop screen — the
+    // reference's fixed 22rem width was only ever tuned for its own
+    // 3-card demo stack, never for laying cards out side by side.
+    sizeClassName = "h-36 w-[22rem]",
 }) {
     return (
         <div
             ref={cardRef}
             className={cn(
-                "glass-panel relative flex h-36 w-[22rem] -skew-y-[8deg] select-none flex-col justify-between rounded-xl px-4 py-3 transition-all duration-700 after:absolute after:-right-1 after:top-[-5%] after:h-[110%] after:w-[20rem] after:bg-gradient-to-l after:from-black after:to-transparent after:content-[''] hover:border-white/20 [&>*]:flex [&>*]:items-center [&>*]:gap-2",
+                "glass-panel relative flex -skew-y-[8deg] select-none flex-col justify-between rounded-xl px-4 py-3 transition-all duration-700 after:absolute after:-right-1 after:top-[-5%] after:h-[110%] after:w-[20rem] after:bg-gradient-to-l after:from-black after:to-transparent after:content-[''] hover:border-white/20 [&>*]:flex [&>*]:items-center [&>*]:gap-2",
+                sizeClassName,
                 className
             )}
         >

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { motion as Motion, useScroll, useMotionValueEvent } from "framer-motion";
@@ -59,6 +59,53 @@ const pillVariants = {
 const linkVariants = {
     expanded: { opacity: 1, x: 0, transition: { type: "spring", damping: 16 } },
     collapsed: { opacity: 0, x: -10, transition: { duration: 0.15 } },
+};
+
+// The wordmark that reads "| 8ctal" next to the ball icon — split into
+// individual characters so they can retract into the ball (and extend back
+// out of it) one at a time instead of the whole label just fading as a
+// block. The ball icon itself is a separate, unanimated element and always
+// stays: only this text should ever disappear.
+const WORDMARK_CHARS = "| 8ctal".split("");
+
+const Wordmark = ({ visible }) => {
+    const charRefs = useRef([]);
+
+    useGSAP(() => {
+        const chars = charRefs.current.filter(Boolean);
+        if (!chars.length) return;
+
+        gsap.to(chars, {
+            opacity: visible ? 1 : 0,
+            x: visible ? 0 : -14,
+            duration: 0.4,
+            ease: visible ? "power2.out" : "power2.in",
+            // Retracting (hiding), the sweep starts at the letter farthest
+            // from the ball and runs toward it; extending (showing), it
+            // starts at the ball and runs back out — the same motion in
+            // reverse, not just a fade toggling in place.
+            stagger: { each: 0.028, from: visible ? "start" : "end" },
+            overwrite: true,
+        });
+    }, [visible]);
+
+    return (
+        // aria-hidden, not display:none — the accessible name for the whole
+        // link lives on the <Link> itself (see NavBar's aria-label below)
+        // regardless of which characters are visually mid-animation.
+        <p aria-hidden="true">
+            {WORDMARK_CHARS.map((char, index) => (
+                <span
+                    key={index}
+                    ref={(el) => (charRefs.current[index] = el)}
+                    className="inline-block"
+                    style={{ whiteSpace: "pre" }}
+                >
+                    {char}
+                </span>
+            ))}
+        </p>
+    );
 };
 
 // The desktop nav links, rebuilt as a framer-motion pill that collapses to a
@@ -143,6 +190,10 @@ const NavBar = () => {
     const [scrolled, setScrolled] = useState(false);
     // track whether the mobile nav overlay is open
     const [menuOpen, setMenuOpen] = useState(false);
+    // The wordmark only shows while the Hero section itself is on screen —
+    // not just "not scrolled", since routes other than "/" (e.g. /blog)
+    // have no Hero at all and should never show it either.
+    const [inHero, setInHero] = useState(true);
     const { reducedMotion, setReducedMotion } = useMotionPreference();
 
     const overlayRef = useRef(null);
@@ -164,6 +215,25 @@ const NavBar = () => {
         // cleanup the event listener when the component is unmounted
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    // Re-checked on every route change too (not just once on mount): #hero
+    // only exists on "/", so navigating to /blog needs this to notice
+    // there's no Hero at all and fall back to "not in hero" — a plain
+    // IntersectionObserver never fires for an element that isn't there.
+    const location = useLocation();
+    useEffect(() => {
+        const heroEl = document.getElementById("hero");
+        if (!heroEl) {
+            setInHero(false);
+            return undefined;
+        }
+        const observer = new IntersectionObserver(
+            ([entry]) => setInHero(entry.isIntersecting),
+            { threshold: 0.4 }
+        );
+        observer.observe(heroEl);
+        return () => observer.disconnect();
+    }, [location]);
 
     // While the mobile nav is open: lock body scroll, let Escape close it,
     // and move keyboard focus into the overlay.
@@ -248,10 +318,10 @@ const NavBar = () => {
             </svg>
 
             <div className="inner">
-                <Link to="/" className="logo">
+                <Link to="/" className="logo" aria-label="8ctal — inicio">
                     <div className="flex items-center gap-2">
-                        <img src="/images/logo_8ball.png" alt="logo" className="h-15 w-auto" />
-                        <p>| 8ctal</p>
+                        <img src="/images/logo_8ball.png" alt="" className="h-15 w-auto" />
+                        <Wordmark visible={inHero} />
                     </div>
                 </Link>
 

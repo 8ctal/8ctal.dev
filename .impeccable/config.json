@@ -14,6 +14,54 @@
         "value": "2.5rem",
         "createdAt": "2026-09-02T14:11:35.039Z",
         "reason": "One-off display size for the full-screen boot counter (a single 2-digit number dominating an otherwise-empty screen) — a distinct composition from Hero's multi-line headline, not meant to become a reusable type-scale step"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#340b05",
+        "createdAt": "2026-09-15T02:28:27.091Z",
+        "reason": "User explicitly requested ref_components/Ruixen_Gradient_Footer.tsx by name for the footer; these are that component's exact rainbow gradient stops, the whole point of the visual. Documented in DESIGN.md as a second sanctioned exception to the single-neon-spark rule (alongside the Experience timeline)."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#0358f7",
+        "createdAt": "2026-09-15T02:28:27.190Z",
+        "reason": "User explicitly requested ref_components/Ruixen_Gradient_Footer.tsx by name for the footer; these are that component's exact rainbow gradient stops, the whole point of the visual. Documented in DESIGN.md as a second sanctioned exception to the single-neon-spark rule (alongside the Experience timeline)."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#5092c7",
+        "createdAt": "2026-09-15T02:28:27.277Z",
+        "reason": "User explicitly requested ref_components/Ruixen_Gradient_Footer.tsx by name for the footer; these are that component's exact rainbow gradient stops, the whole point of the visual. Documented in DESIGN.md as a second sanctioned exception to the single-neon-spark rule (alongside the Experience timeline)."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#e1ecfe",
+        "createdAt": "2026-09-15T02:28:27.373Z",
+        "reason": "User explicitly requested ref_components/Ruixen_Gradient_Footer.tsx by name for the footer; these are that component's exact rainbow gradient stops, the whole point of the visual. Documented in DESIGN.md as a second sanctioned exception to the single-neon-spark rule (alongside the Experience timeline)."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ffd400",
+        "createdAt": "2026-09-15T02:28:27.459Z",
+        "reason": "User explicitly requested ref_components/Ruixen_Gradient_Footer.tsx by name for the footer; these are that component's exact rainbow gradient stops, the whole point of the visual. Documented in DESIGN.md as a second sanctioned exception to the single-neon-spark rule (alongside the Experience timeline)."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fa3d1d",
+        "createdAt": "2026-09-15T02:28:27.539Z",
+        "reason": "User explicitly requested ref_components/Ruixen_Gradient_Footer.tsx by name for the footer; these are that component's exact rainbow gradient stops, the whole point of the visual. Documented in DESIGN.md as a second sanctioned exception to the single-neon-spark rule (alongside the Experience timeline)."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fd02f5",
+        "createdAt": "2026-09-15T02:28:27.619Z",
+        "reason": "User explicitly requested ref_components/Ruixen_Gradient_Footer.tsx by name for the footer; these are that component's exact rainbow gradient stops, the whole point of the visual. Documented in DESIGN.md as a second sanctioned exception to the single-neon-spark rule (alongside the Experience timeline)."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ffc0fd00",
+        "createdAt": "2026-09-15T02:28:27.700Z",
+        "reason": "User explicitly requested ref_components/Ruixen_Gradient_Footer.tsx by name for the footer; these are that component's exact rainbow gradient stops, the whole point of the visual. Documented in DESIGN.md as a second sanctioned exception to the single-neon-spark rule (alongside the Experience timeline)."
       }
     ]
   }

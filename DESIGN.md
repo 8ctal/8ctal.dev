@@ -124,7 +124,9 @@ La paleta es casi monocromática por diseño: negros profundos como lienzo, un b
 - Estos tokens son distintos en rol de Ink/Void/Graphite/Slate/Signal White: no son parte de la escala de negros apilados, son la translucidez, el borde y el realce de un material que *flota sobre* esa escala.
 
 ### Named Rules
-**La Regla de la Chispa Única.** El degradado neón (cian/azul/coral/violeta) vive solo en la línea del timeline. No se replica en botones, badges ni fondos — su rareza es lo que lo hace notar.
+**La Regla de la Chispa Única.** El degradado neón cian/azul/coral/violeta vive solo en la línea del timeline. No se replica en botones, badges ni fondos — su rareza es lo que lo hace notar.
+
+**La segunda excepción: el resplandor del footer.** El Footer (`RuixenGradientFooter.jsx`, ver ref_components/Ruixen_Gradient_Footer.tsx) tiene su propio resplandor de degradado a todo color — ámbar oscuro → azul → blanco casi puro → amarillo → rojo-naranja → magenta — fijo al fondo del viewport y que crece conforme el usuario llega al final de la página. No es una expansión del degradado del timeline (es su propia paleta, distinta) ni una excepción "porque este componente es más importante": es un segundo momento de color, deliberado y pedido explícitamente por su referencia exacta, que marca el cierre de la página igual que la línea del timeline marca su propio recorrido. Sigue sin sancionarse un tercero: cualquier otro degradado a todo color en botones, badges o fondos de sección sigue siendo territorio prohibido — ver Don't.
 
 **La Regla del Vidrio Reservado.** Los tokens `glass-*` solo se usan en componentes de chrome flotante e interactivo (navegación, tarjetas, marcadores de timeline, botones) — nunca como fondo de sección ni decoración plana. Ver Elevation & Depth y Do's/Don'ts.
 
@@ -200,7 +202,7 @@ Dos familias de esquina, sin mezclarlas: **`rounded-full`** para píldoras y ele
 ### Do:
 - **Do** usar Signal White (`#d9ecff`) como color de texto por defecto; reservar Pure White (`#ffffff`) solo para estados de hover/foco.
 - **Do** dar a todo elemento interactivo (botón, link, tarjeta) una respuesta de revelado o movimiento al hover — nunca solo un cambio de color plano.
-- **Do** mantener la chispa de neón (cian/azul/coral/violeta) confinada a la línea del timeline (La Regla de la Chispa Única).
+- **Do** mantener la chispa de neón (cian/azul/coral/violeta) confinada a la línea del timeline (La Regla de la Chispa Única); el resplandor del footer es la única otra excepción a todo color, y tiene su propia paleta separada.
 - **Do** usar `rounded-full` solo para píldoras/círculos y `rounded-xl`/`rounded-2xl` solo para superficies grandes — no intercambiarlos.
 - **Do** reservar el material de Vidrio Líquido (`glass-*`, blur, borde, sombra offset+blur) para chrome flotante e interactivo — navegación, tarjetas, marcadores de timeline, botones — nunca como decoración de fondo de sección.
 - **Do** usar el mismo `.glass-panel`/`.cta-button` para cualquier botón nuevo — no introducir un segundo estilo de botón "porque este es más importante"; la jerarquía se expresa con tamaño/posición, no con un material distinto.

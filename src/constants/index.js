@@ -318,24 +318,33 @@ const testimonials = [
   },
 ];
 
+// `label` is the human-readable name shown in the footer's social links
+// (see SocialLinks.jsx, which renders it as clickable text) — kept apart
+// from `name` since that key had drifted from what it actually links to
+// (the "fb" entry has always pointed at GitHub, not Facebook) and nothing
+// previously rendered `name` where that would show.
 const socialImgs = [
   {
     name: "insta",
+    label: "Instagram",
     imgPath: "/images/insta.png",
     link: "https://www.instagram.com/8ctals/",
   },
   {
     name: "fb",
+    label: "GitHub",
     imgPath: "/images/github.png",
     link: "https://github.com/8ctal",
   },
   {
     name: "x",
+    label: "X",
     imgPath: "/images/x.png",
     link: "https://x.com/8ctalst",
   },
   {
     name: "linkedin",
+    label: "LinkedIn",
     imgPath: "/images/linkedin.png",
     link: "https://www.linkedin.com/in/camilo-j-avila",
   },
@@ -396,7 +405,8 @@ const projects = [
     technologies: ["StreamLit", "Python", "Cloudflare"],
     link: "#",
     featured: true,
-    category: "mobile"
+    category: "mobile",
+    islandColor: "#000"
   },
   {
     id: "gymapp",
@@ -407,7 +417,8 @@ const projects = [
     technologies: ["Flutter", "Supabase"],
     link: "https://github.com/xMiguelBolano/gym_app",
     featured: true,
-    category: "mobile"
+    category: "mobile",
+    islandColor: "#000"
   },
   {
     id: "school-admin",

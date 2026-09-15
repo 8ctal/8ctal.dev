@@ -23,10 +23,17 @@ const POSITION_STYLES = [
     { scale: 0.9, y: -44 },
 ];
 
-const EXIT_FORWARD = { y: 340, scale: 1, zIndex: 10 };
-const EXIT_BACKWARD = { y: -220, scale: 0.85, zIndex: 10, opacity: 0 };
-const ENTER_FORWARD = { y: -44, scale: 0.9 };
-const ENTER_BACKWARD = { y: 340, scale: 1 };
+// A horizontal slide (the whole deck reads as moving left on advance, right
+// on retreat) instead of the vertical drop this replaced — the drop read as
+// "pésima" (the user's word): 340px of vertical travel at a full second's
+// duration, on a card that otherwise only ever moves along y in small
+// (12–44px) steps, so it didn't read as part of the same stack at all.
+const SLIDE_DISTANCE = 480;
+const EXIT_FORWARD = { x: -SLIDE_DISTANCE, y: 12, opacity: 0, scale: 0.92, rotate: -6, zIndex: 10 };
+const EXIT_BACKWARD = { x: SLIDE_DISTANCE, y: 12, opacity: 0, scale: 0.92, rotate: 6, zIndex: 10 };
+const ENTER_FORWARD = { x: SLIDE_DISTANCE, y: -44, opacity: 0, scale: 0.85 };
+const ENTER_BACKWARD = { x: -SLIDE_DISTANCE, y: -44, opacity: 0, scale: 0.85 };
+const CARD_TRANSITION = { type: "spring", duration: 0.55, bounce: 0.15 };
 
 const CertificationCardContent = ({ cert }) => (
     <GlowCard card={cert} index={0} showStars={false}>
@@ -89,7 +96,7 @@ const CertificationCardContent = ({ cert }) => (
     </GlowCard>
 );
 
-const StackedCard = ({ cert, slot, exitDirection }) => {
+const StackedCard = ({ cert, slot, exitDirection, onSelect }) => {
     const { scale, y } = POSITION_STYLES[slot] ?? POSITION_STYLES[POSITION_STYLES.length - 1];
     const zIndex = POSITION_STYLES.length - slot;
     const exitAnim = slot === 0 ? (exitDirection === "back" ? EXIT_BACKWARD : EXIT_FORWARD) : undefined;
@@ -101,17 +108,28 @@ const StackedCard = ({ cert, slot, exitDirection }) => {
             : undefined;
 
     return (
-        <Motion.div
-            key={cert.credentialId}
-            initial={initialAnim}
-            animate={{ y, scale, opacity: 1 }}
-            exit={exitAnim}
-            transition={{ type: "spring", duration: 1, bounce: 0 }}
-            style={{ zIndex, left: "50%", x: "-50%", bottom: 0 }}
-            className="absolute w-[min(90vw,26rem)]"
-        >
-            <CertificationCardContent cert={cert} />
-        </Motion.div>
+        // The centering (left: 50% + a -50% shift) has to live on a plain,
+        // un-animated wrapper: framer-motion owns the whole `transform`
+        // property once `x`/`y`/etc are animated props, so a static "-50%"
+        // baked into that same x would fight the slide-in/out offset
+        // instead of composing with it.
+        <div className="absolute bottom-0 left-1/2 w-[min(90vw,26rem)] -translate-x-1/2" style={{ zIndex }}>
+            <Motion.div
+                key={cert.credentialId}
+                initial={initialAnim}
+                animate={{ x: 0, y, scale, opacity: 1, rotate: 0 }}
+                exit={exitAnim}
+                transition={CARD_TRANSITION}
+                // Slots behind the front one are the "next cert" affordance
+                // on mobile, where the prev/next buttons are hidden —
+                // tapping the peeking card brings it to the front, same as
+                // pressing "next" enough times to reach it.
+                onClick={slot > 0 ? () => onSelect(slot) : undefined}
+                className={slot > 0 ? "cursor-pointer" : ""}
+            >
+                <CertificationCardContent cert={cert} />
+            </Motion.div>
+        </div>
     );
 };
 
@@ -131,6 +149,13 @@ const CertificationStack = ({ items }) => {
         setOrder((current) => [current[current.length - 1], ...current.slice(0, -1)]);
     };
 
+    // Tapping a peeking card (slot 1 or 2) jumps straight to it, instead of
+    // only ever being able to advance one step at a time.
+    const advanceTo = (slot) => {
+        setExitDirection("forward");
+        setOrder((current) => [...current.slice(slot), ...current.slice(0, slot)]);
+    };
+
     const visible = order.slice(0, POSITION_STYLES.length);
 
     return (
@@ -138,13 +163,22 @@ const CertificationStack = ({ items }) => {
             <div className="relative h-[30rem] w-full sm:h-[34rem]">
                 <AnimatePresence initial={false}>
                     {visible.map((cert, slot) => (
-                        <StackedCard key={cert.credentialId} cert={cert} slot={slot} exitDirection={exitDirection} />
+                        <StackedCard
+                            key={cert.credentialId}
+                            cert={cert}
+                            slot={slot}
+                            exitDirection={exitDirection}
+                            onSelect={advanceTo}
+                        />
                     ))}
                 </AnimatePresence>
             </div>
 
+            {/* Buttons stay for desktop, but disappear on mobile — there,
+                tapping the peeking card itself (see StackedCard) is how you
+                advance, so the row would otherwise duplicate that. */}
             {items.length > 1 && (
-                <div className="mt-8 flex items-center gap-4">
+                <div className="mt-8 hidden items-center gap-4 md:flex">
                     <button
                         type="button"
                         onClick={retreat}

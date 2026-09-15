@@ -1,7 +1,6 @@
 import Certifications from "../sections/Certifications";
 import Contact from "../sections/Contact";
 import Experience from "../sections/Experience";
-import FeatureCards from "../sections/FeatureCards";
 import Hero from "../sections/Hero";
 import LogoShowcase from "../sections/LogoShowcase";
 import RecentThoughts from "../sections/RecentThoughts";
@@ -21,7 +20,6 @@ const Home = () => (
         <StatsShowcase />
         <ShowcaseSection />
         <LogoShowcase />
-        <FeatureCards />
         <Experience />
         <Certifications />
         <TechStack />
