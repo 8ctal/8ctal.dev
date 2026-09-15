@@ -23,16 +23,20 @@ const POSITION_STYLES = [
     { scale: 0.9, y: -44 },
 ];
 
-// A horizontal slide (the whole deck reads as moving left on advance, right
-// on retreat) instead of the vertical drop this replaced — the drop read as
-// "pésima" (the user's word): 340px of vertical travel at a full second's
-// duration, on a card that otherwise only ever moves along y in small
-// (12–44px) steps, so it didn't read as part of the same stack at all.
-const SLIDE_DISTANCE = 480;
-const EXIT_FORWARD = { x: -SLIDE_DISTANCE, y: 12, opacity: 0, scale: 0.92, rotate: -6, zIndex: 10 };
-const EXIT_BACKWARD = { x: SLIDE_DISTANCE, y: 12, opacity: 0, scale: 0.92, rotate: 6, zIndex: 10 };
-const ENTER_FORWARD = { x: SLIDE_DISTANCE, y: -44, opacity: 0, scale: 0.85 };
-const ENTER_BACKWARD = { x: -SLIDE_DISTANCE, y: -44, opacity: 0, scale: 0.85 };
+// A horizontal slide with rotate (the whole deck reading as moving left on
+// advance, right on retreat) used to live here — replacing an earlier
+// vertical drop that read as "pésima" (the user's word). That slide turned
+// out to have the same problem in a different shape: on a small mobile
+// screen, x-travel + rotation + this stack's own y-position all changing
+// at once read as too much simultaneous motion — "extraña" (the user's
+// word this time). What's left is purely vertical, matching the stack's
+// own resting look (POSITION_STYLES only ever moves cards along y): the
+// entering card comes from further back than the stack's own back slot,
+// the exiting one continues past it, and neither rotates or moves in x —
+// same motion regardless of advancing or retreating, so there's no longer
+// a "forward" vs "backward" version of it to keep track of.
+const EXIT_ANIM = { x: 0, y: -90, opacity: 0, scale: 0.82, zIndex: 10 };
+const ENTER_ANIM = { x: 0, y: -90, opacity: 0, scale: 0.82 };
 const CARD_TRANSITION = { type: "spring", duration: 0.55, bounce: 0.15 };
 
 const CertificationCardContent = ({ cert }) => (
@@ -107,16 +111,11 @@ const CertificationCardContent = ({ cert }) => (
 const DRAG_COMMIT_DISTANCE = 90;
 const DRAG_COMMIT_VELOCITY = 500;
 
-const StackedCard = ({ cert, slot, exitDirection, onSelect, onAdvance, onRetreat, onDragStart }) => {
+const StackedCard = ({ cert, slot, onSelect, onAdvance, onRetreat, onDragStart }) => {
     const { scale, y } = POSITION_STYLES[slot] ?? POSITION_STYLES[POSITION_STYLES.length - 1];
     const zIndex = POSITION_STYLES.length - slot;
-    const exitAnim = slot === 0 ? (exitDirection === "back" ? EXIT_BACKWARD : EXIT_FORWARD) : undefined;
-    const initialAnim =
-        slot === POSITION_STYLES.length - 1
-            ? exitDirection === "back"
-                ? ENTER_BACKWARD
-                : ENTER_FORWARD
-            : undefined;
+    const exitAnim = slot === 0 ? EXIT_ANIM : undefined;
+    const initialAnim = slot === POSITION_STYLES.length - 1 ? ENTER_ANIM : undefined;
     const isFront = slot === 0;
 
     return (
@@ -168,7 +167,6 @@ const StackedCard = ({ cert, slot, exitDirection, onSelect, onAdvance, onRetreat
 
 const CertificationStack = ({ items }) => {
     const [order, setOrder] = useState(items);
-    const [exitDirection, setExitDirection] = useState("forward");
     // Shown once, over the front card, until the visitor's first real
     // interaction with the stack — on mobile the prev/next buttons are
     // hidden and tapping a peeking card only gets you one step at a time,
@@ -181,13 +179,11 @@ const CertificationStack = ({ items }) => {
 
     const advance = () => {
         dismissHint();
-        setExitDirection("forward");
         setOrder((current) => [...current.slice(1), current[0]]);
     };
 
     const retreat = () => {
         dismissHint();
-        setExitDirection("back");
         setOrder((current) => [current[current.length - 1], ...current.slice(0, -1)]);
     };
 
@@ -195,7 +191,6 @@ const CertificationStack = ({ items }) => {
     // only ever being able to advance one step at a time.
     const advanceTo = (slot) => {
         dismissHint();
-        setExitDirection("forward");
         setOrder((current) => [...current.slice(slot), ...current.slice(0, slot)]);
     };
 
@@ -210,7 +205,6 @@ const CertificationStack = ({ items }) => {
                             key={cert.credentialId}
                             cert={cert}
                             slot={slot}
-                            exitDirection={exitDirection}
                             onSelect={advanceTo}
                             onAdvance={advance}
                             onRetreat={retreat}

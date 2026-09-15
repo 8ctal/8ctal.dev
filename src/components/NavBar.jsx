@@ -307,12 +307,21 @@ const NavBar = () => {
             </svg>
 
             <div className="inner">
-                <Link to="/" className="logo" aria-label="8ctal — inicio">
+                {/* A plain anchor to "/#hero", not a router <Link to="/">:
+                    the logo is meant to act like every site's "click the
+                    logo to go home" affordance, but a <Link to="/"> is a
+                    no-op when you're already on "/" — which, on a single-
+                    page site, is basically always. The hash makes it
+                    actually scroll back to the Hero regardless of how far
+                    down the page you are, the same mechanism the other
+                    nav links already use (see NavLinkItem) to jump
+                    correctly from another route too. */}
+                <a href="/#hero" className="logo" aria-label="8ctal — volver al inicio">
                     <div className="flex items-center gap-2">
                         <img src="/images/logo_8ball.png" alt="" className="h-15 w-auto" />
                         <Wordmark visible={showWordmark} />
                     </div>
-                </Link>
+                </a>
 
                 {/* Centered on the header itself, not "between the logo and
                     the action buttons" — those two flank it at very
@@ -392,6 +401,26 @@ const NavBar = () => {
                         aria-hidden={!menuOpen}
                         aria-label="Navegación"
                     >
+                        {/* The header's own ball logo sits underneath this
+                            overlay (.navbar is z-[100], this is z-[200] —
+                            see index.css), so it disappears the instant the
+                            menu opens. Rather than fight that stacking order
+                            (raising .navbar above the overlay would also
+                            bring back its now-redundant hamburger button,
+                            landing right on top of the close button below),
+                            this is its own copy, rendered as part of the
+                            overlay itself so it's naturally on top of it —
+                            same destination and the same "closes the menu
+                            first" behavior as every link below. */}
+                        <a
+                            href="/#hero"
+                            className="absolute left-5 top-5"
+                            aria-label="8ctal — volver al inicio"
+                            onClick={closeMenu}
+                        >
+                            <img src="/images/logo_8ball.png" alt="" className="h-12 w-auto" />
+                        </a>
+
                         <button
                             type="button"
                             className="nav-toggle glass-panel absolute top-5 right-5"

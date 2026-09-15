@@ -778,10 +778,21 @@ html.is-booting {
    opacity the covered card's own text stayed faintly visible right through
    the front one, blurred but still legible enough to fight with it.
    Testimonials' GlowCard grid doesn't overlap, so it keeps the lighter,
-   more translucent default. */
+   more translucent default.
+   backdrop-filter is turned back off here too: the base .card's blur is
+   there to soften whatever shows through a translucent surface, but this
+   variant is ~90-97% opaque already — nothing shows through it for that
+   blur to soften in the first place, so it was pure waste. Worse than
+   pure waste on mobile specifically: recomputing a 24px backdrop blur
+   every frame while the element itself is also animating position/scale
+   is exactly the kind of thing weaker mobile GPUs render as a smeary,
+   swimming artifact rather than a crisp blur — which is what actually
+   read as the stack's transition looking "extraña" there. */
 .card.card--solid {
   background: linear-gradient(180deg, rgba(14, 14, 16, 0.9) 0%, rgba(14, 14, 16, 0.97) 100%);
   border-color: var(--color-glass-border-strong) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 /* The glass's own edge catching the light: a soft highlight that
