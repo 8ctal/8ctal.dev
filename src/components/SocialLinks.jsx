@@ -13,6 +13,10 @@
 // - The pop-up is a real brand mark (SocialIcon.jsx) driven by `social.icon`
 //   instead of the reference's arbitrary `social.image` — the reference
 //   ships no icon artwork of its own to begin with (see SocialIcon.jsx).
+// - The reference's whole gimmick is hover-triggered, which never fires on
+//   a touchscreen — see `hoverCapable` below for how a touch visitor gets a
+//   plain, always-visible icon+label instead of one that can only ever be
+//   revealed by a mouse it doesn't have.
 import { useEffect, useState } from "react";
 // Imported as `Motion` (capitalized): this project's ESLint config has no
 // JSX-usage detection for member-expression tags like `motion.div`, so a
@@ -23,10 +27,17 @@ import { motion as Motion, AnimatePresence } from "framer-motion";
 import { cn } from "../lib/cn";
 import SocialIcon from "./SocialIcon";
 
+// Same query CustomCursor.jsx gates on: true only for a real mouse, false
+// for touch (and for a mouse+touch hybrid device in its touch mode).
+const HOVER_CAPABLE_QUERY = "(hover: hover) and (pointer: fine)";
+
 export function SocialLinks({ socials, className, ...props }) {
     const [hoveredSocial, setHoveredSocial] = useState(null);
     const [rotation, setRotation] = useState(0);
     const [clicked, setClicked] = useState(false);
+    const [hoverCapable, setHoverCapable] = useState(
+        () => typeof window !== "undefined" && window.matchMedia(HOVER_CAPABLE_QUERY).matches
+    );
 
     const animation = {
         scale: clicked ? [1, 1.3, 1] : 1,
@@ -43,6 +54,36 @@ export function SocialLinks({ socials, className, ...props }) {
         window.addEventListener("click", handleClick);
         return () => window.removeEventListener("click", handleClick);
     }, []);
+
+    useEffect(() => {
+        const mql = window.matchMedia(HOVER_CAPABLE_QUERY);
+        const onChange = () => setHoverCapable(mql.matches);
+        mql.addEventListener("change", onChange);
+        return () => mql.removeEventListener("change", onChange);
+    }, []);
+
+    // Touch has no hover to reveal the pop-up icon with, so there's nothing
+    // to gate there — every icon is just always on, stacked in normal flow
+    // above its label instead of absolutely positioned over it (nothing
+    // triggers it into place on top of the text the way a hover would).
+    if (!hoverCapable) {
+        return (
+            <div className={cn("flex items-center justify-center gap-6", className)} {...props}>
+                {socials.map((social) => (
+                    <a
+                        href={social.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        key={social.label}
+                        className="flex flex-col items-center gap-1.5"
+                    >
+                        <SocialIcon name={social.icon} className="size-6" />
+                        <span className="text-xs font-medium text-white-50">{social.label}</span>
+                    </a>
+                ))}
+            </div>
+        );
+    }
 
     return (
         <div className={cn("flex items-center justify-center gap-0", className)} {...props}>

@@ -4,7 +4,7 @@ import { useState } from "react";
 // lowercase import reads as unused even though it's referenced in the JSX
 // below (see CardStack.jsx's own copy of this same note).
 import { motion as Motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MoveHorizontal } from "lucide-react";
 
 import GlowCard from "./GlowCard";
 import SkillsToggle from "./SkillsToggle";
@@ -107,7 +107,7 @@ const CertificationCardContent = ({ cert }) => (
 const DRAG_COMMIT_DISTANCE = 90;
 const DRAG_COMMIT_VELOCITY = 500;
 
-const StackedCard = ({ cert, slot, exitDirection, onSelect, onAdvance, onRetreat }) => {
+const StackedCard = ({ cert, slot, exitDirection, onSelect, onAdvance, onRetreat, onDragStart }) => {
     const { scale, y } = POSITION_STYLES[slot] ?? POSITION_STYLES[POSITION_STYLES.length - 1];
     const zIndex = POSITION_STYLES.length - slot;
     const exitAnim = slot === 0 ? (exitDirection === "back" ? EXIT_BACKWARD : EXIT_FORWARD) : undefined;
@@ -147,6 +147,7 @@ const StackedCard = ({ cert, slot, exitDirection, onSelect, onAdvance, onRetreat
                 drag={isFront ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.6}
+                onDragStart={isFront ? onDragStart : undefined}
                 onDragEnd={
                     isFront
                         ? (_e, info) => {
@@ -168,15 +169,24 @@ const StackedCard = ({ cert, slot, exitDirection, onSelect, onAdvance, onRetreat
 const CertificationStack = ({ items }) => {
     const [order, setOrder] = useState(items);
     const [exitDirection, setExitDirection] = useState("forward");
+    // Shown once, over the front card, until the visitor's first real
+    // interaction with the stack — on mobile the prev/next buttons are
+    // hidden and tapping a peeking card only gets you one step at a time,
+    // so dragging is the only way to actually get through all of them; this
+    // is what tells a mobile visitor that's possible at all.
+    const [hasInteracted, setHasInteracted] = useState(false);
+    const dismissHint = () => setHasInteracted(true);
 
     if (!items?.length) return null;
 
     const advance = () => {
+        dismissHint();
         setExitDirection("forward");
         setOrder((current) => [...current.slice(1), current[0]]);
     };
 
     const retreat = () => {
+        dismissHint();
         setExitDirection("back");
         setOrder((current) => [current[current.length - 1], ...current.slice(0, -1)]);
     };
@@ -184,6 +194,7 @@ const CertificationStack = ({ items }) => {
     // Tapping a peeking card (slot 1 or 2) jumps straight to it, instead of
     // only ever being able to advance one step at a time.
     const advanceTo = (slot) => {
+        dismissHint();
         setExitDirection("forward");
         setOrder((current) => [...current.slice(slot), ...current.slice(0, slot)]);
     };
@@ -203,9 +214,22 @@ const CertificationStack = ({ items }) => {
                             onSelect={advanceTo}
                             onAdvance={advance}
                             onRetreat={retreat}
+                            onDragStart={dismissHint}
                         />
                     ))}
                 </AnimatePresence>
+
+                {!hasInteracted && items.length > 1 && (
+                    <div
+                        className="swipe-hint pointer-events-none absolute inset-x-0 bottom-6 z-40 flex items-center justify-center gap-2 md:hidden"
+                        aria-hidden="true"
+                    >
+                        <div className="glass-panel flex items-center gap-2 rounded-full px-4 py-2 text-blue-50">
+                            <MoveHorizontal className="swipe-hint-icon size-4" />
+                            <span className="text-xs">Desliza para ver más</span>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Buttons stay for desktop, but disappear on mobile — there,

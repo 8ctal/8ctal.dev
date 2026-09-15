@@ -33,7 +33,7 @@ const iconFor = (label) => {
 // they appear verbatim in source, so a computed string like
 // `translate-x-${n}` never produces the utility it names — nothing in the
 // compiled CSS would actually move the card. Same reasoning for
-// ROW_OFFSETS/LIFTED_OFFSETS below.
+// ROW_OFFSETS and Z_INDEX_CLASSES below.
 const STACK_OFFSETS = [
     "translate-x-0 translate-y-0",
     "translate-x-4 translate-y-3",
@@ -41,17 +41,12 @@ const STACK_OFFSETS = [
     "translate-x-12 translate-y-9",
 ];
 
-// What a card switches to when tapped (mobile's stand-in for hover — a
-// phone has no hover to reveal a card buried in the stack, so a tap swaps
-// its offset to this instead of STACK_OFFSETS). Same x as its stacked
-// position, lifted well clear on y so it reads on top of its neighbors once
-// paired with the z-20 in cardClassName below.
-const LIFTED_OFFSETS = [
-    "translate-x-0 -translate-y-10",
-    "translate-x-4 -translate-y-10",
-    "translate-x-8 -translate-y-10",
-    "translate-x-12 -translate-y-10",
-];
+// Paints the rotated-to-front card on top regardless of its original DOM
+// position (see `frontIndex` below — rotating which item reads as "front"
+// doesn't reorder the rendered array, so natural DOM paint order can't be
+// relied on to put the right one on top anymore). Literal classes for the
+// same Tailwind-scanning reason as the offsets above.
+const Z_INDEX_CLASSES = ["z-0", "z-10", "z-20", "z-30"];
 
 // The settled, side-by-side layout each card animates *into* after the
 // stack has had a moment to read as a stack — still built from translate
@@ -77,11 +72,12 @@ const ROW_OFFSETS = [
  * horizontal row. That settle only ever happens on desktop/tablet (see
  * ROW_OFFSETS, `md:`-scoped) — 4 real rows this wide don't fit a phone
  * screen at any legible card size, so on mobile the cards stay a stack
- * permanently; tapping one there (see `liftedIndex`) is mobile's stand-in
- * for the hover a desktop stack uses to reveal a card buried behind the
- * front one. See DisplayCards.jsx for why they're built from its
- * DisplayCard primitive directly rather than through the generic
- * <DisplayCards> wrapper.
+ * permanently; tapping any of them there (see `frontIndex`/`advance`)
+ * rotates the next one to the front, looping forever — mobile's stand-in
+ * for the hover a desktop stack would use instead, and the only way to
+ * ever reach whichever card started out buried two or three deep. See
+ * DisplayCards.jsx for why they're built from its DisplayCard primitive
+ * directly rather than through the generic <DisplayCards> wrapper.
  *
  * The counting-up animation itself is unchanged from the old
  * AnimatedCounter.jsx: GSAP tweens each number's innerText from 0 to its
@@ -91,11 +87,12 @@ const StatsShowcase = () => {
     const counterRef = useRef(null);
     const countersRef = useRef([]);
     const [settled, setSettled] = useState(false);
-    // Which card a tap has brought to the front — mobile only, in effect
-    // (see cardClassName: the row settle overrides positioning at md: and
-    // desktop already reveals every card via hover, so this is a no-op
-    // there). Toggles off on a second tap of the same card.
-    const [liftedIndex, setLiftedIndex] = useState(null);
+    // Which counterItems index currently sits at the front of the stack —
+    // mobile only, in effect (the row settle overrides positioning at md:,
+    // so rotating this becomes a no-op there). Starts at `last` to match
+    // the stack's original, un-rotated look (see cardClassName).
+    const [frontIndex, setFrontIndex] = useState(counterItems.length - 1);
+    const advance = () => setFrontIndex((current) => (current + 1) % counterItems.length);
 
     useGSAP(() => {
         countersRef.current.forEach((card, index) => {
@@ -135,16 +132,24 @@ const StatsShowcase = () => {
     }, []);
 
     const last = counterItems.length - 1;
-    const toggleLifted = (index) => setLiftedIndex((current) => (current === index ? null : index));
 
     const cardClassName = (index) => {
-        const isLast = index === last;
-        const isLifted = liftedIndex === index;
-        const offsets = isLifted ? LIFTED_OFFSETS : STACK_OFFSETS;
+        // How many rotation steps this card sits behind whichever one is
+        // currently front — 0 for the front card itself, up to `last` for
+        // the one buried deepest. Mapped to a *slot* (not used to reindex
+        // the rendered array — countersRef/the counting-up effect above
+        // both depend on stable index-to-DOM identity) so the existing
+        // STACK_OFFSETS/Z_INDEX_CLASSES tables, tuned around "slot `last`
+        // is the fully visible front card", still apply after any number
+        // of taps.
+        const distanceFromFront = (index - frontIndex + counterItems.length) % counterItems.length;
+        const slot = last - distanceFromFront;
+        const isFront = distanceFromFront === 0;
 
         return [
             "[grid-area:stack] transition-transform duration-[900ms] ease-out cursor-pointer",
-            offsets[Math.min(index, offsets.length - 1)],
+            STACK_OFFSETS[slot],
+            Z_INDEX_CLASSES[slot],
             settled && ROW_OFFSETS[Math.min(index, ROW_OFFSETS.length - 1)],
             // DisplayCard's own `after:` edge-fade (see DisplayCards.jsx) is
             // sized to mask a card into the ones stacked *behind* it — at
@@ -155,17 +160,12 @@ const StatsShowcase = () => {
             // mobile never leaves the stacked layout, so it still needs
             // this mask there regardless of `settled`.
             settled && "md:grayscale-0 md:scale-100 md:after:hidden",
-            !isLast &&
+            !isFront &&
                 [
                     "before:absolute before:left-0 before:top-0 before:h-full before:w-full before:rounded-xl before:bg-black/50 before:outline-1 before:outline-white/15 before:content-[''] before:transition-opacity before:duration-700 grayscale-[100%] hover:grayscale-0 hover:before:opacity-0",
                     settled && "md:before:hidden",
                 ],
-            isLast ? "hover:translate-y-2" : "hover:-translate-y-8",
-            // The tapped card, front and center regardless of z-order:
-            // grayscale/overlay off like a hover would do, plus a z-index
-            // bump since DOM order alone would otherwise still paint it
-            // under whichever card comes after it.
-            isLifted && "z-20 grayscale-0 before:opacity-0",
+            isFront ? "hover:translate-y-2" : "hover:-translate-y-8",
         ]
             .flat()
             .filter(Boolean)
@@ -193,7 +193,7 @@ const StatsShowcase = () => {
                             description={item.label}
                             date=""
                             skewed={!settled}
-                            onClick={() => toggleLifted(index)}
+                            onClick={advance}
                         />
                     );
                 })}

@@ -42,6 +42,17 @@ const ProjectDetailModal = ({ project, onClose }) => {
     const hasGif = !hasVideo && Boolean(project.gifPath);
     const hasLink = project.link && project.link !== "#";
 
+    // Web screenshots are landscape and mobile ones are portrait — one
+    // fixed aspect-ratio box cropping both to fit was always going to cut
+    // pieces off one of them. Web keeps the media on top the whole width
+    // (it's already wide, so full-width top billing is what shows the most
+    // of it) with text below; mobile puts the media in a side column,
+    // narrower but free to run as tall as the screenshot actually is,
+    // alongside the text rather than above it — a portrait screenshot
+    // stacked above a paragraph of text would push that text a long way
+    // down for no reason.
+    const isMobileProject = project.category === "mobile";
+
     return createPortal(
         <div
             className="fixed inset-0 z-[300] flex items-center justify-center bg-black/70 p-4 backdrop-blur-md md:p-8"
@@ -51,7 +62,9 @@ const ProjectDetailModal = ({ project, onClose }) => {
             onClick={onClose}
         >
             <div
-                className="glass-panel-strong relative flex max-h-[88vh] w-full max-w-4xl flex-col overflow-y-auto rounded-2xl md:flex-row"
+                className={`glass-panel-strong relative flex max-h-[88vh] w-full max-w-4xl flex-col overflow-y-auto rounded-2xl ${
+                    isMobileProject ? "md:flex-row" : ""
+                }`}
                 onClick={(e) => e.stopPropagation()}
             >
                 <button
@@ -67,18 +80,24 @@ const ProjectDetailModal = ({ project, onClose }) => {
                     </svg>
                 </button>
 
-                {/* aspect-video (not md:aspect-auto) stays in force at every
-                    breakpoint, and md:self-start opts this side out of the
-                    row's default flex stretch — otherwise a shorter
-                    description on one project vs. a longer one on another
-                    would stretch this box to a different height each time,
-                    which read as the media area having different dimensions
-                    per project instead of one consistent frame. */}
-                <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-black-100 md:w-1/2 md:self-start">
+                {/* object-contain, not object-cover: letterboxing beats
+                    cropping either shape of screenshot. md:self-start (mobile
+                    only) keeps this column from being stretched to match the
+                    text column's height, so it's free to size purely off the
+                    image's own aspect ratio instead. Web's image gets a
+                    max-height so an unusually long full-page screenshot
+                    can't dominate the whole modal — mobile deliberately has
+                    no such cap, since letting it run "as tall as necessary"
+                    is the point of putting it in its own column. */}
+                <div
+                    className={`relative flex w-full shrink-0 items-center justify-center overflow-hidden bg-black-100 ${
+                        isMobileProject ? "md:w-2/5 md:self-start" : ""
+                    }`}
+                >
                     {hasVideo ? (
                         <video
                             src={project.videoPath}
-                            className="h-full w-full object-cover"
+                            className={`w-full object-contain ${isMobileProject ? "h-auto" : "h-auto max-h-[60vh]"}`}
                             autoPlay
                             muted
                             loop
@@ -88,13 +107,13 @@ const ProjectDetailModal = ({ project, onClose }) => {
                         <img
                             src={hasGif ? project.gifPath : project.imagePath}
                             alt={project.title}
-                            className="h-full w-full object-cover"
+                            className={`w-full object-contain ${isMobileProject ? "h-auto" : "h-auto max-h-[60vh]"}`}
                             loading="lazy"
                         />
                     )}
                 </div>
 
-                <div className="flex w-full flex-col gap-5 p-6 md:w-1/2 md:p-10">
+                <div className={`flex w-full flex-col gap-5 p-6 md:p-10 ${isMobileProject ? "md:w-3/5" : ""}`}>
                     <div>
                         <h3 className="text-2xl font-semibold text-white md:text-3xl">{project.title}</h3>
                         {project.subtitle && (
