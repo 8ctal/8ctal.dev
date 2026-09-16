@@ -219,8 +219,18 @@ export function CardStack({
                             // hide far-away cards cleanly
                             if (!visible) return null;
 
-                            // fan geometry
-                            const rotateZ = off * stepDeg;
+                            // fan geometry. rotateZ specifically only reads as a
+                            // "fan" alongside the perspective/rotateX tilt that
+                            // sells the cards as receding in 3D space — without
+                            // that depth cue (mobile drops both, see isMobile
+                            // above), the same rotation on a flat 2D card just
+                            // looks like it toppled over, not like it's fanned
+                            // out behind the active one. maxOffset also shrinks
+                            // to 1 on mobile, which would otherwise concentrate
+                            // the whole spreadDeg into a single, much sharper
+                            // step (48deg instead of 16deg) — another reason
+                            // this has to be zero there, not just smaller.
+                            const rotateZ = isMobile ? 0 : off * stepDeg;
                             const x = off * cardSpacing;
                             const y = abs * 10; // subtle arc-down feel
                             const z = isMobile ? 0 : -abs * depthPx;

@@ -649,12 +649,19 @@ const projects = [
   },
 ];
 
+// `technologies` powers Certifications.jsx's filter selector — a short,
+// language-independent set of category tags per cert (same convention as
+// projects.technologies), separate from the fuller, translated `skills`
+// list each cert already carries. Kept small (1-3 tags) on purpose: it's
+// meant to group certs at a glance as more get added, not restate every
+// skill already covered by the skills toggle.
 const certifications = [
   {
     issuer: "MinTIC",
     credentialId: "Ef4mLmADys",
     imgPath: "/images/logos/talento_tech_logo.png",
     link: "https://app.certika.co/certificate/OTU0Mjg=",
+    technologies: ["Python", "Machine Learning"],
     es: {
       title: "Bootcamp Inteligencia Artificial",
       date: "Diciembre 2024",
@@ -694,6 +701,7 @@ const certifications = [
     credentialId: "DYL4YF5D0II0",
     imgPath: "/images/logos/imb_logo.png",
     link: "https://coursera.org/verify/DYL4YF5D0II0",
+    technologies: ["Python", "Machine Learning"],
     es: {
       title: "Machine Learning con Python",
       date: "Diciembre 2024",
@@ -728,6 +736,7 @@ const certifications = [
     credentialId: "d758ef3d-87f2-4868-ba19-ff4dd64faa7b",
     imgPath: "/images/logos/alura_logo.jpg",
     link: "https://app.aluracursos.com/program/certificate/d758ef3d-87f2-4868-ba19-ff4dd64faa7b?lang",
+    technologies: ["Java", "Backend"],
     es: {
       title: "Programa Oracle Next Education F2 T6 Back-end",
       date: "Julio 2024",
@@ -746,6 +755,7 @@ const certifications = [
     credentialId: "UC-0123456789",
     imgPath: "/images/logos/udemy_logo.png",
     link: "https://www.udemy.com/certificate/UC-0123456789/",
+    technologies: ["Flutter", "Mobile"],
     es: {
       title: "Flutter Developer",
       date: "Junio 2025",
@@ -761,12 +771,13 @@ const certifications = [
   },
   // No `credentialId` on these two: they link straight to the certificate
   // PDF rather than to a verification-code page like the others above, so
-  // there's no separate ID to show — CertificationStack.jsx only renders
+  // there's no separate ID to show — CertificationCard.jsx only renders
   // the "ID: …" line when credentialId is actually set.
   {
     issuer: "SENA",
     imgPath: "/images/logos/sena_logo.svg",
     link: "https://drive.google.com/file/d/1x2bwtV5p9TNzC-oPKEq-YOxbyzx2vUhL/view?usp=sharing",
+    technologies: ["Software Quality"],
     es: {
       title: "Calidad en el Desarrollo de Software",
       date: "Agosto 2026",
@@ -785,6 +796,7 @@ const certifications = [
     issuer: "SENA",
     imgPath: "/images/logos/sena_logo.svg",
     link: "https://drive.google.com/file/d/1bFjiet5L853e9_FM-nwQWDU9rR4fBTx4/view?usp=sharing",
+    technologies: ["IoT"],
     es: {
       title: "Diseño de Soluciones de Internet de las Cosas",
       date: "Agosto 2026",

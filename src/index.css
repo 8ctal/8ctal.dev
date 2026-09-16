@@ -82,19 +82,22 @@ html.is-booting {
   }
 }
 
-/* CertificationStack.jsx's mobile-only "swipe to see more" hint. On
-   desktop, the prev/next buttons make the interaction obvious; on mobile
-   they're hidden and the front card's own drag handling is the only way
-   through the whole stack, so this nudges a first-time visitor toward
-   trying it. Plain CSS, same reasoning as cv-float above. */
+/* CertificationScrollStack.jsx's mobile-only "swipe to see more" hint —
+   the desktop equivalent (CertificationGallery.jsx) makes its interaction
+   obvious via the pile's own hover lift and explicit "Explore" button, but
+   the mobile stack's only way through is a vertical swipe/scroll, so this
+   nudges a first-time visitor toward trying it. Plain CSS, same reasoning
+   as cv-float above. Vertical (translateY), matching the stack's own
+   vertical navigation — this used to pulse horizontally for the previous,
+   horizontally-swiped stack design. */
 @keyframes swipe-hint-icon {
   0%,
   100% {
-    transform: translateX(0);
+    transform: translateY(0);
     opacity: 0.7;
   }
   50% {
-    transform: translateX(5px);
+    transform: translateY(5px);
     opacity: 1;
   }
 }
@@ -388,7 +391,7 @@ html.is-booting {
       cv-float 5s ease-in-out 2.5s infinite;
   }
 
-  /* CertificationStack.jsx's "swipe to see more" hint icon (see
+  /* CertificationScrollStack.jsx's "swipe to see more" hint icon (see
      swipe-hint-icon keyframes above). */
   .swipe-hint-icon {
     animation: swipe-hint-icon 1.6s ease-in-out infinite;
@@ -792,10 +795,12 @@ html.is-booting {
 
 /* GlowCard's `solid` prop opts into this instead of the ~5-10% opaque fill
    above (same formula as .glass-panel-strong). Only needed where cards sit
-   almost directly on top of one another — CertificationStack's stack has
-   each card just 12-44px off the one behind it, so at the normal glass
-   opacity the covered card's own text stayed faintly visible right through
-   the front one, blurred but still legible enough to fight with it.
+   almost directly on top of one another — CertificationScrollStack's
+   mobile deck stacks its cards only a handful of px apart, so at the
+   normal glass opacity the covered card's own text stayed faintly visible
+   right through the front one, blurred but still legible enough to fight
+   with it. CertificationGallery's grid and pile use it too, for visual
+   consistency with the same card everywhere it appears.
    Testimonials' GlowCard grid doesn't overlap, so it keeps the lighter,
    more translucent default.
    backdrop-filter is turned back off here too: the base .card's blur is
@@ -847,7 +852,7 @@ html.is-booting {
      difference between a GPU-composited scroll and a main-thread repaint
      on every one, which is exactly the kind of thing that reads as
      scroll jank on a page with several of these stacked at once
-     (CertificationStack). */
+     (CertificationScrollStack, CertificationGallery). */
   mask: linear-gradient(#0000, #0000),
     conic-gradient(from calc((var(--start) - 15) * 1deg),
       #ffffff1f 0deg,
