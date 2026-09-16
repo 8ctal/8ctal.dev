@@ -5,6 +5,7 @@ import * as React from "react";
 // below.
 import { motion as Motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SquareArrowOutUpRight } from "lucide-react";
+import { useMediaQuery } from "react-responsive";
 
 import { useLanguage } from "../context/Language";
 
@@ -81,6 +82,17 @@ export function CardStack({
     const reduceMotion = systemReduceMotion || forceReducedMotion;
     const len = items.length;
 
+    // Below this width, drop the fan's 3D depth (perspective/rotateX/
+    // translateZ) and cap how many cards are mounted at once — true 3D
+    // transforms force every visible card onto its own GPU-composited
+    // layer, and with up to `maxVisible` of them plus two blurred wash
+    // layers behind them, weaker mobile GPUs render that as dropped frames
+    // and stutter on scroll even when nothing is actively animating (the
+    // layers still have to be composited every scroll frame). The fan still
+    // reads as a fan on mobile — x-offset, a slight arc, rotateZ, scale —
+    // it just stays flat instead of tilting in z.
+    const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+
     const [active, setActive] = React.useState(() => wrapIndex(initialIndex, len));
     const [hovering, setHovering] = React.useState(false);
 
@@ -116,7 +128,7 @@ export function CardStack({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [active]);
 
-    const maxOffset = Math.max(0, Math.floor(maxVisible / 2));
+    const maxOffset = Math.max(0, Math.floor((isMobile ? Math.min(maxVisible, 3) : maxVisible) / 2));
 
     const cardSpacing = Math.max(10, Math.round(scaledCardWidth * (1 - overlap)));
     const stepDeg = maxOffset > 0 ? spreadDeg / maxOffset : 0;
@@ -177,19 +189,26 @@ export function CardStack({
                 tabIndex={0}
                 onKeyDown={onKeyDown}
             >
-                {/* background wash / spotlight (unique feel) */}
-                <div
-                    className="pointer-events-none absolute inset-x-0 top-6 mx-auto h-48 w-[70%] rounded-full bg-white-50/5 blur-3xl"
-                    aria-hidden="true"
-                />
-                <div
-                    className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-40 w-[76%] rounded-full bg-black/40 blur-3xl"
-                    aria-hidden="true"
-                />
+                {/* background wash / spotlight (unique feel) — skipped on
+                    mobile: a static 64px filter: blur() over a large area is
+                    real, permanent compositing cost for a purely decorative
+                    glow, on exactly the devices least able to absorb it. */}
+                {!isMobile && (
+                    <>
+                        <div
+                            className="pointer-events-none absolute inset-x-0 top-6 mx-auto h-48 w-[70%] rounded-full bg-white-50/5 blur-3xl"
+                            aria-hidden="true"
+                        />
+                        <div
+                            className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-40 w-[76%] rounded-full bg-black/40 blur-3xl"
+                            aria-hidden="true"
+                        />
+                    </>
+                )}
 
                 <div
                     className="absolute inset-0 flex items-end justify-center"
-                    style={{ perspective: `${perspectivePx}px` }}
+                    style={isMobile ? undefined : { perspective: `${perspectivePx}px` }}
                 >
                     <AnimatePresence initial={false}>
                         {items.map((item, i) => {
@@ -204,14 +223,14 @@ export function CardStack({
                             const rotateZ = off * stepDeg;
                             const x = off * cardSpacing;
                             const y = abs * 10; // subtle arc-down feel
-                            const z = -abs * depthPx;
+                            const z = isMobile ? 0 : -abs * depthPx;
 
                             const isActive = off === 0;
 
                             const scale = isActive ? activeScale : inactiveScale;
                             const lift = isActive ? -activeLiftPx : 0;
 
-                            const rotateX = isActive ? 0 : tiltXDeg;
+                            const rotateX = isMobile || isActive ? 0 : tiltXDeg;
 
                             const zIndex = 100 - abs;
 
@@ -245,7 +264,7 @@ export function CardStack({
                                         width: scaledCardWidth,
                                         height: scaledCardHeight,
                                         zIndex,
-                                        transformStyle: "preserve-3d",
+                                        transformStyle: isMobile ? undefined : "preserve-3d",
                                     }}
                                     initial={
                                         reduceMotion
@@ -275,10 +294,11 @@ export function CardStack({
                                 >
                                     <div
                                         className="h-full w-full"
-                                        style={{
-                                            transform: `translateZ(${z}px)`,
-                                            transformStyle: "preserve-3d",
-                                        }}
+                                        style={
+                                            isMobile
+                                                ? undefined
+                                                : { transform: `translateZ(${z}px)`, transformStyle: "preserve-3d" }
+                                        }
                                     >
                                         {renderCard ? (
                                             renderCard(item, { active: isActive })

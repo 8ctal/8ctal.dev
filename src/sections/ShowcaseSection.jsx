@@ -83,7 +83,7 @@ const AppShowcase = () => {
                                             alt={item.title}
                                             className="h-full w-full object-cover"
                                             draggable={false}
-                                            loading="eager"
+                                            loading="lazy"
                                         />
                                     )}
                                 />

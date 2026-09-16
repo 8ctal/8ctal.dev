@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 // below (see CardStack.jsx's own copy of this same note).
 import { motion as Motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, MoveHorizontal } from "lucide-react";
+import { useMediaQuery } from "react-responsive";
 
 import GlowCard from "./GlowCard";
 import SkillsToggle from "./SkillsToggle";
@@ -174,6 +175,15 @@ const StackedCard = ({ cert, slot, onSelect, onAdvance, onRetreat, onDragStart }
 
 const CertificationStack = ({ items }) => {
     const { t } = useLanguage();
+    // Below this width, only the front card mounts — the other two are
+    // purely decorative peeking edges, but each one is still a full
+    // GlowCard (its own box-shadow, its own masked border-glow
+    // pseudo-element) recomputed every scroll frame. Stacking three of
+    // those is what actually reads as sluggish on a weaker mobile GPU, not
+    // the card-to-card transition itself. Swiping still advances the stack
+    // exactly as before (the front card's drag handling doesn't depend on
+    // anything behind it) and the swipe-hint below still teaches that.
+    const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
     const [order, setOrder] = useState(items);
 
     // `items` is a fresh, re-localized array every time the language toggles
@@ -216,7 +226,7 @@ const CertificationStack = ({ items }) => {
         setOrder((current) => [...current.slice(slot), ...current.slice(0, slot)]);
     };
 
-    const visible = order.slice(0, POSITION_STYLES.length);
+    const visible = order.slice(0, isMobile ? 1 : POSITION_STYLES.length);
 
     return (
         <div className="flex w-full flex-col items-center">

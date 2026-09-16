@@ -837,7 +837,17 @@ html.is-booting {
   border-radius: 12px;
   border: 2px solid transparent;
   background: var(--gradient);
-  background-attachment: fixed;
+  /* Deliberately *not* background-attachment: fixed — that anchors the
+     gradient to the viewport instead of the element, which forces the
+     browser to repaint this layer on every scroll frame instead of just
+     translating it. --gradient is a plain static radial gradient (no
+     parallax/viewport-relative intent to it), and the mask only ever
+     reveals a thin ring of it near the border, so anchoring it to the
+     element instead is visually indistinguishable — but it's the
+     difference between a GPU-composited scroll and a main-thread repaint
+     on every one, which is exactly the kind of thing that reads as
+     scroll jank on a page with several of these stacked at once
+     (CertificationStack). */
   mask: linear-gradient(#0000, #0000),
     conic-gradient(from calc((var(--start) - 15) * 1deg),
       #ffffff1f 0deg,
