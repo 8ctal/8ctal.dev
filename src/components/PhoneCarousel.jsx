@@ -1,6 +1,8 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 
+import { useLanguage } from "../context/Language";
+
 function cn(...classes) {
     return classes.filter(Boolean).join(" ");
 }
@@ -149,6 +151,7 @@ const CarouselButton = ({ onClick, label, children }) => (
  * matches.
  */
 export const PhoneCarousel = ({ images, className, onChangeIndex, forceReducedMotion = false }) => {
+    const { t } = useLanguage();
     const [currentIndex, setCurrentIndex] = React.useState(0);
     const [isPaused, setIsPaused] = React.useState(false);
     const [isHovering, setIsHovering] = React.useState(false);
@@ -185,7 +188,7 @@ export const PhoneCarousel = ({ images, className, onChangeIndex, forceReducedMo
         <div
             role="region"
             className={cn("relative w-full py-6 md:py-10", className)}
-            aria-label="Carrusel de capturas de la app"
+            aria-label={t.carousel.region}
         >
             {/* Stage: overflow-hidden lives here, and only here, so it crops
                 the peeking prev/next phones without also clipping the
@@ -236,13 +239,13 @@ export const PhoneCarousel = ({ images, className, onChangeIndex, forceReducedMo
 
             {images.length > 1 && (
                 <div className="mt-6 flex justify-center items-center gap-4">
-                    <CarouselButton onClick={handlePrevious} label="Imagen anterior">
+                    <CarouselButton onClick={handlePrevious} label={t.carousel.previous}>
                         <ChevronLeft className="h-5 w-5" />
                     </CarouselButton>
-                    <CarouselButton onClick={togglePause} label={isPaused ? "Reanudar" : "Pausar"}>
+                    <CarouselButton onClick={togglePause} label={isPaused ? t.carousel.resume : t.carousel.pause}>
                         {isPaused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
                     </CarouselButton>
-                    <CarouselButton onClick={handleNext} label="Siguiente imagen">
+                    <CarouselButton onClick={handleNext} label={t.carousel.next}>
                         <ChevronRight className="h-5 w-5" />
                     </CarouselButton>
                 </div>

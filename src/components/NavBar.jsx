@@ -6,8 +6,9 @@ import gsap from "gsap";
 import { motion as Motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu } from "lucide-react";
 
-import { navLinks } from "../constants";
+import { useLanguage } from "../context/Language";
 import { useMotionPreference } from "../context/MotionPreference";
+import LanguageToggle from "./LanguageToggle";
 
 // A nav link is either a same-page anchor jump ("/#work") or a real route
 // ("/blog") — the first needs a plain <a> (so the browser's own hash
@@ -128,6 +129,7 @@ const DesktopNavPill = () => {
     const { scrollY } = useScroll();
     const lastY = useRef(0);
     const collapsedAtY = useRef(0);
+    const { navLinks } = useLanguage();
 
     useMotionValueEvent(scrollY, "change", (latest) => {
         const previous = lastY.current;
@@ -220,6 +222,7 @@ const NavBar = () => {
     const location = useLocation();
     const isHomeRoute = location.pathname === "/";
     const { reducedMotion, setReducedMotion } = useMotionPreference();
+    const { navLinks, t } = useLanguage();
 
     const overlayRef = useRef(null);
     const linkRefs = useRef([]);
@@ -335,7 +338,7 @@ const NavBar = () => {
                     down the page you are, the same mechanism the other
                     nav links already use (see NavLinkItem) to jump
                     correctly from another route too. */}
-                <a href="/#hero" className="logo" aria-label="8ctal — volver al inicio">
+                <a href="/#hero" className="logo" aria-label={t.nav.logoLabel}>
                     <div className="flex items-center gap-2">
                         <img src="/images/logo_8ball.png" alt="" className="h-15 w-auto" />
                         <Wordmark visible={showWordmark} />
@@ -358,16 +361,18 @@ const NavBar = () => {
                 <div className="flex items-center gap-3">
                     <a href="/#contact" className="contact-btn group hidden lg:flex">
                         <div className="inner glass-panel">
-                            <span>Contáctame</span>
+                            <span>{t.nav.contact}</span>
                         </div>
                     </a>
+
+                    <LanguageToggle className="hidden lg:flex" />
 
                     <button
                         type="button"
                         className="motion-toggle glass-panel"
                         aria-pressed={reducedMotion}
-                        aria-label={reducedMotion ? "Activar animaciones" : "Reducir animaciones"}
-                        title={reducedMotion ? "Animaciones reducidas" : "Animaciones activas"}
+                        aria-label={reducedMotion ? t.nav.enableMotion : t.nav.reduceMotion}
+                        title={reducedMotion ? t.nav.motionReduced : t.nav.motionActive}
                         onClick={() => setReducedMotion((prev) => !prev)}
                     >
                         {reducedMotion ? (
@@ -386,7 +391,7 @@ const NavBar = () => {
                         className="nav-toggle glass-panel"
                         aria-expanded={menuOpen}
                         aria-controls="mobile-nav"
-                        aria-label="Abrir menú"
+                        aria-label={t.nav.openMenu}
                         // Opens only — the overlay carries its own close
                         // button now, so this never needs to double as one
                         // (and never risks showing two X icons at once).
@@ -418,7 +423,7 @@ const NavBar = () => {
                         role="dialog"
                         aria-modal="true"
                         aria-hidden={!menuOpen}
-                        aria-label="Navegación"
+                        aria-label={t.nav.navigation}
                     >
                         {/* The header's own ball logo sits underneath this
                             overlay (.navbar is z-[100], this is z-[200] —
@@ -434,7 +439,7 @@ const NavBar = () => {
                         <a
                             href="/#hero"
                             className="absolute left-5 top-5"
-                            aria-label="8ctal — volver al inicio"
+                            aria-label={t.nav.logoLabel}
                             onClick={closeMenu}
                         >
                             <img src="/images/logo_8ball.png" alt="" className="h-12 w-auto" />
@@ -443,7 +448,7 @@ const NavBar = () => {
                         <button
                             type="button"
                             className="nav-toggle glass-panel absolute top-5 right-5"
-                            aria-label="Cerrar menú"
+                            aria-label={t.nav.closeMenu}
                             onClick={closeMenu}
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -455,7 +460,7 @@ const NavBar = () => {
                         <nav className="flex flex-1 flex-col items-center justify-center gap-8 px-5">
                             {navLinks.map(({ link, name }, index) => (
                                 <NavLinkItem
-                                    key={name}
+                                    key={link}
                                     link={link}
                                     className="mobile-nav-link"
                                     ref={(el) => {
@@ -473,8 +478,15 @@ const NavBar = () => {
                                 ref={(el) => (linkRefs.current[navLinks.length] = el)}
                                 onClick={closeMenu}
                             >
-                                Contáctame
+                                {t.nav.contact}
                             </a>
+
+                            {/* Language switch lives at the bottom of this
+                                same menu, below the section links — a
+                                utility control, not a destination, so it
+                                doesn't compete with the links above it for
+                                the same visual weight. */}
+                            <LanguageToggle className="mt-4" />
                         </nav>
                     </div>,
                     document.body

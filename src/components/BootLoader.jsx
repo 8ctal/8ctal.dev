@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 import { useMotionPreference } from "../context/MotionPreference";
+import { useLanguage } from "../context/Language";
 
 /**
  * Entrance boot sequence — adapted from camosdigital's BootLoader.tsx (same
@@ -11,23 +12,16 @@ import { useMotionPreference } from "../context/MotionPreference";
  *   `window.load` (or already-complete) plus a minimum display time, since
  *   this site has nothing bespoke to track the way camosdigital's Flee
  *   stage did.
- * - No i18n — this site is Spanish-only.
+ * - Its terminal strings come from useLanguage()'s `t.boot` (see
+ *   constants/ui.js) — LanguageProvider reads the persisted/browser-detected
+ *   language synchronously on first render, so this never flashes the
+ *   wrong language before hydrating.
  * - Gated on both the OS prefers-reduced-motion query AND this site's own
  *   toggle (MotionPreference) — the reference only read the OS query.
  * A repeat visit within the same tab session skips the theatrics (a quick
  * sweep to 100 and out), and a hard failsafe guarantees this never traps
  * a visitor behind a stalled load.
  */
-
-const STATUSES = [
-    "inicializando interfaz",
-    "cargando modelo 3d",
-    "calibrando la cámara",
-    "abriendo el portafolio",
-];
-const READY_LABEL = "listo";
-const EYEBROW = "8ctal — portafolio";
-const BOOT_ANNOTATION = "secuencia de arranque";
 
 const SESSION_KEY = "8ctal:booted";
 const SCRAMBLE_CHARSET = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789·—/";
@@ -84,6 +78,8 @@ const BootLoader = () => {
     const statusRef = useRef(null);
     const [isDone, setIsDone] = useState(false);
     const { reducedMotion } = useMotionPreference();
+    const { t } = useLanguage();
+    const { statuses: STATUSES, ready: READY_LABEL, eyebrow: EYEBROW, annotation: BOOT_ANNOTATION } = t.boot;
 
     useEffect(() => {
         const root = rootRef.current;

@@ -2,9 +2,9 @@ import { useRef, useState, lazy, Suspense } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { projects } from "../constants";
 import TitleHeader from "../components/TitleHeader";
 import ProjectDetailModal from "../components/ProjectDetailModal";
+import { useLanguage } from "../context/Language";
 import { useMotionPreference } from "../context/MotionPreference";
 
 // Below the fold, and each pulls in its own real dependency (framer-motion,
@@ -26,6 +26,7 @@ gsap.registerPlugin(ScrollTrigger);
 const AppShowcase = () => {
     const sectionRef = useRef(null);
     const { reducedMotion } = useMotionPreference();
+    const { projects, t } = useLanguage();
     const [activeProject, setActiveProject] = useState(null);
 
     useGSAP(() => {
@@ -60,8 +61,8 @@ const AppShowcase = () => {
         <div id="work" ref={sectionRef} className="app-showcase">
             <div className="w-full">
                 <TitleHeader
-                    title="Mi Trabajo"
-                    sub="Proyectos que he construido"
+                    title={t.showcase.title}
+                    sub={t.showcase.sub}
                 />
 
                 <div className="relative mt-16">
@@ -98,7 +99,7 @@ const AppShowcase = () => {
                 {mobileImages.length > 0 && (
                     <div className="mt-20">
                         <h3 className="text-3xl font-bold mb-2 text-center">
-                            Apps móviles
+                            {t.showcase.mobileApps}
                         </h3>
                         <Suspense fallback={<StackFallback height={410} />}>
                             <PhoneCarousel
@@ -124,6 +125,7 @@ const AppShowcase = () => {
  * and a direct "Ver proyecto" link, for whichever project is currently
  * active in a CardStack or PhoneCarousel above it. */
 const ProjectCaption = ({ project, onViewDetails }) => {
+    const { t } = useLanguage();
     if (!project) return null;
     const href = project.link && project.link !== "#" ? project.link : undefined;
 
@@ -148,7 +150,7 @@ const ProjectCaption = ({ project, onViewDetails }) => {
                     onClick={() => onViewDetails?.(project)}
                     className="glass-panel rounded-lg px-4 py-2 text-sm font-medium text-white-50 transition-colors duration-300 hover:text-white"
                 >
-                    Ver detalles
+                    {t.showcase.viewDetails}
                 </button>
                 {href && (
                     <a
@@ -157,7 +159,7 @@ const ProjectCaption = ({ project, onViewDetails }) => {
                         rel="noopener noreferrer"
                         className="inline-block text-blue-50 hover:text-white-50 text-sm transition-colors"
                     >
-                        Ver proyecto
+                        {t.showcase.viewProject}
                     </a>
                 )}
             </div>

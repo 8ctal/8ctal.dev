@@ -4,7 +4,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion as Motion, useScroll, useTransform } from "framer-motion";
 
-import { expCards } from "../constants";
+import { useLanguage } from "../context/Language";
 import TitleHeader from "../components/TitleHeader";
 import TimelineLogo from "../components/TimelineLogo";
 import SkillsToggle from "../components/SkillsToggle";
@@ -12,6 +12,7 @@ import SkillsToggle from "../components/SkillsToggle";
 gsap.registerPlugin(ScrollTrigger);
 
 const Experience = () => {
+    const { expCards, t } = useLanguage();
     const sectionRef = useRef(null);
     const listRef = useRef(null);
     // A ref, not useState: useTransform's array-range form ([0,1] -> [0,
@@ -74,8 +75,8 @@ const Experience = () => {
         >
             <div className="w-full h-full md:px-20 px-5">
                 <TitleHeader
-                    title="Experiencia Profesional"
-                    sub="Mi trayectoria a lo largo de los años"
+                    title={t.experience.title}
+                    sub={t.experience.sub}
                 />
                 <div className="mt-32 relative">
                     <div className="relative z-50 xl:space-y-20 space-y-10" ref={listRef}>
@@ -89,7 +90,7 @@ const Experience = () => {
 
                         {expCards.map((card) => (
                             <div
-                                key={`${card.company}-${card.title}`}
+                                key={card.id}
                                 className="exp-card-wrapper"
                             >
                                 {/* Sticky on desktop — pinned in place while this
@@ -119,7 +120,7 @@ const Experience = () => {
                                     <div className="timeline-logo glass-panel absolute left-5 top-0 -translate-x-1/2 md:left-10">
                                         <TimelineLogo
                                             src={card.logoPath}
-                                            alt={`Logo de ${card.company}`}
+                                            alt={t.experience.logoAlt(card.company)}
                                             fallbackText={card.company}
                                         />
                                     </div>

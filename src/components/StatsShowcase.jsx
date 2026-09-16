@@ -4,23 +4,23 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/all";
 import { Award, Rocket, Sparkles, Users } from "lucide-react";
 
-import { counterItems } from "../constants";
+import { useLanguage } from "../context/Language";
 import { DisplayCard } from "./DisplayCards";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// One icon per stat, matched by a keyword in its label rather than by
-// position — counterItems is content data (constants/index.js), and
-// guessing by array index would silently point at the wrong icon the next
-// time someone reorders or edits that list.
-const iconFor = (label) => {
-    const lower = label.toLowerCase();
-    if (lower.includes("experiencia")) return Sparkles;
-    if (lower.includes("proyecto")) return Rocket;
-    if (lower.includes("cliente")) return Users;
-    if (lower.includes("certificacion")) return Award;
-    return Sparkles;
+// One icon per stat, matched by counterItems' own stable `id` (constants/
+// index.js) rather than by array position or by the (translated, therefore
+// language-dependent) label — guessing by position would silently point at
+// the wrong icon the next time someone reorders that list, and matching on
+// the label broke the moment the label stopped being Spanish.
+const ICONS_BY_ID = {
+    experience: Sparkles,
+    projects: Rocket,
+    clients: Users,
+    certifications: Award,
 };
+const iconFor = (id) => ICONS_BY_ID[id] || Sparkles;
 
 // Offsets grow with index so later cards fan out further behind the front
 // one — a generalised version of the reference's fixed 3-card stack
@@ -84,6 +84,7 @@ const ROW_OFFSETS = [
  * real value, gated on `#counter` scrolling to the middle of the viewport.
  */
 const StatsShowcase = () => {
+    const { counterItems } = useLanguage();
     const counterRef = useRef(null);
     const countersRef = useRef([]);
     const [settled, setSettled] = useState(false);
@@ -176,10 +177,10 @@ const StatsShowcase = () => {
         <div id="counter" ref={counterRef} className="padding-x-lg xl:mt-0 mt-32">
             <div className="mx-auto grid [grid-template-areas:'stack'] place-items-center py-10">
                 {counterItems.map((item, index) => {
-                    const Icon = iconFor(item.label);
+                    const Icon = iconFor(item.id);
                     return (
                         <DisplayCard
-                            key={item.label}
+                            key={item.id}
                             cardRef={(el) => el && (countersRef.current[index] = el)}
                             className={cardClassName(index)}
                             sizeClassName="h-28 w-64 md:h-32 md:w-64"

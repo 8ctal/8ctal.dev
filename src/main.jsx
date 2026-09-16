@@ -4,13 +4,16 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import { MotionPreferenceProvider } from './context/MotionPreference.jsx'
+import { LanguageProvider } from './context/Language.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <MotionPreferenceProvider>
-        <App />
-      </MotionPreferenceProvider>
+      <LanguageProvider>
+        <MotionPreferenceProvider>
+          <App />
+        </MotionPreferenceProvider>
+      </LanguageProvider>
     </BrowserRouter>
   </StrictMode>,
 )

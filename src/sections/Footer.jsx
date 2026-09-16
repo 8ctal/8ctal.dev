@@ -1,6 +1,7 @@
 import { socialImgs } from "../constants";
 import RuixenGradientFooter from "../components/RuixenGradientFooter";
 import SocialLinks from "../components/SocialLinks";
+import { useLanguage } from "../context/Language";
 
 // The marquee band, the extra "Contáctame" button that used to sit next to
 // the status dot, and then the status dot itself were all removed per
@@ -12,6 +13,8 @@ import SocialLinks from "../components/SocialLinks";
 // single-neon-spark rule); the social row is
 // ref_components/social_links/social_links.tsx (see SocialLinks.jsx).
 const Footer = () => {
+    const { t } = useLanguage();
+
     return (
         <RuixenGradientFooter minReveal={0} className="relative pt-16 pb-8 md:pt-20 md:pb-10">
             <div className="footer md:px-20 px-5">
@@ -19,7 +22,7 @@ const Footer = () => {
                     <SocialLinks socials={socialImgs} />
 
                     <p className="text-center md:text-end">
-                        © {new Date().getFullYear()} 8ctal development. All rights reserved.
+                        © {new Date().getFullYear()} 8ctal development. {t.footer.rights}
                     </p>
                 </div>
             </div>

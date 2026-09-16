@@ -2,13 +2,15 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import { certifications } from "../constants";
+import { useLanguage } from "../context/Language";
 import TitleHeader from "../components/TitleHeader";
 import CertificationStack from "../components/CertificationStack";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Certifications = () => {
+    const { certifications, t } = useLanguage();
+
     useGSAP(() => {
         gsap.fromTo(
             "#certifications .cert-stack",
@@ -33,8 +35,8 @@ const Certifications = () => {
         >
             <div className="w-full h-full md:px-20 px-5">
                 <TitleHeader
-                    title="Certificaciones"
-                    sub="Credenciales que validan mi experiencia"
+                    title={t.certifications.title}
+                    sub={t.certifications.sub}
                 />
 
                 {/* Stack instead of a grid — mechanics ported from

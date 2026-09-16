@@ -1,8 +1,8 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
-import { getBlogPost } from "../constants/blog";
 import { iconForPost } from "../constants/blogIcons";
+import { useLanguage } from "../context/Language";
 
 /**
  * /blog/:slug — a dedicated page per post. Not a modal or a section of the
@@ -13,15 +13,16 @@ import { iconForPost } from "../constants/blogIcons";
  */
 const BlogPost = () => {
     const { slug } = useParams();
+    const { getBlogPost, formatDate, t } = useLanguage();
     const post = getBlogPost(slug);
 
     if (!post) {
         return (
             <section className="flex-center flex-col gap-6 pt-40 pb-20 md:pt-52 text-center px-5">
-                <h1 className="text-3xl font-semibold text-white">Post no encontrado</h1>
-                <p className="text-blue-50">Puede que el enlace esté roto o el post ya no exista.</p>
+                <h1 className="text-3xl font-semibold text-white">{t.blog.notFoundTitle}</h1>
+                <p className="text-blue-50">{t.blog.notFoundBody}</p>
                 <Link to="/blog" className="glass-panel rounded-lg px-5 py-3 text-sm font-medium text-white-50 hover:text-white transition-colors duration-300">
-                    Volver al blog
+                    {t.blog.backToBlog}
                 </Link>
             </section>
         );
@@ -37,7 +38,7 @@ const BlogPost = () => {
                     className="inline-flex items-center gap-2 text-sm text-blue-50 transition-colors duration-300 hover:text-white-50"
                 >
                     <ArrowLeft className="size-4" />
-                    Todos los posts
+                    {t.blog.allPosts}
                 </Link>
 
                 <header className="mt-8 flex flex-col items-center gap-5 text-center">
@@ -46,7 +47,7 @@ const BlogPost = () => {
                     </span>
                     <h1 className="text-3xl font-semibold text-white md:text-4xl">{post.title}</h1>
                     <p className="text-sm text-blue-50">
-                        {post.readTime} de lectura · <time dateTime={post.dateISO}>{post.date}</time>
+                        {post.readTime} {t.blog.readSuffix} · <time dateTime={post.dateISO}>{formatDate(post.dateISO)}</time>
                     </p>
                 </header>
 
@@ -61,7 +62,7 @@ const BlogPost = () => {
                         to="/blog"
                         className="glass-panel rounded-lg px-5 py-3 text-sm font-medium text-white-50 transition-colors duration-300 hover:text-white"
                     >
-                        Ver más posts
+                        {t.blog.morePosts}
                     </Link>
                 </div>
             </div>

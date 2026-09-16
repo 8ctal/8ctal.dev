@@ -1,4 +1,4 @@
-import { cvLink } from "../constants";
+import { useLanguage } from "../context/Language";
 
 // The entrance pop and idle float both live in index.css now (see
 // .cv-animated-div's `animation` there) instead of as GSAP tweens — this
@@ -11,6 +11,8 @@ import { cvLink } from "../constants";
 // them the same as everything else, so there's nothing left for this
 // component to gate in JS — it's a static button.
 const FloatingCVButton = () => {
+    const { cvLink, t } = useLanguage();
+
     return (
         <div
             className="cv-animated-div fixed bottom-15 right-9
@@ -23,8 +25,8 @@ const FloatingCVButton = () => {
                 className="cv-btn glass-panel group"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Descargar CV"
-                title="Descargar CV"
+                aria-label={t.cv.download}
+                title={t.cv.download}
             >
                 <img
                     src="/images/cv_button.png"

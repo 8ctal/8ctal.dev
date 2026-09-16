@@ -187,6 +187,25 @@ html.is-booting {
     @apply flex justify-center items-center size-11 rounded-full text-white-50 transition-colors duration-300 hover:text-white;
   }
 
+  /* Minimalist ES/EN switch (LanguageToggle.jsx) — same h-11 glass pill
+     language as .contact-btn's inner, both codes always visible so the
+     control never needs to be read in a language you don't have yet. */
+  .lang-toggle {
+    @apply flex items-center gap-1.5 h-11 px-4 rounded-full text-xs font-semibold tracking-[0.05em] text-white-50 transition-colors duration-300 hover:text-white;
+
+    span {
+      @apply opacity-40 transition-opacity duration-300;
+    }
+
+    .lang-toggle-active {
+      @apply opacity-100;
+    }
+
+    .lang-toggle-divider {
+      @apply opacity-25;
+    }
+  }
+
   .mobile-nav-overlay {
     @apply fixed inset-0 z-[200] flex flex-col;
   }

@@ -6,6 +6,8 @@ import * as React from "react";
 import { motion as Motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SquareArrowOutUpRight } from "lucide-react";
 
+import { useLanguage } from "../context/Language";
+
 function cn(...classes) {
     return classes.filter(Boolean).join(" ");
 }
@@ -74,6 +76,7 @@ export function CardStack({
     // with whatever the caller passes here.
     forceReducedMotion = false,
 }) {
+    const { t } = useLanguage();
     const systemReduceMotion = useReducedMotion();
     const reduceMotion = systemReduceMotion || forceReducedMotion;
     const len = items.length;
@@ -305,7 +308,7 @@ export function CardStack({
                                         "h-2 w-2 rounded-full transition",
                                         on ? "bg-white-50" : "bg-white-50/30 hover:bg-white-50/50"
                                     )}
-                                    aria-label={`Ir a ${it.title}`}
+                                    aria-label={t.cardStack.goTo(it.title)}
                                 />
                             );
                         })}
@@ -316,7 +319,7 @@ export function CardStack({
                             target="_blank"
                             rel="noreferrer"
                             className="text-blue-50 hover:text-white-50 transition-colors"
-                            aria-label="Abrir enlace"
+                            aria-label={t.cardStack.openLink}
                         >
                             <SquareArrowOutUpRight className="h-4 w-4" />
                         </a>
@@ -328,6 +331,7 @@ export function CardStack({
 }
 
 function DefaultFanCard({ item }) {
+    const { t } = useLanguage();
     return (
         <div className="relative h-full w-full">
             <div className="absolute inset-0">
@@ -341,7 +345,7 @@ function DefaultFanCard({ item }) {
                     />
                 ) : (
                     <div className="flex h-full w-full items-center justify-center bg-black-200 text-sm text-blue-50">
-                        Sin imagen
+                        {t.cardStack.noImage}
                     </div>
                 )}
             </div>

@@ -4,7 +4,8 @@ import { useMediaQuery } from "react-responsive";
 import { lazy, Suspense, useState } from "react";
 
 import TitleHeader from "../components/TitleHeader";
-import { techStackIcons, techStackImgs } from "../constants";
+import { techStackImgs } from "../constants";
+import { useLanguage } from "../context/Language";
 
 // Only the desktop branch below ever mounts this — mobile renders the
 // static image instead — so code-split it rather than shipping R3F/drei
@@ -14,6 +15,7 @@ const TechIconCardExperience = lazy(() =>
 );
 
 const TechStack = () => {
+    const { techStackIcons, t } = useLanguage();
     // Below this width, skip the 3D canvases entirely and render the static
     // logo instead — five live WebGL contexts on one screen is real cost on
     // a phone (battery, thermals, first paint), and mobile users never get
@@ -59,8 +61,8 @@ const TechStack = () => {
         <div id="skills" className="flex-center section-padding">
             <div className="w-full h-full md:px-10 px-5">
                 <TitleHeader
-                    title="Habilidades clave y tecnologías"
-                    sub="Lo que puedo aportar"
+                    title={t.techStack.title}
+                    sub={t.techStack.sub}
                 />
                 <div className="tech-grid">
                     {/* Loop through the techStackIcons array and create a component for each item.
@@ -69,7 +71,7 @@ const TechStack = () => {
               classes are only applied on larger screens. */}
                     {techStackIcons.map((techStackIcon, index) => (
                         <div
-                            key={techStackIcon.name}
+                            key={techStackIcon.modelPath}
                             tabIndex={0}
                             className="border border-black-50 bg-black-100 tech-card overflow-hidden group xl:rounded-full rounded-lg"
                             onMouseEnter={() => setActiveIndex(index)}

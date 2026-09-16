@@ -7,7 +7,10 @@ const TechIconCardExperience = ({ model }) => {
     const scene = useGLTF(model.modelPath);
 
     useEffect(() => {
-        if (model.name === "Diseñador UI/UX y 3D") {
+        // Matched on modelPath, not `model.name`: the name is user-facing
+        // and translated per language (see constants/index.js), so it can't
+        // be relied on as a stable identifier for which model this is.
+        if (model.modelPath === "/models/three.js-transformed.glb") {
             scene.scene.traverse((child) => {
                 if (child.isMesh) {
                     if (child.name === "Object_5") {

@@ -4,9 +4,9 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 
-import { blogPosts } from "../constants/blog";
 import TitleHeader from "../components/TitleHeader";
 import { iconForPost } from "../constants/blogIcons";
+import { useLanguage } from "../context/Language";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,6 +21,7 @@ gsap.registerPlugin(ScrollTrigger);
  * (BlogIndex.jsx).
  */
 const RecentThoughts = () => {
+    const { blogPosts, formatDate, t } = useLanguage();
     const recent = blogPosts.slice(0, 3);
 
     useGSAP(() => {
@@ -45,7 +46,7 @@ const RecentThoughts = () => {
     return (
         <section id="thoughts" className="flex-center md:mt-40 mt-20 section-padding xl:px-0">
             <div className="w-full h-full md:px-20 px-5">
-                <TitleHeader title="Pensamientos recientes" sub="Notas sobre el oficio" />
+                <TitleHeader title={t.thoughts.title} sub={t.thoughts.sub} />
 
                 <div className="mt-16 flex flex-col gap-4">
                     {recent.map((post) => {
@@ -64,7 +65,7 @@ const RecentThoughts = () => {
                                         {post.title}
                                     </h3>
                                     <p className="mt-1 text-xs text-blue-50 sm:text-sm">
-                                        {post.readTime} de lectura · {post.date}
+                                        {post.readTime} {t.thoughts.readSuffix} · {formatDate(post.dateISO)}
                                     </p>
                                 </div>
                                 <span className="me-2 flex size-9 shrink-0 items-center justify-center rounded-full border border-black-50 text-blue-50 transition-colors duration-300 group-hover:text-white">
@@ -80,7 +81,7 @@ const RecentThoughts = () => {
                         to="/blog"
                         className="glass-panel rounded-lg px-5 py-3 text-sm font-medium text-white-50 transition-colors duration-300 hover:text-white"
                     >
-                        Ver todos los posts
+                        {t.thoughts.viewAll}
                     </Link>
                 </div>
             </div>

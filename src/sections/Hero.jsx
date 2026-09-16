@@ -3,10 +3,12 @@ import gsap from "gsap";
 
 import Button from "../components/Button";
 import HandwritingText from "../components/HandwritingText";
-import { words } from "../constants";
+import { useLanguage } from "../context/Language";
 import HeroExperience from "../components/models/hero_models/HeroExperience";
 
 const Hero = () => {
+    const { words, t } = useLanguage();
+
     useGSAP(() => {
         gsap.fromTo(
             ".hero-text h1",
@@ -27,7 +29,7 @@ const Hero = () => {
                     <div className="flex flex-col gap-7">
                         <div className="hero-text">
                             <h1>
-                                Convirtiendo
+                                {t.hero.titlePrefix}
                                 <span className="slide">
                                     <span className="wrapper">
                                         {words.map((word, index) => (
@@ -46,8 +48,8 @@ const Hero = () => {
                                     </span>
                                 </span>
                             </h1>
-                            <h1>en proyectos reales</h1>
-                            <h1>que dan resultados</h1>
+                            <h1>{t.hero.titleLine1}</h1>
+                            <h1>{t.hero.titleLine2}</h1>
                         </div>
 
                         {/* The handwriting accent lives on the greeting, not
@@ -57,7 +59,7 @@ const Hero = () => {
                         <div className="w-full max-w-full space-y-1 overflow-hidden sm:space-y-0">
                             <p className="w-full max-w-full text-xs leading-relaxed text-white-50 sm:text-sm md:text-xl relative z-10 pointer-events-none">
                                 <HandwritingText
-                                    text="¡Hola! Soy Camilo un ingeniero de software Colombiano"
+                                    text={t.hero.greeting1}
                                     height="clamp(1.75em, 7vw, 2.5em)"
                                     duration={2.6}
                                 />
@@ -67,7 +69,7 @@ const Hero = () => {
                                     so the two lines read as written one after
                                     the other rather than scribbled at once. */}
                                 <HandwritingText
-                                    text="Apasionado por la creación de experiencias digitales"
+                                    text={t.hero.greeting2}
                                     height="clamp(1.75em, 7vw, 2.5em)"
                                     duration={2.4}
                                     delay={1.6}
@@ -77,7 +79,7 @@ const Hero = () => {
 
 
                         <Button
-                            text="Mira mi trabajo"
+                            text={t.hero.cta}
                             className="md:w-80 md:h-16 w-60 h-12"
                             id="counter"
                         />

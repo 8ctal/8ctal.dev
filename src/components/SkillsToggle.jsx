@@ -1,13 +1,19 @@
 import { useState } from "react";
 
+import { useLanguage } from "../context/Language";
+
 /**
  * Collapsed-by-default skill/stack chip list behind a "Ver skills" toggle —
  * shared by Certifications and the Experience timeline, so the chip wall
  * doesn't compete with the summary/description text for attention by
  * default. Chips themselves are unchanged (same bg-black-200/text-white-50/
- * rounded-full look used everywhere else in the site).
+ * rounded-full look used everywhere else in the site). `label` is the
+ * already-localized noun the caller passes in (e.g. "stack" or
+ * t.certifications.skillsLabel) — only the "Show"/"Hide" verb wrapping it
+ * is translated here.
  */
 const SkillsToggle = ({ skills, label = "habilidades" }) => {
+    const { t } = useLanguage();
     const [open, setOpen] = useState(false);
 
     if (!skills?.length) return null;
@@ -20,7 +26,7 @@ const SkillsToggle = ({ skills, label = "habilidades" }) => {
                 aria-expanded={open}
                 onClick={() => setOpen((prev) => !prev)}
             >
-                <span>{open ? `Ocultar ${label}` : `Ver ${label}`}</span>
+                <span>{open ? t.skills.hide(label) : t.skills.show(label)}</span>
                 <svg
                     width="14"
                     height="14"

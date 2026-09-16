@@ -4,8 +4,10 @@ import emailjs from "@emailjs/browser";
 import TitleHeader from "../components/TitleHeader";
 import GlobeCdn from "../components/GlobeCdn";
 import useInView from "../hooks/useInView";
+import { useLanguage } from "../context/Language";
 
 const Contact = () => {
+    const { t } = useLanguage();
     const formRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
@@ -48,8 +50,8 @@ const Contact = () => {
         <section id="contact" className="flex-center section-padding">
             <div className="w-full h-full md:px-10 px-5">
                 <TitleHeader
-                    title="Contáctame"
-                    sub="¿Tienes preguntas o ideas? ¡Házmelo saber!"
+                    title={t.contact.title}
+                    sub={t.contact.sub}
                 />
                 <div className="grid-12-cols mt-16">
                     <div className="xl:col-span-5">
@@ -60,39 +62,39 @@ const Contact = () => {
                                 className="w-full flex flex-col gap-7"
                             >
                                 <div>
-                                    <label htmlFor="name">Tu nombre</label>
+                                    <label htmlFor="name">{t.contact.nameLabel}</label>
                                     <input
                                         type="text"
                                         id="name"
                                         name="name"
                                         value={form.name}
                                         onChange={handleChange}
-                                        placeholder="¿Cuál es tu nombre?"
+                                        placeholder={t.contact.namePlaceholder}
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label htmlFor="email">Tu correo</label>
+                                    <label htmlFor="email">{t.contact.emailLabel}</label>
                                     <input
                                         type="email"
                                         id="email"
                                         name="email"
                                         value={form.email}
                                         onChange={handleChange}
-                                        placeholder="¿Cuál es tu correo electrónico?"
+                                        placeholder={t.contact.emailPlaceholder}
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label htmlFor="message">Tu mensaje</label>
+                                    <label htmlFor="message">{t.contact.messageLabel}</label>
                                     <textarea
                                         id="message"
                                         name="message"
                                         value={form.message}
                                         onChange={handleChange}
-                                        placeholder="¿Cómo puedo ayudarte?"
+                                        placeholder={t.contact.messagePlaceholder}
                                         rows="5"
                                         required
                                     />
@@ -101,7 +103,7 @@ const Contact = () => {
                                 <button type="submit" className="cta-wrapper">
                                     <div className="cta-button glass-panel group">
                                         <p className="text">
-                                            {loading ? "Enviando..." : "Enviar mensaje"}
+                                            {loading ? t.contact.sending : t.contact.send}
                                         </p>
                                         <div className="arrow-wrapper">
                                             <img src="/images/arrow-right.svg" alt="" />

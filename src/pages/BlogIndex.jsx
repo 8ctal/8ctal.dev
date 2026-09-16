@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 
-import { blogPosts } from "../constants/blog";
 import { iconForPost } from "../constants/blogIcons";
 import TitleHeader from "../components/TitleHeader";
+import { useLanguage } from "../context/Language";
 
 /**
  * /blog — every post, same row style as the home page's RecentThoughts
@@ -14,10 +14,12 @@ import TitleHeader from "../components/TitleHeader";
  * pushes it clear of the fixed navbar.
  */
 const BlogIndex = () => {
+    const { blogPosts, formatDate, t } = useLanguage();
+
     return (
         <section className="flex-center pt-40 pb-20 md:pt-52 md:pb-32 px-5 md:px-10">
             <div className="w-full max-w-4xl">
-                <TitleHeader title="Blog" sub="Todos los posts" />
+                <TitleHeader title={t.blog.indexTitle} sub={t.blog.indexSub} />
 
                 <div className="mt-16 flex flex-col gap-4">
                     {blogPosts.map((post) => {
@@ -39,7 +41,7 @@ const BlogIndex = () => {
                                         {post.excerpt}
                                     </p>
                                     <p className="mt-1 text-xs text-blue-50/70">
-                                        {post.readTime} de lectura · {post.date}
+                                        {post.readTime} {t.blog.readSuffix} · {formatDate(post.dateISO)}
                                     </p>
                                 </div>
                                 <span className="me-2 flex size-9 shrink-0 items-center justify-center rounded-full border border-black-50 text-blue-50 transition-colors duration-300 group-hover:text-white">
@@ -50,7 +52,7 @@ const BlogIndex = () => {
                     })}
 
                     {blogPosts.length === 0 && (
-                        <p className="text-center text-blue-50">Todavía no hay posts publicados.</p>
+                        <p className="text-center text-blue-50">{t.blog.empty}</p>
                     )}
                 </div>
             </div>
